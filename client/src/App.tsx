@@ -1,9 +1,19 @@
 import * as React from "react";
-import { useGetPokemonByNameQuery } from "./app/api";
+import { useConnectionStateQuery } from "./services/connection";
 
 function App() {
-  const { data, error, isLoading } = useGetPokemonByNameQuery("bulbasaur");
+  const { data, error, isLoading } = useConnectionStateQuery("", {
+    pollingInterval: 1000,
+    refetchOnMountOrArgChange: true,
+    skip: false,
+  });
 
+  if (error) {
+    console.log(error);
+  }
+  if (isLoading) {
+    console.log("isLoading");
+  }
   console.log(data);
   return (
     <div className="App">
