@@ -34,10 +34,10 @@ function SidebarItem() {
       current: pathname === "/admin/rooms",
     },
     {
-      name: "Manage Users",
-      to: "manage-users",
+      name: "Manage User",
+      to: "manage-user",
       icon: <ManageAccountsIcon />,
-      current: pathname === "/admin/manage-users",
+      current: pathname === "/admin/manage-user",
     },
   ];
   return (

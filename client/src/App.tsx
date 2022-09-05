@@ -13,13 +13,7 @@ import Home from "./pages/Home";
 import Page404 from "./pages/Page404";
 import { useConnectionStateQuery } from "./services/connection";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: indigo[900],
-    },
-  },
-});
+const theme = createTheme();
 
 function App() {
   const { data, error, isLoading, isError } = useConnectionStateQuery("", {
@@ -42,7 +36,7 @@ function App() {
           </Route>
           <Route path="admin" element={<Admin />}>
             <Route index element={<Dashboard />} />
-            <Route path="manage-users" element={<ManageUser />} />
+            <Route path="manage-user" element={<ManageUser />} />
             <Route path="rooms" element={<Rooms />} />
           </Route>
           <Route path="*" element={<Page404 />} />

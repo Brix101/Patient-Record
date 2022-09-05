@@ -68,13 +68,11 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function Admin() {
+  const { state } = useLocation();
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
-  const { state } = useLocation();
-  console.log(state);
 
   return (
     <Box sx={{ display: "flex" }}>

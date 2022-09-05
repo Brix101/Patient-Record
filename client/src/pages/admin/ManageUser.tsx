@@ -88,7 +88,7 @@ export default function ManageUsers() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Container component="main" maxWidth="md">
+          <Container component="main" maxWidth="xs">
             <Box
               sx={{
                 display: "flex",
@@ -125,6 +125,36 @@ export default function ManageUsers() {
                       label="Last Name"
                       name="lastName"
                       autoComplete="family-name"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
                     />
                   </Grid>
                   <Grid item xs={12}>
