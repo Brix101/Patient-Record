@@ -3,7 +3,7 @@ import React from "react";
 import Chart from "../../components/admin/Chart";
 import Deposits from "../../components/admin/Deposits";
 
-function Dashboard() {
+function AdminDashboard() {
   return (
     <>
       <Grid container spacing={3}>
@@ -38,4 +38,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default AdminDashboard;

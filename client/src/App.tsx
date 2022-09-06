@@ -1,14 +1,16 @@
 import { createTheme, LinearProgress, ThemeProvider } from "@mui/material";
-import { green, indigo, purple } from "@mui/material/colors";
 import * as React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Admin from "./layout/Admin";
+import Doctor from "./layout/Doctor";
 import Main from "./layout/Main";
 import About from "./pages/About";
-import Dashboard from "./pages/admin/Dashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageUser from "./pages/admin/ManageUser";
 import Rooms from "./pages/admin/Rooms";
 import Contact from "./pages/Contact";
+import Appointment from "./pages/doctor/Appointment";
+import DoctorDashboard from "./pages/doctor/Dashboard";
 import Home from "./pages/Home";
 import Page404 from "./pages/Page404";
 import { useConnectionStateQuery } from "./services/connection";
@@ -35,9 +37,13 @@ function App() {
             <Route path="contact" element={<Contact />} />
           </Route>
           <Route path="admin" element={<Admin />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<AdminDashboard />} />
             <Route path="manage-user" element={<ManageUser />} />
             <Route path="rooms" element={<Rooms />} />
+          </Route>
+          <Route path="doctor" element={<Doctor />}>
+            <Route index element={<DoctorDashboard />} />
+            <Route path="appointment" element={<Appointment />} />
           </Route>
           <Route path="*" element={<Page404 />} />
         </Routes>
