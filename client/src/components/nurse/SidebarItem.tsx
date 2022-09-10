@@ -1,6 +1,6 @@
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
+import EventIcon from "@mui/icons-material/Event";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -21,21 +21,15 @@ function SidebarItem() {
   const navigation: navItem[] = [
     {
       name: "Dashboard",
-      to: "/admin",
+      to: "/nurse",
       icon: <DashboardIcon />,
-      current: pathname === "/admin",
+      current: pathname === "/nurse",
     },
     {
-      name: "Rooms",
-      to: "rooms",
-      icon: <RoomPreferencesIcon />,
-      current: pathname === "/admin/rooms",
-    },
-    {
-      name: "Manage User",
-      to: "manage-user",
-      icon: <ManageAccountsIcon />,
-      current: pathname === "/admin/manage-user",
+      name: "Patient",
+      to: "patient",
+      icon: <GroupAddIcon />,
+      current: pathname === "/nurse/patient",
     },
   ];
   return (

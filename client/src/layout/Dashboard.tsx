@@ -15,7 +15,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import SidebarItem from "../components/doctor/SidebarItem";
+import AdminItem from "../components/admin/SidebarItem";
+import DoctorItem from "../components/doctor/SidebarItem";
+import NurseItem from "../components/nurse/SidebarItem";
 
 const drawerWidth: number = 240;
 
@@ -67,12 +69,14 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-function Doctor() {
+function Dashboard() {
   const { state } = useLocation();
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const { pathname } = useLocation();
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -126,7 +130,9 @@ function Doctor() {
         </Toolbar>
         <Divider />
         <List component="nav">
-          <SidebarItem />
+          {pathname.search("admin") === 1 && <AdminItem />}
+          {pathname.search("doctor") === 1 && <DoctorItem />}
+          {pathname.search("nurse") === 1 && <NurseItem />}
         </List>
       </Drawer>
       <Box
@@ -150,4 +156,4 @@ function Doctor() {
   );
 }
 
-export default Doctor;
+export default Dashboard;
