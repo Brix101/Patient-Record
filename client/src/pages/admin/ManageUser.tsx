@@ -1,5 +1,12 @@
 import SearchIcon from "@mui/icons-material/Search";
-import { Modal } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -9,6 +16,10 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { Box, Container } from "@mui/system";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
 import Users from "../../components/admin/Users";
 
@@ -23,12 +34,44 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+interface UserType {
+  id: number;
+  type: string;
+}
+const user: UserType[] = [
+  {
+    id: 0,
+    type: "Admin",
+  },
+  {
+    id: 1,
+    type: "Doctor",
+  },
+  {
+    id: 2,
+    type: "Nurse",
+  },
+];
 
 export default function ManageUsers() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [gender, setGender] = React.useState("");
+  const [userType, setUserType] = React.useState("");
+  const [value, setValue] = React.useState<Dayjs | null>();
 
+  const handleGenderChange = (event: SelectChangeEvent) => {
+    setGender(event.target.value);
+  };
+
+  const handleUserTypeChange = (event: SelectChangeEvent) => {
+    setUserType(event.target.value);
+  };
+
+  const handleDateChange = (newValue: Dayjs | null) => {
+    setValue(newValue);
+  };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -97,7 +140,7 @@ export default function ManageUsers() {
               }}
             >
               <Typography component="h1" variant="h5">
-                Sign up
+                Add User
               </Typography>
               <Box
                 component="form"
@@ -115,6 +158,7 @@ export default function ManageUsers() {
                       id="firstName"
                       label="First Name"
                       autoFocus
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -125,6 +169,7 @@ export default function ManageUsers() {
                       label="Last Name"
                       name="lastName"
                       autoComplete="family-name"
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -135,48 +180,76 @@ export default function ManageUsers() {
                       label="Email Address"
                       name="email"
                       autoComplete="email"
+                      size="small"
                     />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl sx={{ minWidth: 120 }} fullWidth>
+                      <InputLabel id="gender-helper-label" size="small">
+                        Gender
+                      </InputLabel>
+                      <Select
+                        labelId="gender-helper-label"
+                        id="gender-select-helper"
+                        value={gender}
+                        label="Gender"
+                        onChange={handleGenderChange}
+                        size="small"
+                      >
+                        <MenuItem value={"Male"}>Male</MenuItem>
+                        <MenuItem value={"Female"}>Female</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <FormControl
+                        sx={{ minWidth: 120 }}
+                        fullWidth
+                        size="small"
+                      >
+                        <MobileDatePicker
+                          label="Birthday"
+                          inputFormat="MMMM DD, YYYY"
+                          value={value}
+                          onChange={handleDateChange}
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+                      </FormControl>
+                    </LocalizationProvider>
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
                       required
                       fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
+                      id="address"
+                      label="Address"
+                      name="address"
+                      autoComplete="address"
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      id="password"
-                      autoComplete="new-password"
-                    />
+                    <FormControl sx={{ minWidth: 120 }} fullWidth>
+                      <InputLabel
+                        id="uset-type-select-helper-label"
+                        size="small"
+                      >
+                        User Type
+                      </InputLabel>
+                      <Select
+                        labelId="uset-type-select-helper-label"
+                        id="user-type-select-helper"
+                        value={userType}
+                        label="User Type"
+                        onChange={handleUserTypeChange}
+                        size="small"
+                      >
+                        {user.map(({ type }: UserType) => {
+                          return <MenuItem value={type}>{type}</MenuItem>;
+                        })}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
                 <Button
@@ -184,8 +257,9 @@ export default function ManageUsers() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
+                  size="small"
                 >
-                  Sign Up
+                  Submit
                 </Button>
               </Box>
             </Box>
