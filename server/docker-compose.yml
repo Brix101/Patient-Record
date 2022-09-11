@@ -26,18 +26,14 @@ services:
     networks:
       - backend
     links:
-      - pg
+      - mongo
     depends_on:
-      - pg
-  pg:
-    image: bitnami/postgresql:11-debian-9
-    container_name: pg
-    environment:
-      POSTGRESQL_USERNAME: root
-      POSTGRESQL_PASSWORD: password
-      POSTGRESQL_DATABASE: test
+      - mongo
+  mongo:
+    image: mvertes/alpine-mongo
+    container_name: mongo
     ports:
-      - '5432:5432'
+      - '27017:27017'
     networks:
       - backend
 

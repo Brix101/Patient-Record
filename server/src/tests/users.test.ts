@@ -1,134 +1,131 @@
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 import request from 'supertest';
-import { createConnection, getConnection, Repository } from 'typeorm';
-import App from '@/app';
-import { dbConnection } from '@databases';
-import { CreateUserDto } from '@dtos/users.dto';
-import { UserEntity } from '@entities/users.entity';
-import UserRoute from '@routes/users.route';
-
-beforeAll(async () => {
-  await createConnection(dbConnection);
-});
+import App from '../app';
+import { CreateUserDto } from '../dtos/users.dto';
+import UsersRoute from '../routes/users.route';
 
 afterAll(async () => {
-  await getConnection().close();
+  await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
 });
 
 describe('Testing Users', () => {
-  describe('[POST] /users', () => {
-    it('response Create user', async () => {
-      const userData: CreateUserDto = {
-        email: 'test@email.com',
-        password: 'q1w2e3r4!',
-      };
-
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
-
-      userRepository.findOne = jest.fn().mockReturnValue(null);
-      userRepository.save = jest.fn().mockReturnValue({
-        id: 1,
-        email: userData.email,
-        password: await bcrypt.hash(userData.password, 10),
-      });
-
-      const app = new App([usersRoute]);
-      return request(app.getServer()).post(`${usersRoute.path}`).send(userData).expect(201);
-    });
-  });
-
   describe('[GET] /users', () => {
-    it('response findAll users', async () => {
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+    it('response fineAll Users', async () => {
+      const usersRoute = new UsersRoute();
+      const users = usersRoute.usersController.userService.users;
 
-      userRepository.find = jest.fn().mockReturnValue([
+      users.find = jest.fn().mockReturnValue([
         {
-          id: 1,
+          _id: 'qpwoeiruty',
           email: 'a@email.com',
           password: await bcrypt.hash('q1w2e3r4!', 10),
         },
         {
-          id: 2,
+          _id: 'alskdjfhg',
           email: 'b@email.com',
           password: await bcrypt.hash('a1s2d3f4!', 10),
         },
         {
-          id: 3,
+          _id: 'zmxncbv',
           email: 'c@email.com',
           password: await bcrypt.hash('z1x2c3v4!', 10),
         },
       ]);
 
+      (mongoose as any).connect = jest.fn();
       const app = new App([usersRoute]);
       return request(app.getServer()).get(`${usersRoute.path}`).expect(200);
     });
   });
 
   describe('[GET] /users/:id', () => {
-    it('response findOne user', async () => {
-      const userId = 1;
+    it('response findOne User', async () => {
+      const userId = 'qpwoeiruty';
 
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+      const usersRoute = new UsersRoute();
+      const users = usersRoute.usersController.userService.users;
 
-      userRepository.findOne = jest.fn().mockReturnValue({
-        id: userId,
+      users.findOne = jest.fn().mockReturnValue({
+        _id: 'qpwoeiruty',
         email: 'a@email.com',
         password: await bcrypt.hash('q1w2e3r4!', 10),
       });
 
+      (mongoose as any).connect = jest.fn();
       const app = new App([usersRoute]);
       return request(app.getServer()).get(`${usersRoute.path}/${userId}`).expect(200);
     });
   });
 
-  describe('[PUT] /users/:id', () => {
-    it('response Update user', async () => {
-      const userId = 1;
+  describe('[POST] /users', () => {
+    it('response Create User', async () => {
       const userData: CreateUserDto = {
         email: 'test@email.com',
-        password: '1q2w3e4r!',
+        password: 'q1w2e3r4',
       };
 
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+      const usersRoute = new UsersRoute();
+      const users = usersRoute.usersController.userService.users;
 
-      userRepository.findOne = jest.fn().mockReturnValue({
-        id: userId,
-        email: userData.email,
-        password: await bcrypt.hash(userData.password, 10),
-      });
-      userRepository.update = jest.fn().mockReturnValue({
-        generatedMaps: [],
-        raw: [],
-        affected: 1,
-      });
-      userRepository.findOne = jest.fn().mockReturnValue({
-        id: userId,
+      users.findOne = jest.fn().mockReturnValue(null);
+      users.create = jest.fn().mockReturnValue({
+        _id: '60706478aad6c9ad19a31c84',
         email: userData.email,
         password: await bcrypt.hash(userData.password, 10),
       });
 
+      (mongoose as any).connect = jest.fn();
       const app = new App([usersRoute]);
-      return request(app.getServer()).put(`${usersRoute.path}/${userId}`).send(userData).expect(200);
+      return request(app.getServer()).post(`${usersRoute.path}`).send(userData).expect(201);
+    });
+  });
+
+  describe('[PUT] /users/:id', () => {
+    it('response Update User', async () => {
+      const userId = '60706478aad6c9ad19a31c84';
+      const userData: CreateUserDto = {
+        email: 'test@email.com',
+        password: 'q1w2e3r4',
+      };
+
+      const usersRoute = new UsersRoute();
+      const users = usersRoute.usersController.userService.users;
+
+      if (userData.email) {
+        users.findOne = jest.fn().mockReturnValue({
+          _id: userId,
+          email: userData.email,
+          password: await bcrypt.hash(userData.password, 10),
+        });
+      }
+
+      users.findByIdAndUpdate = jest.fn().mockReturnValue({
+        _id: userId,
+        email: userData.email,
+        password: await bcrypt.hash(userData.password, 10),
+      });
+
+      (mongoose as any).connect = jest.fn();
+      const app = new App([usersRoute]);
+      return request(app.getServer()).put(`${usersRoute.path}/${userId}`).send(userData);
     });
   });
 
   describe('[DELETE] /users/:id', () => {
-    it('response Delete user', async () => {
-      const userId = 1;
+    it('response Delete User', async () => {
+      const userId = '60706478aad6c9ad19a31c84';
 
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+      const usersRoute = new UsersRoute();
+      const users = usersRoute.usersController.userService.users;
 
-      userRepository.findOne = jest.fn().mockReturnValue({
-        id: userId,
-        email: 'a@email.com',
+      users.findByIdAndDelete = jest.fn().mockReturnValue({
+        _id: '60706478aad6c9ad19a31c84',
+        email: 'test@email.com',
         password: await bcrypt.hash('q1w2e3r4!', 10),
       });
 
+      (mongoose as any).connect = jest.fn();
       const app = new App([usersRoute]);
       return request(app.getServer()).delete(`${usersRoute.path}/${userId}`).expect(200);
     });

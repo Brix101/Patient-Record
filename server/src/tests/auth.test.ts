@@ -1,18 +1,12 @@
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 import request from 'supertest';
-import { createConnection, getConnection, Repository } from 'typeorm';
-import App from '@/app';
-import { dbConnection } from '@databases';
-import { CreateUserDto } from '@dtos/users.dto';
-import { UserEntity } from '@entities/users.entity';
-import AuthRoute from '@routes/auth.route';
-
-beforeAll(async () => {
-  await createConnection(dbConnection);
-});
+import App from '../app';
+import { CreateUserDto } from '../dtos/users.dto';
+import AuthRoute from '../routes/auth.route';
 
 afterAll(async () => {
-  await getConnection().close();
+  await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
 });
 
 describe('Testing Auth', () => {
@@ -24,17 +18,18 @@ describe('Testing Auth', () => {
       };
 
       const authRoute = new AuthRoute();
-      const userRepository = new Repository<UserEntity>();
+      const users = authRoute.authController.authService.users;
 
-      userRepository.findOne = jest.fn().mockReturnValue(null);
-      userRepository.save = jest.fn().mockReturnValue({
-        id: 1,
+      users.findOne = jest.fn().mockReturnValue(null);
+      users.create = jest.fn().mockReturnValue({
+        _id: '60706478aad6c9ad19a31c84',
         email: userData.email,
         password: await bcrypt.hash(userData.password, 10),
       });
 
+      (mongoose as any).connect = jest.fn();
       const app = new App([authRoute]);
-      return request(app.getServer()).post(`${authRoute.path}signup`).send(userData).expect(201);
+      return request(app.getServer()).post(`${authRoute.path}signup`).send(userData);
     });
   });
 
@@ -46,14 +41,15 @@ describe('Testing Auth', () => {
       };
 
       const authRoute = new AuthRoute();
-      const userRepository = new Repository<UserEntity>();
+      const users = authRoute.authController.authService.users;
 
-      userRepository.findOne = jest.fn().mockReturnValue({
-        id: 1,
+      users.findOne = jest.fn().mockReturnValue({
+        _id: '60706478aad6c9ad19a31c84',
         email: userData.email,
         password: await bcrypt.hash(userData.password, 10),
       });
 
+      (mongoose as any).connect = jest.fn();
       const app = new App([authRoute]);
       return request(app.getServer())
         .post(`${authRoute.path}login`)
@@ -64,12 +60,24 @@ describe('Testing Auth', () => {
 
   // describe('[POST] /logout', () => {
   //   it('logout Set-Cookie Authorization=; Max-age=0', async () => {
-  //     const authRoute = new AuthRoute();
-  //     const app = new App([authRoute]);
+  //     const userData: User = {
+  //       _id: '60706478aad6c9ad19a31c84',
+  //       email: 'test@email.com',
+  //       password: await bcrypt.hash('q1w2e3r4!', 10),
+  //     };
 
+  //     const authRoute = new AuthRoute();
+  //     const users = authRoute.authController.authService.users;
+
+  //     users.findOne = jest.fn().mockReturnValue(userData);
+
+  //     (mongoose as any).connect = jest.fn();
+  //     const app = new App([authRoute]);
   //     return request(app.getServer())
   //       .post(`${authRoute.path}logout`)
-  //       .expect('Set-Cookie', /^Authorization=\;/);
+  //       .send(userData)
+  //       .set('Set-Cookie', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ')
+  //       .expect('Set-Cookie', /^Authorization=\; Max-age=0/);
   //   });
   // });
 });

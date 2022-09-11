@@ -1,5 +1,5 @@
 import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from '@config';
-import { AppDataSource } from '@databases';
+import { dbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
@@ -9,11 +9,10 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
+import { connect, ConnectOptions, set } from 'mongoose';
 import morgan from 'morgan';
-import 'reflect-metadata';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { DataSource } from 'typeorm';
 
 class App {
   public app: express.Application;
@@ -23,9 +22,9 @@ class App {
   constructor(routes: Routes[]) {
     this.app = express();
     this.env = NODE_ENV || 'development';
-    this.port = PORT || 3000;
+    this.port = PORT || 5000;
 
-    this.env !== 'test' && this.connectToDatabase();
+    this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initializeSwagger();
@@ -45,8 +44,12 @@ class App {
     return this.app;
   }
 
-  private async connectToDatabase() {
-    await AppDataSource.initialize();
+  private connectToDatabase() {
+    if (this.env !== 'production') {
+      set('debug', true);
+    }
+
+    connect(dbConnection.url, dbConnection.options as ConnectOptions);
   }
 
   private initializeMiddlewares() {
@@ -79,7 +82,7 @@ class App {
     };
 
     const specs = swaggerJSDoc(options);
-    this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs));
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
   }
 
   private initializeErrorHandling() {
