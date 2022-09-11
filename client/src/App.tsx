@@ -19,8 +19,8 @@ import { useConnectionStateQuery } from "./services/connection";
 const theme = createTheme();
 
 function App() {
-  const { data, error, isLoading, isError } = useConnectionStateQuery("", {
-    pollingInterval: 3000,
+  const { isLoading, isError } = useConnectionStateQuery("", {
+    // pollingInterval: 3000,
     refetchOnMountOrArgChange: true,
     skip: false,
   });

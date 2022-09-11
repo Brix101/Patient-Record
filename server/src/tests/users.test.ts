@@ -2,7 +2,8 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import App from '../app';
-import { CreateUserDto } from '../dtos/users.dto';
+import { CreateUserDto, UpdateUserDto } from '../dtos/users.dto';
+import { Gender } from '../models/users.model';
 import UsersRoute from '../routes/users.route';
 
 afterAll(async () => {
@@ -61,8 +62,13 @@ describe('Testing Users', () => {
   describe('[POST] /users', () => {
     it('response Create User', async () => {
       const userData: CreateUserDto = {
+        firstName: 'string',
+        lastName: 'string',
         email: 'test@email.com',
-        password: 'q1w2e3r4',
+        gender: Gender.Male,
+        birthday: 'string',
+        address: 'string',
+        contactNumber: 'string',
       };
 
       const usersRoute = new UsersRoute();
@@ -72,7 +78,7 @@ describe('Testing Users', () => {
       users.create = jest.fn().mockReturnValue({
         _id: '60706478aad6c9ad19a31c84',
         email: userData.email,
-        password: await bcrypt.hash(userData.password, 10),
+        password: await bcrypt.hash('12345678', 10),
       });
 
       (mongoose as any).connect = jest.fn();
@@ -84,8 +90,14 @@ describe('Testing Users', () => {
   describe('[PUT] /users/:id', () => {
     it('response Update User', async () => {
       const userId = '60706478aad6c9ad19a31c84';
-      const userData: CreateUserDto = {
+      const userData: UpdateUserDto = {
+        firstName: 'string',
+        lastName: 'string',
         email: 'test@email.com',
+        gender: Gender.Male,
+        birthday: 'string',
+        address: 'string',
+        contactNumber: 'string',
         password: 'q1w2e3r4',
       };
 
