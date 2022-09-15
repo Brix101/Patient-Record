@@ -32,16 +32,6 @@ export default function ProductHero() {
       >
         Enjoy secret offers up to -70% off the best luxury hotels every Sunday.
       </Typography>
-      <Button
-        color="secondary"
-        variant="contained"
-        size="large"
-        component="a"
-        href="/premium-themes/onepirate/sign-up/"
-        sx={{ minWidth: 200 }}
-      >
-        Register
-      </Button>
       <Typography variant="body2" color="inherit" sx={{ mt: 2 }}>
         Discover the experience
       </Typography>

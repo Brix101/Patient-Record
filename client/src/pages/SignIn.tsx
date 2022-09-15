@@ -8,7 +8,6 @@ import FormFeedback from "../components/modules/form/FormFeedback";
 import RFTextField from "../components/modules/form/RFTextField";
 import { email, required } from "../components/modules/form/validation";
 import AppAppBar from "../components/modules/views/AppBar";
-import AppFooter from "../components/modules/views/AppFootBar";
 import AppForm from "../components/modules/views/AppForm";
 import withRoot from "../components/modules/withRoot";
 
@@ -117,7 +116,6 @@ function SignIn() {
           </Link>
         </Typography>
       </AppForm>
-      <AppFooter />
     </React.Fragment>
   );
 }

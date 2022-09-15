@@ -1,6 +1,5 @@
 import * as React from "react";
 import AppAppBar from "../components/modules/views/AppBar";
-import AppFooter from "../components/modules/views/AppFootBar";
 import ProductCategories from "../components/modules/views/ProductCategories";
 import ProductCTA from "../components/modules/views/ProductCTA";
 import ProductHero from "../components/modules/views/ProductHero";
@@ -19,7 +18,6 @@ function Home() {
       <ProductHowItWorks />
       <ProductCTA />
       <ProductSmokingHero />
-      <AppFooter />
     </React.Fragment>
   );
 }

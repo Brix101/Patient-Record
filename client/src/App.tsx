@@ -1,7 +1,7 @@
 import { LinearProgress, ThemeProvider } from "@mui/material";
 import * as React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import theme from "./components/modules/theme";
+import theme from "./assets/theme";
 import Dashboard from "./layout/Dashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageUser from "./pages/admin/ManageUser";
