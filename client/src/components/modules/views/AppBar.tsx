@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import AppBar from "../components/AppBar";
 import Toolbar from "../components/Toolbar";
 
@@ -8,9 +9,11 @@ const rightLink = {
   fontSize: 16,
   color: "common.white",
   ml: 3,
+  cursor: "pointer",
 };
 
 function AppAppBar() {
+  const navigate = useNavigate();
   return (
     <div>
       <AppBar position="fixed">
@@ -20,8 +23,8 @@ function AppAppBar() {
             variant="h6"
             underline="none"
             color="inherit"
-            href="/premium-themes/onepirate/"
-            sx={{ fontSize: 24 }}
+            sx={{ fontSize: 24, cursor: "pointer" }}
+            onClick={() => navigate("/")}
           >
             {"onepirate"}
           </Link>
@@ -30,7 +33,7 @@ function AppAppBar() {
               color="inherit"
               variant="h6"
               underline="none"
-              href="/premium-themes/onepirate/sign-in/"
+              onClick={() => navigate("/sign-in/")}
               sx={rightLink}
             >
               {"Sign In"}
