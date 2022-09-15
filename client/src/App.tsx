@@ -1,22 +1,18 @@
-import { createTheme, LinearProgress, ThemeProvider } from "@mui/material";
+import { LinearProgress, ThemeProvider } from "@mui/material";
 import * as React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import theme from "./components/modules/theme";
 import Dashboard from "./layout/Dashboard";
-import Main from "./layout/Main";
-import About from "./pages/About";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageUser from "./pages/admin/ManageUser";
 import Rooms from "./pages/admin/Rooms";
-import Contact from "./pages/Contact";
 import Appointment from "./pages/doctor/Appointment";
 import DoctorDashboard from "./pages/doctor/DoctorDashboard";
 import Home from "./pages/Home";
 import NurseDashboard from "./pages/nurse/NurseDashboard";
 import Patient from "./pages/nurse/Patient";
-import Page404 from "./pages/Page404";
+import SignIn from "./pages/SignIn";
 import { useConnectionStateQuery } from "./services/connection";
-
-const theme = createTheme();
 
 function App() {
   const { isLoading, isError } = useConnectionStateQuery("", {
@@ -32,11 +28,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Main />}>
-            <Route index element={<Home />} />
-            <Route path="about" element={<About />} />
-            <Route path="contact" element={<Contact />} />
-          </Route>
+          <Route index element={<Home />} />
+          <Route path="sign-in" element={<SignIn />} />
           <Route path="admin" element={<Dashboard />}>
             <Route index element={<AdminDashboard />} />
             <Route path="manage-user" element={<ManageUser />} />
@@ -50,7 +43,7 @@ function App() {
             <Route index element={<NurseDashboard />} />
             <Route path="patient" element={<Patient />} />
           </Route>
-          <Route path="*" element={<Page404 />} />
+          {/* <Route path="*" element={<Page404 />} /> */}
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
