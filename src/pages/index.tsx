@@ -92,7 +92,7 @@ const Home: NextPage = () => {
                   </a>
                 </li>
                 <li>
-                  <Link href="/login">
+                  <Link href="signin#/signin">
                     <a className="bg-transparent hover:bg-green-700 text-grey-700 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded-full">
                       Login
                     </a>

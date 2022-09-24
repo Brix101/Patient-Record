@@ -23,6 +23,14 @@ export const requestOtpSchema = z.object({
 
 export type requestOtpInput = z.TypeOf<typeof requestOtpSchema>;
 
+export const confirmOtpSchema = z.object({
+  email: z.string().email(),
+  otp: z.string(),
+  hash: z.string(),
+});
+
+export type confirmOtpInput = z.TypeOf<typeof confirmOtpSchema>;
+
 export const verifyOtpSchema = z.object({
   hash: z.string(),
 });
