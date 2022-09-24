@@ -23,13 +23,16 @@ model Example {
 }
 
 model User {
-    id            Int       @id @default(autoincrement())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    Account       Account[]
-    Session       Session[]
+    id       Int       @id @default(autoincrement())
+    name     String?
+    email    String?   @unique
+    role     Role      @default(NURSE)
+    image    String?
+    Otp      Otp[]
+    Account  Account[]
+    Session  Session[]
+    createAt DateTime  @default(now())
+    updateAt DateTime  @updatedAt
 }
 
 // Necessary for Next auth
@@ -65,4 +68,22 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Otp {
+    id              Int      @id @default(autoincrement())
+    otp             String
+    expiration_time DateTime
+    verified        Boolean  @default(false)
+    userId          Int
+    user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createAt        DateTime @default(now())
+    updateAt        DateTime @updatedAt
+}
+
+enum Role {
+    ADMIN
+    NURSE
+    PHYSICIAN
+    PHARMACIST
 }

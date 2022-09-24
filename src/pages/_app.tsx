@@ -2,11 +2,11 @@
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { loggerLink } from "@trpc/client/links/loggerLink";
 import { withTRPC } from "@trpc/next";
-import { SessionProvider } from "next-auth/react";
-import superjson from "superjson";
-import type { AppType } from "next/app";
-import type { AppRouter } from "../server/router";
 import type { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import type { AppType } from "next/app";
+import superjson from "superjson";
+import type { AppRouter } from "../server/router";
 import "../styles/globals.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -45,6 +45,12 @@ export default withTRPC<AppRouter>({
       ],
       url,
       transformer: superjson,
+      headers() {
+        if (ctx?.req) {
+          return { ...ctx.req.headers };
+        }
+        return {};
+      },
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */

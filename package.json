@@ -19,15 +19,18 @@
     "@trpc/server": "^9.27.2",
     "next": "12.3.1",
     "next-auth": "^4.10.3",
+    "otp-generator": "^4.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-feather": "^2.0.10",
+    "react-hook-form": "^7.36.1",
     "react-query": "3.39.2",
     "superjson": "^1.10.0",
     "zod": "^3.18.0"
   },
   "devDependencies": {
     "@types/node": "18.0.0",
+    "@types/otp-generator": "^4.0.0",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
