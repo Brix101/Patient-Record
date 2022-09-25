@@ -123,15 +123,17 @@ export const usersRouter = createRouter()
   .query("me", {
     async resolve({ ctx }) {
       if (ctx.session) {
-        const { user } = ctx.session;
+        const email = ctx.session.user?.email;
 
-        const userData = await ctx.prisma.user.findUnique({
-          where: {
-            email: user?.email,
-          },
-        });
+        if (email) {
+          const userData = await ctx.prisma.user.findUnique({
+            where: {
+              email,
+            },
+          });
 
-        return userData;
+          return userData;
+        }
       }
       return null;
     },

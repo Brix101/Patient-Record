@@ -19,10 +19,13 @@ const ConfirmOtpPage: NextPage = () => {
     },
   });
 
-  const { email, hash } = router.query;
+  const query = router.query;
 
   function onSubmit(values: confirmOtpInput) {
-    if (router.query) {
+    if (query.email && query.hash) {
+      const email = query.email as string;
+      const hash = query.hash as string;
+
       mutate({ ...values, email, hash });
     }
   }
@@ -61,7 +64,7 @@ const ConfirmOtpPage: NextPage = () => {
 
                 <div className="bg-cyan-50 py-2 px-5 rounded-md text-center">
                   <span className=" text-gray-700 text-md">
-                    We email <strong>{email}</strong>
+                    We email <strong>{query.email}</strong>
                   </span>
                   <br />
                   <span className=" text-gray-700 text-md ">a magic code.</span>
