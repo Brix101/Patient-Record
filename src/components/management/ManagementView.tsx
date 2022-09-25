@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -47,6 +48,7 @@ function ManagementView({ children }: { children?: React.ReactNode }) {
                 <Users size={20} />
                 <a>Users</a>
               </SideBarButton>
+              <button onClick={() => signOut()}>Logout</button>
             </div>
           </Sidebar>
           <div className="flex-1">

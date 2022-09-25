@@ -131,7 +131,6 @@ export const usersRouter = createRouter()
           },
         });
 
-        console.log(userData);
         return userData;
       }
       return null;
