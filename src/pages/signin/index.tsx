@@ -39,7 +39,7 @@ const SignInPage: NextPage = () => {
       <RoleCheck check={role ? true : false}>
         <main className="h-screen w-full bg-green-100">
           <div className="flex min-h-full justify-center py-12 px-4 sm:px-6 lg:px-8">
-            <div className="w-full min-w-fit min-h-fit space-y-10 max-w-xl bg-white flex flex-col justify-center py-10 rounded-xl drop-shadow-2xl">
+            <div className="w-full min-w-fit h-fit space-y-5 max-w-xl bg-white flex flex-col justify-center pb-10 pt-5 rounded-xl drop-shadow-2xl">
               <Link href="/">
                 <div className="flex flex-row mx-2 self-center items-center text-center cursor-pointer select-none hover:bg-green-50 hover:text-green-900 max-w-fit p-2 rounded-md">
                   <img className="w-24 mr-5" src="/logo.svg" alt="logo" />
