@@ -36,7 +36,6 @@ export const usersRouter = createRouter()
             });
           }
         }
-        console.log(e);
         throw new trpc.TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Something went wrong",
@@ -89,25 +88,17 @@ export const usersRouter = createRouter()
           user: {
             email,
           },
+          verified: false,
+          expiration_time: {
+            gte: new Date(),
+          },
         },
       });
+
       if (!resOtp) {
         throw new trpc.TRPCError({
-          code: "NOT_FOUND",
-          message: "OTP Not Found",
-        });
-      }
-      if (resOtp.verified === true) {
-        throw new trpc.TRPCError({
-          code: "BAD_REQUEST",
-          message: "OTP Already Used",
-        });
-      }
-
-      if (resOtp.expiration_time < new Date()) {
-        throw new trpc.TRPCError({
-          code: "TIMEOUT",
-          message: "OTP Expired",
+          code: "UNAUTHORIZED",
+          message: "Invalid OTP",
         });
       }
 
@@ -123,10 +114,26 @@ export const usersRouter = createRouter()
           user: true,
         },
       });
-      // TODO add jwt signin
+
       return {
-        role: upOtp.user.role,
+        email: upOtp.user.email,
       };
-      // return await ctx.prisma.example.findMany();
+    },
+  })
+  .query("me", {
+    async resolve({ ctx }) {
+      if (ctx.session) {
+        const { user } = ctx.session;
+
+        const userData = await ctx.prisma.user.findUnique({
+          where: {
+            email: user?.email,
+          },
+        });
+
+        console.log(userData);
+        return userData;
+      }
+      return null;
     },
   });

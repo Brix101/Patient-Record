@@ -1,20 +1,21 @@
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { trpc } from "../../utils/trpc";
+import { RoleCheck } from "../../components/RoleCheck";
 
 const NursePage: NextPage = () => {
-  const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
-
   return (
     <>
       <Head>
         <title>Nurse Page</title>
       </Head>
-      <main>
-        <div className="pt-6 text-2xl text-blue-500 flex justify-center items-center w-full">
-          {hello.data ? <p>{hello.data.greeting} Nurse</p> : <p>Loading..</p>}
-        </div>
-      </main>
+      <RoleCheck>
+        <main>
+          <div className="pt-6 text-2xl text-blue-500 flex justify-center items-center w-full">
+            Nurse
+          </div>
+        </main>
+      </RoleCheck>
     </>
   );
 };

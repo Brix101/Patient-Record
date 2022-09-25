@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { Clipboard, Columns, Server, User, Users } from "react-feather";
 import SideBarButton from "../buttons/SideBarButton";
+import { RoleCheck } from "../RoleCheck";
 import Sidebar from "./Sidebar";
 
 function ManagementView({ children }: { children?: React.ReactNode }) {
@@ -13,7 +14,7 @@ function ManagementView({ children }: { children?: React.ReactNode }) {
   const currentUrl = pathname.split("/")[2];
 
   return (
-    <>
+    <RoleCheck>
       <main className="overflow-hidden h-screen">
         <header className="w-full flex items-center p-2 px-4 text-semibold text-black bg-green-50 border-green-500 border-b">
           <Link href="/">
@@ -26,23 +27,23 @@ function ManagementView({ children }: { children?: React.ReactNode }) {
         <div className="flex h-full ">
           <Sidebar sidebarOpen={sidebarOpen}>
             <div className="mx-4 my-2 space-y-1">
-              <SideBarButton href={"/management"}>
+              <SideBarButton href={"/admin"}>
                 <Server size={20} />
                 <a>Dashboard</a>
               </SideBarButton>
-              <SideBarButton href={"/management/room"}>
+              <SideBarButton href={"/admin/room"}>
                 <Columns size={20} />
                 <a>Room</a>
               </SideBarButton>
-              <SideBarButton href={"/management/physician"}>
+              <SideBarButton href={"/admin/physician"}>
                 <User size={20} />
                 <a>Physician</a>
               </SideBarButton>
-              <SideBarButton href={"/management/patient"}>
+              <SideBarButton href={"/admin/patient"}>
                 <Clipboard size={20} />
                 <a>Patient</a>
               </SideBarButton>
-              <SideBarButton href={"/management/users"}>
+              <SideBarButton href={"/admin/users"}>
                 <Users size={20} />
                 <a>Users</a>
               </SideBarButton>
@@ -77,7 +78,7 @@ function ManagementView({ children }: { children?: React.ReactNode }) {
           </div>
         </div>
       </main>
-    </>
+    </RoleCheck>
   );
 }
 

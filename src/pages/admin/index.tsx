@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import ManagementView from "../../components/management/ManagementView";
-import { trpc } from "../../utils/trpc";
+import { useRoleContext } from "../../context/role.context";
 
 const ManagementPage: NextPage = () => {
-  const { data, isLoading, error } = trpc.useQuery(["auth.getSession"]);
-
   return (
     <>
       <Head>

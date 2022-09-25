@@ -6,21 +6,27 @@ import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import superjson from "superjson";
+import { RoleContextProvider } from "../context/role.context";
 import type { AppRouter } from "../server/router";
 import "../styles/globals.css";
+import { trpc } from "../utils/trpc";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const { data } = trpc.useQuery(["users.me"]);
+
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <RoleContextProvider value={data?.role.toLowerCase()}>
+        <Component {...pageProps} />
+      </RoleContextProvider>
     </SessionProvider>
   );
 };
 
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost

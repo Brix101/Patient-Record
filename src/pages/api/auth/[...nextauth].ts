@@ -7,13 +7,9 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 
 export const authOptions: NextAuthOptions = {
-  // Include user.id on session
   callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-      }
-      return session;
+    async jwt({ token }) {
+      return token;
     },
   },
   // Configure one or more authentication providers
@@ -23,15 +19,19 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        name: {
-          label: "Name",
-          type: "text",
-          placeholder: "Enter your name",
-        },
+        email: { label: "Email", type: "email" },
       },
-      async authorize(credentials, _req) {
-        const user = { id: 1, name: credentials?.name ?? "J Smith" };
-        return user;
+      async authorize(credentials, req) {
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials?.email,
+          },
+        });
+        if (user) {
+          return user;
+        } else {
+          return null;
+        }
       },
     }),
   ],

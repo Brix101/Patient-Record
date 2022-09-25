@@ -1,11 +1,16 @@
+import { Role } from "@prisma/client";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
-  const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
+  const { data, isLoading } = trpc.useQuery(["users.me"]);
 
+  if (data?.role) {
+    console.log(Role[data?.role as keyof typeof Role]);
+  }
   return (
     <>
       <Head>
@@ -92,9 +97,9 @@ const Home: NextPage = () => {
                   </a>
                 </li>
                 <li>
-                  <Link href="signin#/signin">
+                  <Link href="/signin">
                     <a className="bg-transparent hover:bg-green-700 text-grey-700 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded-full">
-                      Login
+                      Sign In
                     </a>
                   </Link>
                 </li>
