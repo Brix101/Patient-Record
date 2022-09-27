@@ -6,7 +6,6 @@ import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
   const { data, isLoading } = trpc.useQuery(["users.me"]);
-
   if (data?.role) {
     console.log(Role[data?.role as keyof typeof Role]);
   }
@@ -43,9 +42,9 @@ const Home: NextPage = () => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 ></path>
               </svg>
             </button>

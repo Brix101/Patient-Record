@@ -1,9 +1,6 @@
 import type { NextPage } from "next";
-import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import ManagementView from "../../components/management/ManagementView";
-import { useRoleContext } from "../../context/role.context";
+import AdminView from "../../components/admin/AdminView";
 
 const ManagementPage: NextPage = () => {
   return (
@@ -11,7 +8,7 @@ const ManagementPage: NextPage = () => {
       <Head>
         <title>Management</title>
       </Head>
-      <ManagementView>Dashboard</ManagementView>
+      <AdminView>Dashboard</AdminView>
     </>
   );
 };

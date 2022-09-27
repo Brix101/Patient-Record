@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import ManagementView from "../../components/management/ManagementView";
+import AdminView from "../../components/admin/AdminView";
 import { trpc } from "../../utils/trpc";
 
 const PhysicianPage: NextPage = () => {
@@ -11,7 +11,7 @@ const PhysicianPage: NextPage = () => {
       <Head>
         <title>Management - Physician</title>
       </Head>
-      <ManagementView>Physician</ManagementView>
+      <AdminView>Physician</AdminView>
     </>
   );
 };

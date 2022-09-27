@@ -14,8 +14,12 @@ const ConfirmOtpPage: NextPage = () => {
   const router = useRouter();
   const { handleSubmit, register } = useForm<confirmOtpInput>();
   const { mutate, error, isLoading } = trpc.useMutation(["users.confirm-otp"], {
-    onSuccess: ({ email }) => {
-      signIn("credentials", { email, expires: Date });
+    onSuccess: ({ email, role }) => {
+      signIn("credentials", {
+        email,
+        expires: Date,
+        callbackUrl: `${window.location.origin}/${role}`,
+      });
     },
   });
 

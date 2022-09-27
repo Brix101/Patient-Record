@@ -117,6 +117,7 @@ export const usersRouter = createRouter()
 
       return {
         email: upOtp.user.email,
+        role: upOtp.user.role,
       };
     },
   })
