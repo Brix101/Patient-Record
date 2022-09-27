@@ -10,3 +10,8 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 }
+
+export type Hash = {
+  email: string | undefined;
+  hash: string | undefined;
+};
