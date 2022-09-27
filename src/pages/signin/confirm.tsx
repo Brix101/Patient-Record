@@ -18,7 +18,7 @@ const ConfirmOtpPage: NextPage = () => {
       signIn("credentials", {
         email,
         expires: Date,
-        callbackUrl: `${window.location.origin}/${role}`,
+        callbackUrl: `${window.location.origin}/${role.toLowerCase()}`,
       });
     },
   });
