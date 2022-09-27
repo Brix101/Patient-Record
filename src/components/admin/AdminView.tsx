@@ -7,7 +7,7 @@ import SideBarButton from "../buttons/SideBarButton";
 import { RoleCheck } from "../RoleCheck";
 import Sidebar from "./Sidebar";
 
-function ManagementView({ children }: { children?: React.ReactNode }) {
+function AdminView({ children }: { children?: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const { pathname } = useRouter();
@@ -76,6 +76,7 @@ function ManagementView({ children }: { children?: React.ReactNode }) {
                 {currentUrl ? currentUrl : "Dashboard"}
               </p>
             </nav>
+
             <main className="m-10">{children}</main>
           </div>
         </div>
@@ -84,4 +85,4 @@ function ManagementView({ children }: { children?: React.ReactNode }) {
   );
 }
 
-export default ManagementView;
+export default AdminView;

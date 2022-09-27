@@ -11,6 +11,10 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token }) {
       return token;
     },
+    // async redirect({ url, baseUrl }) {
+    //   console.log(url);
+    //   return baseUrl;
+    // },
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
@@ -39,6 +43,9 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  // pages: {
+  //   signIn: "/signin",
+  // },
 };
 
 export default NextAuth(authOptions);
