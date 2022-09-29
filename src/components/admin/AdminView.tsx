@@ -77,7 +77,9 @@ function AdminView({ children }: { children?: React.ReactNode }) {
               </p>
             </nav>
 
-            <main className="m-10">{children}</main>
+            <main className="mx-10 my-5 h-[80vh] min-h-0 overflow-y-scroll">
+              {children}
+            </main>
           </div>
         </div>
       </main>

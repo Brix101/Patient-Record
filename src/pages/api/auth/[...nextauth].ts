@@ -7,16 +7,12 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    async jwt({ token }) {
-      return token;
-    },
-    // async redirect({ url, baseUrl }) {
-    //   console.log(url);
-    //   return baseUrl;
-    // },
-  },
-  // Configure one or more authentication providers
+  // callbacks: {
+  // async jwt({ token }) {
+  //   return token;
+  // },
+  // },
+
   adapter: PrismaAdapter(prisma),
   providers: [
     // ...add more providers here

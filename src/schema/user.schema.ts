@@ -1,18 +1,18 @@
+import { Role } from "@prisma/client";
 import z from "zod";
-
-export const role = ["ADMIN", "NURSE", "PHYSICIAN", "PHARMACIST"] as const;
 
 export const createUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
-  role: z.enum(role).default(role[1]),
+  role: z.nativeEnum(Role),
   image: z.string().nullable(),
 });
 
 export const createUserOutputSchema = z.object({
   name: z.string(),
   email: z.string().email(),
-  role: z.enum(role),
+  role: z.nativeEnum(Role),
+  image: z.string(),
 });
 
 export type CreateUserInput = z.TypeOf<typeof createUserSchema>;
