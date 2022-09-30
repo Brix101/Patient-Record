@@ -1,13 +1,11 @@
 import { Role } from "@prisma/client";
 import React, { useState } from "react";
-import { User } from "react-feather";
 import { useForm } from "react-hook-form";
 import { CreateUserInput } from "../../schema/user.schema";
 import { trpc } from "../../utils/trpc";
 
 import DatePicker from "react-datepicker";
 
-import Image from "next/image";
 import "react-datepicker/dist/react-datepicker.css";
 
 function AddUser() {

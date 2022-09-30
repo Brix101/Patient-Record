@@ -34,7 +34,7 @@ model User {
 
 model Physician {
     id            Int     @id @default(autoincrement())
-    experites     String?
+    expertes      String?
     licenseNUmber String?
     userId        Int
     user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)

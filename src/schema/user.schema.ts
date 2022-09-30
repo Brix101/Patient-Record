@@ -6,6 +6,12 @@ export const createUserSchema = z.object({
   email: z.string().email(),
   role: z.nativeEnum(Role),
   image: z.string().nullable(),
+  gender: z.string(),
+  birthday: z.date(),
+  address: z.string().nullable(),
+  mobile: z.string().nullable(),
+  expertes: z.string().nullable(),
+  licenseNUmber: z.string().nullable(),
 });
 
 export const createUserOutputSchema = z.object({

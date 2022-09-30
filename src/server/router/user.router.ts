@@ -14,7 +14,18 @@ export const usersRouter = createRouter()
   .mutation("register-user", {
     input: createUserSchema,
     resolve: async ({ input, ctx }) => {
-      const { email, name, role, image } = input;
+      const {
+        email,
+        name,
+        role,
+        image,
+        gender,
+        address,
+        birthday,
+        mobile,
+        expertes,
+        licenseNUmber,
+      } = input;
 
       try {
         const user = await ctx.prisma.user.create({
@@ -23,8 +34,26 @@ export const usersRouter = createRouter()
             name,
             role: Role[role as keyof typeof Role],
             image,
+            gender,
+            address,
+            birthday,
+            mobile,
           },
         });
+
+        if (role === Role.PHYSICIAN) {
+          await ctx.prisma.physician.create({
+            data: {
+              expertes,
+              licenseNUmber,
+              user: {
+                connect: {
+                  id: user.id,
+                },
+              },
+            },
+          });
+        }
 
         return user;
       } catch (e) {
@@ -119,6 +148,42 @@ export const usersRouter = createRouter()
         email: upOtp.user.email,
         role: upOtp.user.role,
       };
+    },
+  })
+  .query("all-users", {
+    async resolve({ ctx }) {
+      if (ctx.session) {
+        const email = ctx.session.user?.email;
+
+        if (email) {
+          const user = await ctx.prisma.user.findUnique({
+            where: {
+              email,
+            },
+          });
+
+          if (user?.role === Role.ADMIN) {
+            const users = await ctx.prisma.user.findMany({
+              include: {
+                Physician: true,
+              },
+            });
+            return users;
+          }
+          throw new trpc.TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Only Administrator Can view this data",
+          });
+        }
+        throw new trpc.TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Please Login",
+        });
+      }
+      throw new trpc.TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid User",
+      });
     },
   })
   .query("me", {
