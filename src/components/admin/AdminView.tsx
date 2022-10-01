@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import { Clipboard, Columns, Server, User, Users } from "react-feather";
 import AccountButton from "../buttons/AccountButton";
 import SideBarButton from "../buttons/SideBarButton";
@@ -8,12 +7,6 @@ import { RoleCheck } from "../RoleCheck";
 import Sidebar from "./Sidebar";
 
 function AdminView({ children }: { children?: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const { pathname } = useRouter();
-
-  const currentUrl = pathname.split("/")[2];
-
   return (
     <RoleCheck>
       <main className="overflow-hidden h-screen">

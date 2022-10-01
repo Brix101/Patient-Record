@@ -3,15 +3,15 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
-import { CreateUserInput } from "../../schema/user.schema";
-import { trpc } from "../../utils/trpc";
+import { CreateUserInput } from "../../../schema/user.schema";
+import { trpc } from "../../../utils/trpc";
 
 function AddUser({
-  addUser,
-  setAddUser,
+  addMode,
+  setAddMode,
 }: {
-  addUser: boolean;
-  setAddUser: Dispatch<SetStateAction<boolean>>;
+  addMode: boolean;
+  setAddMode: Dispatch<SetStateAction<boolean>>;
 }) {
   const [startDate, setStartDate] = useState(new Date());
   const [isPhysician, setPhysician] = useState(false);
@@ -52,8 +52,8 @@ function AddUser({
         <div className="h-20 w-full flex items-start justify-end pt-2 px-5">
           <button
             type="button"
-            className="rounded-lg border border-transparent bg-green-600 py-2.5 px-5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            onClick={() => setAddUser(!addUser)}
+            className="rounded-lg border border-transparent bg-blue-600 py-2.5 px-5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            onClick={() => setAddMode(!addMode)}
           >
             View User
           </button>

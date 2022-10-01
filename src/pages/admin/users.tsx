@@ -4,25 +4,25 @@ import Head from "next/head";
 import { useState } from "react";
 import AdminView from "../../components/admin/AdminView";
 
-const AddUser = dynamic(() => import("../../components/admin/AddUser"), {
+const AddUser = dynamic(() => import("../../components/admin/user/AddUser"), {
   ssr: false,
 });
-const Users = dynamic(() => import("../../components/admin/Users"), {
+const Users = dynamic(() => import("../../components/admin/user/Users"), {
   ssr: false,
 });
 
 const UsersPage: NextPage = () => {
-  const [addUser, setAddUser] = useState(false);
+  const [addMode, setAddMode] = useState(false);
   return (
     <>
       <Head>
         <title>Management - Users</title>
       </Head>
       <AdminView>
-        {addUser ? (
-          <AddUser addUser={addUser} setAddUser={setAddUser} />
+        {addMode ? (
+          <AddUser addMode={addMode} setAddMode={setAddMode} />
         ) : (
-          <Users addUser={addUser} setAddUser={setAddUser} />
+          <Users addMode={addMode} setAddMode={setAddMode} />
         )}
       </AdminView>
     </>

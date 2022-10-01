@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { RoleCheck } from "../components/RoleCheck";
@@ -12,7 +13,7 @@ const SignInForm = dynamic(() => import("../components/signin/SignInForm"));
 
 const SignInPage: NextPage = () => {
   const role = useRoleContext();
-  const [confirm, setConfirm] = useState(false);
+  const [confirmMode, setConfirmMode] = useState(false);
   const [hash, setHash] = useState<Hash>({
     email: "",
     hash: "",
@@ -29,17 +30,23 @@ const SignInPage: NextPage = () => {
             <div className="w-full min-w-fit h-fit space-y-5 max-w-xl bg-white flex flex-col justify-center pb-10 pt-5 rounded-xl drop-shadow-2xl">
               <Link href="/">
                 <div className="flex flex-row mx-2 self-center items-center text-center cursor-pointer select-none hover:bg-green-50 hover:text-green-900 max-w-fit p-2 rounded-md">
-                  <img className="w-24 mr-5" src="/logo.svg" alt="logo" />
+                  <Image
+                    width={96}
+                    height={96}
+                    className="mr-5"
+                    src="/logo.svg"
+                    alt="logo"
+                  />
                   <div className="flex flex-col  ">
                     <h1 className="text-2xl">Medidas Medical Center</h1>
                     <h3 className="text-lg">Valencia City, Bukidnon</h3>
                   </div>
                 </div>
               </Link>
-              {confirm ? (
+              {confirmMode ? (
                 <OtpForm email={hash.email} hash={hash.hash} />
               ) : (
-                <SignInForm setConfirm={setConfirm} setHash={setHash} />
+                <SignInForm setConfirmMode={setConfirmMode} setHash={setHash} />
               )}
             </div>
           </div>

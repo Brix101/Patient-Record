@@ -5,10 +5,10 @@ import { Hash } from "../../types/next-auth";
 import { trpc } from "../../utils/trpc";
 
 function SignInForm({
-  setConfirm,
+  setConfirmMode,
   setHash,
 }: {
-  setConfirm: Dispatch<SetStateAction<boolean>>;
+  setConfirmMode: Dispatch<SetStateAction<boolean>>;
   setHash: Dispatch<SetStateAction<Hash>>;
 }) {
   const { handleSubmit, register } = useForm<requestOtpInput>();
@@ -16,7 +16,7 @@ function SignInForm({
   const { mutate, error, isLoading } = trpc.useMutation(["users.request-otp"], {
     onSuccess: ({ hash, email }) => {
       if (email && hash) {
-        setConfirm(true);
+        setConfirmMode(true);
         setHash({ email, hash });
       }
     },
