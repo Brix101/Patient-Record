@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ChevronsLeft, Menu } from "react-feather";
 
 function Sidebar({ children }: { children?: React.ReactNode | null }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -20,20 +21,7 @@ function Sidebar({ children }: { children?: React.ReactNode | null }) {
                 className="p-1 mr-4 hover:bg-green-200 rounded-md"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="black"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
+                {sidebarOpen ? <ChevronsLeft size={24} /> : <Menu size={24} />}
               </button>
             </div>
           </div>
