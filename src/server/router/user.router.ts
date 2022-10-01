@@ -5,6 +5,7 @@ import {
   confirmOtpSchema,
   createUserSchema,
   requestOtpSchema,
+  searchUserSchema,
 } from "../../schema/user.schema";
 import { decode, encode } from "../../utils/base64";
 import { generateOtp } from "../../utils/otp";
@@ -151,7 +152,9 @@ export const usersRouter = createRouter()
     },
   })
   .query("all-users", {
-    async resolve({ ctx }) {
+    input: searchUserSchema,
+    async resolve({ ctx, input }) {
+      const { name } = input;
       if (ctx.session) {
         const email = ctx.session.user?.email;
 
@@ -162,8 +165,13 @@ export const usersRouter = createRouter()
             },
           });
 
-          if (user?.role === Role.ADMIN) {
+          if (user?.role === Role.ADMIN && input) {
             const users = await ctx.prisma.user.findMany({
+              where: {
+                name: {
+                  contains: name ? name : "",
+                },
+              },
               include: {
                 Physician: true,
               },

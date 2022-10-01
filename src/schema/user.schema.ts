@@ -35,8 +35,14 @@ export const confirmOtpSchema = z.object({
   hash: z.string(),
 });
 
-export type confirmOtpInput = z.TypeOf<typeof confirmOtpSchema>;
+export type ConfirmOtpInput = z.TypeOf<typeof confirmOtpSchema>;
 
 export const verifyOtpSchema = z.object({
   hash: z.string(),
 });
+
+export const searchUserSchema = z.object({
+  name: z.string(),
+});
+
+export type SearchUserInput = z.TypeOf<typeof searchUserSchema>;
