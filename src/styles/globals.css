@@ -23,3 +23,35 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #86efac;
 }
+
+.linear-activity {
+  overflow: hidden;
+  margin: 20px auto;
+}
+
+.indeterminate {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.indeterminate:after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #22c55e;
+  animation: indeterminate_second 1.5s infinite ease-in;
+}
+
+@keyframes indeterminate_second {
+  0% {
+    left: -150%;
+    width: 100%;
+  }
+  100% {
+    left: 100%;
+    width: 10%;
+  }
+}
