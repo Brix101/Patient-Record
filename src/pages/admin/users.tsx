@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useState } from "react";
 import AdminView from "../../components/admin/AdminView";
-import { trpc } from "../../utils/trpc";
 
 const AddUser = dynamic(() => import("../../components/admin/AddUser"), {
   ssr: false,

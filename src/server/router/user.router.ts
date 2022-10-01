@@ -17,7 +17,8 @@ export const usersRouter = createRouter()
     resolve: async ({ input, ctx }) => {
       const {
         email,
-        name,
+        firstName,
+        lastName,
         role,
         image,
         gender,
@@ -32,7 +33,8 @@ export const usersRouter = createRouter()
         const user = await ctx.prisma.user.create({
           data: {
             email,
-            name,
+            firstName,
+            lastName,
             role: Role[role as keyof typeof Role],
             image,
             gender,
@@ -85,6 +87,12 @@ export const usersRouter = createRouter()
         throw new trpc.TRPCError({
           code: "NOT_FOUND",
           message: "User Not Found",
+        });
+      }
+      if (user.disabled) {
+        throw new trpc.TRPCError({
+          code: "FORBIDDEN",
+          message: "Account disabled please contact the adminstrator",
         });
       }
 
@@ -168,9 +176,10 @@ export const usersRouter = createRouter()
           if (user?.role === Role.ADMIN && input) {
             const users = await ctx.prisma.user.findMany({
               where: {
-                name: {
-                  contains: name ? name : "",
-                },
+                OR: [
+                  { firstName: { contains: name ? name : "" } },
+                  { lastName: { contains: name ? name : "" } },
+                ],
               },
               include: {
                 Physician: true,

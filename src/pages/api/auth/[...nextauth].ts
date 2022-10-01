@@ -22,11 +22,20 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
       },
       async authorize(credentials, req) {
-        const user = await prisma.user.findUnique({
+        const _user = await prisma.user.findUnique({
           where: {
             email: credentials?.email,
           },
         });
+
+        const user = {
+          id: _user?.id,
+          name: _user?.firstName + " " + _user?.lastName,
+          image: _user?.image,
+          role: _user?.role,
+          email: _user?.email,
+        };
+
         if (user) {
           return user;
         } else {

@@ -2,7 +2,8 @@ import { Role } from "@prisma/client";
 import z from "zod";
 
 export const createUserSchema = z.object({
-  name: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
   email: z.string().email(),
   role: z.nativeEnum(Role),
   image: z.string().nullable(),

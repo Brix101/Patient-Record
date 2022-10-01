@@ -6,7 +6,7 @@ import AdminView from "../../components/admin/AdminView";
 const ManagementPage: NextPage = () => {
   const { data } = useSession();
 
-  console.log(data?.user?.id);
+  console.log(data?.user);
   return (
     <>
       <Head>

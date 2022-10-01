@@ -48,16 +48,16 @@ function AddUser({
 
   return (
     <>
-      <div className="h-20 w-full flex items-start justify-end pt-2 px-5">
-        <button
-          type="button"
-          className="rounded-lg border border-transparent bg-green-600 py-2.5 px-5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          onClick={() => setAddUser(!addUser)}
-        >
-          View User
-        </button>
-      </div>
       <div className="shadow sm:overflow-hidden sm:rounded-md  p-5 mx-5">
+        <div className="h-20 w-full flex items-start justify-end pt-2 px-5">
+          <button
+            type="button"
+            className="rounded-lg border border-transparent bg-green-600 py-2.5 px-5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            onClick={() => setAddUser(!addUser)}
+          >
+            View User
+          </button>
+        </div>
         {error && (
           <div
             className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
@@ -80,46 +80,88 @@ function AddUser({
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="col-span-1 space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                Name
-              </label>
-              <input
-                type="text"
-                autoComplete="name"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                placeholder="Name"
-                {...register("name")}
-              />
+            <div className="grid grid-cols-2 gap-2 items-end">
+              <div>
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="First Name"
+                  {...register("firstName")}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="Last Name"
+                  {...register("lastName")}
+                />
+              </div>
             </div>
-            <div>
-              <label className="bloc text-sm font-medium text-gray-900 dark:text-gray-300">
-                Email
-              </label>
-              <input
-                type="email"
-                autoComplete="email"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                placeholder="john.doe@example.com"
-                {...register("email")}
-              />
+            <div className="grid grid-cols-2 gap-2 items-end">
+              <div>
+                <label className="bloc text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  autoComplete="email"
+                  required
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="john.doe@example.com"
+                  {...register("email")}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Mobile Number
+                </label>
+                <input
+                  type="text"
+                  autoComplete="mobile"
+                  required
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="Mobile"
+                  {...register("mobile")}
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                Mobile Number
-              </label>
-              <input
-                type="text"
-                autoComplete="mobile"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                placeholder="Mobile"
-                {...register("mobile")}
-              />
+            <div className="grid grid-cols-2 gap-2 items-end">
+              <div>
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  {...register("gender")}
+                >
+                  <option value="" selected disabled hidden>
+                    Gender
+                  </option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Birthdate
+                </label>
+                <DatePicker
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  selected={startDate}
+                  onChange={(date: Date) => setStartDate(date)}
+                />
+              </div>
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                 Address
@@ -134,34 +176,6 @@ function AddUser({
             </div>
           </div>
           <div className="col-span-1 space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                Gender
-              </label>
-              <select
-                id="gender"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                {...register("gender")}
-              >
-                <option value="" selected disabled hidden>
-                  Gender
-                </option>
-                <option value="MALE">Male</option>
-                <option value="FEMALE">Female</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                Birthdate
-              </label>
-              <DatePicker
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                selected={startDate}
-                onChange={(date: Date) => setStartDate(date)}
-              />
-            </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                 User Role
@@ -222,7 +236,7 @@ function AddUser({
                 />
               </div>
             </>
-            <div className="bg-gray-50 py-3 text-right">
+            <div className="py-3 text-right">
               <button
                 type="submit"
                 className={`inline-flex justify-center

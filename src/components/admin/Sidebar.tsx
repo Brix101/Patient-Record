@@ -1,5 +1,4 @@
-import Link from "next/link";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 
 function Sidebar({
   sidebarOpen,
@@ -7,7 +6,6 @@ function Sidebar({
 }: {
   sidebarOpen: boolean;
   children?: React.ReactNode | null;
-  // setSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
     <>
@@ -16,7 +14,7 @@ function Sidebar({
           !sidebarOpen && "-ml-64"
         }`}
       >
-        <div className="h-full  bg-green-400">
+        <div className="h-full  bg-green-500">
           <div className="w-full h-12 bg-green-50" />
           {children}
         </div>

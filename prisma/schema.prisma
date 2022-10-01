@@ -17,7 +17,8 @@ model Example {
 
 model User {
     id        Int         @id @default(autoincrement())
-    name      String?
+    firstName String?
+    lastName  String?
     email     String?     @unique
     role      Role        @default(ADMIN)
     image     String?
@@ -25,6 +26,7 @@ model User {
     birthday  DateTime?
     address   String?
     mobile    String?
+    disabled  Boolean     @default(false)
     createAt  DateTime    @default(now())
     updateAt  DateTime    @updatedAt
     Otp       Otp[]
