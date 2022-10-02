@@ -1,10 +1,10 @@
 import { useAppSelector } from "@app/hook";
-import PrimaryLoaderButton from "@components/buttons/PrimaryLoaderButton";
+import PrimaryButton from "@components/buttons/PrimaryButton";
+import { signinState } from "@features/signin/signinSlice";
 import { ConfirmOtpInput } from "@schema/user.schema";
 import { trpc } from "@utils/trpc";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
-import { signinState } from "./signinSlice";
 
 function ConfirmOtpForm() {
   const { email, hash } = useAppSelector(signinState);
@@ -62,14 +62,14 @@ function ConfirmOtpForm() {
           </div>
         </div>
         <div>
-          <PrimaryLoaderButton
+          <PrimaryButton
             className="w-full"
             type="submit"
             isLoading={isLoading}
             isSuccess={isSuccess}
           >
             Continue
-          </PrimaryLoaderButton>
+          </PrimaryButton>
         </div>
       </form>
     </>

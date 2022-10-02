@@ -1,28 +1,31 @@
 import React from "react";
 
-function PrimaryLoaderButton({
+function PrimaryButton({
   isLoading = false,
   isSuccess = false,
   className,
   children,
   type,
+  onClick,
 }: {
-  isLoading: boolean;
-  isSuccess: boolean;
+  isLoading?: boolean;
+  isSuccess?: boolean;
   className?: string;
   children: React.ReactNode;
-  type?: "button" | "submit" | "reset" | undefined;
+  type?: "button" | "submit" | "reset";
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) {
   return (
     <button
       type={type}
-      className={`inline-flex justify-center ${className}
+      className={`inline-flex justify-center p-2 h-11 items-center ${className}
   ${
     isLoading || isSuccess
-      ? " text-white bg-green-400 dark:bg-green-500 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-      : " rounded-lg border border-transparent bg-green-600 py-2.5 px-5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+      ? " text-white bg-green-400 dark:bg-green-500 cursor-not-allowed font-medium rounded-lg text-sm text-center"
+      : " rounded-lg border border-transparent bg-green-600 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
   }`}
       disabled={isLoading || isSuccess}
+      onClick={onClick}
     >
       {isLoading || isSuccess ? (
         <svg
@@ -48,4 +51,4 @@ function PrimaryLoaderButton({
   );
 }
 
-export default PrimaryLoaderButton;
+export default PrimaryButton;

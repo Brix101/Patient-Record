@@ -1,9 +1,9 @@
 import { useAppDispatch } from "@app/hook";
-import PrimaryLoaderButton from "@components/buttons/PrimaryLoaderButton";
+import PrimaryButton from "@components/buttons/PrimaryButton";
+import { confirmMode } from "@features/signin/signinSlice";
 import { RequestOtpInput } from "@schema/user.schema";
 import { trpc } from "@utils/trpc";
 import { useForm } from "react-hook-form";
-import { confirmMode } from "./signinSlice";
 
 function SignInForm() {
   const dispatch = useAppDispatch();
@@ -53,14 +53,14 @@ function SignInForm() {
           </div>
         </div>
         <div>
-          <PrimaryLoaderButton
+          <PrimaryButton
             className="w-full"
             type="submit"
             isLoading={isLoading}
             isSuccess={isSuccess}
           >
             Sign In
-          </PrimaryLoaderButton>
+          </PrimaryButton>
         </div>
         <div className="bg-green-50 py-2 px-5 rounded-md text-center">
           <span className=" text-gray-700 text-md">

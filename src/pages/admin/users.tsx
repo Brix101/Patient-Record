@@ -1,29 +1,31 @@
+import { useAppSelector } from "@/app/hook";
+import { usersState } from "@/features/users/usersSlice";
 import AdminView from "@components/admin/AdminView";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useState } from "react";
 
-const AddUser = dynamic(() => import("@components/admin/user/AddUser"), {
+const AddUser = dynamic(() => import("@features/users/AddUser"), {
   ssr: false,
 });
-const Users = dynamic(() => import("@components/admin/user/Users"), {
+const ViewUsers = dynamic(() => import("@features/users/ViewUsers"), {
+  ssr: false,
+});
+const EditUser = dynamic(() => import("@features/users/EditUser"), {
   ssr: false,
 });
 
 const UsersPage: NextPage = () => {
-  const [addMode, setAddMode] = useState(false);
+  const { mode } = useAppSelector(usersState);
   return (
     <>
       <Head>
         <title>Management - Users</title>
       </Head>
       <AdminView>
-        {addMode ? (
-          <AddUser addMode={addMode} setAddMode={setAddMode} />
-        ) : (
-          <Users addMode={addMode} setAddMode={setAddMode} />
-        )}
+        {mode === "View" && <ViewUsers />}
+        {mode === "Add" && <AddUser />}
+        {mode === "Edit" && <EditUser />}
       </AdminView>
     </>
   );
