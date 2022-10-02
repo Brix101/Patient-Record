@@ -2,7 +2,7 @@ import GenericInput from "@/components/inputs/GenericInput";
 import { useAppDispatch } from "@app/hook";
 import PrimaryButton from "@components/buttons/PrimaryButton";
 import { confirmMode } from "@features/signin/signinSlice";
-import { RequestOtpInput } from "@schema/user.schema";
+import { RequestOtpInput } from "@schema/auth.schema";
 import { trpc } from "@utils/trpc";
 import { useForm } from "react-hook-form";
 

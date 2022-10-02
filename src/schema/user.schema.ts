@@ -22,28 +22,28 @@ export const createUserOutputSchema = z.object({
   image: z.string(),
 });
 
-export type CreateUserInput = z.TypeOf<typeof createUserSchema>;
-
-export const requestOtpSchema = z.object({
-  email: z.string().email(),
-});
-
-export type RequestOtpInput = z.TypeOf<typeof requestOtpSchema>;
-
-export const confirmOtpSchema = z.object({
-  email: z.string().email(),
-  otp: z.string(),
-  hash: z.string(),
-});
-
-export type ConfirmOtpInput = z.TypeOf<typeof confirmOtpSchema>;
-
-export const verifyOtpSchema = z.object({
-  hash: z.string(),
-});
-
 export const searchUserSchema = z.object({
   name: z.string(),
 });
 
+export const updateUserSchema = z.object({
+  id: z.number(),
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email(),
+  role: z.nativeEnum(Role),
+  image: z.string().nullable(),
+  gender: z.string(),
+  birthday: z.date(),
+  address: z.string().nullable(),
+  mobile: z.string().nullable(),
+  expertise: z.string().nullable(),
+  licenseNumber: z.string().nullable(),
+  disabled: z.boolean(),
+});
+
+export type CreateUserInput = z.TypeOf<typeof createUserSchema>;
+
 export type SearchUserInput = z.TypeOf<typeof searchUserSchema>;
+
+export type UpdateUserInput = z.TypeOf<Omit<typeof updateUserSchema, "id">>;

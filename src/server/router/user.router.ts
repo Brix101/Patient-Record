@@ -1,6 +1,10 @@
 import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import { createUserSchema, searchUserSchema } from "@schema/user.schema";
+import {
+  createUserSchema,
+  searchUserSchema,
+  updateUserSchema,
+} from "@schema/user.schema";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 
@@ -23,45 +27,30 @@ export const usersRouter = createProtectedRouter()
       } = input;
 
       try {
-        if (role === "PHYSICIAN") {
-          const user = await ctx.prisma.user.create({
-            data: {
-              email,
-              firstName,
-              lastName,
-              role,
-              image,
-              gender,
-              address,
-              birthday,
-              mobile,
-              Physician: {
-                create: {
-                  expertise,
-                  licenseNumber,
-                },
-              },
-            },
-          });
+        const user = await ctx.prisma.user.create({
+          data: {
+            email,
+            firstName,
+            lastName,
+            role,
+            image,
+            gender,
+            address,
+            birthday,
+            mobile,
+            Physician:
+              role === "PHYSICIAN"
+                ? {
+                    create: {
+                      expertise,
+                      licenseNumber,
+                    },
+                  }
+                : undefined,
+          },
+        });
 
-          return user;
-        } else {
-          const user = await ctx.prisma.user.create({
-            data: {
-              email,
-              firstName,
-              lastName,
-              role,
-              image,
-              gender,
-              address,
-              birthday,
-              mobile,
-            },
-          });
-
-          return user;
-        }
+        return user;
       } catch (e) {
         console.log(e);
         if (e instanceof PrismaClientKnownRequestError) {
@@ -142,5 +131,70 @@ export const usersRouter = createProtectedRouter()
         }
       }
       return null;
+    },
+  })
+  .mutation("update-user", {
+    input: updateUserSchema,
+    resolve: async ({ input, ctx }) => {
+      console.log(input);
+      const {
+        id,
+        email,
+        firstName,
+        lastName,
+        role,
+        image,
+        gender,
+        address,
+        birthday,
+        mobile,
+        expertise,
+        licenseNumber,
+        disabled,
+      } = input;
+
+      console.log(disabled);
+      try {
+        const user = await ctx.prisma.user.update({
+          where: {
+            id: id,
+          },
+          data: {
+            email,
+            firstName,
+            lastName,
+            role,
+            image,
+            gender,
+            address,
+            birthday,
+            mobile,
+            disabled,
+            Physician:
+              role === "PHYSICIAN"
+                ? {
+                    create: {
+                      expertise,
+                      licenseNumber,
+                    },
+                  }
+                : undefined,
+          },
+        });
+        return user;
+      } catch (e) {
+        // if (e instanceof PrismaClientKnownRequestError) {
+        //   if (e.code === "P2002") {
+        //     throw new trpc.TRPCError({
+        //       code: "CONFLICT",
+        //       message: "User already exists",
+        //     });
+        //   }
+        // }
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
     },
   });

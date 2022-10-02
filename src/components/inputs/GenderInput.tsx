@@ -1,23 +1,38 @@
-import React from "react";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import * as React from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 function Gender({ register }: { register: UseFormRegisterReturn<any> }) {
+  const [gender, setGender] = React.useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setGender(event.target.value);
+  };
   return (
     <div>
       <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
         Gender
       </label>
-      <select
-        id="gender"
-        className="block w-full h-10 rounded-md border bg-white border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-        {...register}
-      >
-        <option value="" selected disabled hidden>
-          Gender
-        </option>
-        <option value="MALE">Male</option>
-        <option value="FEMALE">Female</option>
-      </select>
+      <FormControl sx={{ width: "100%", maxHeight: "40px" }}>
+        <Select
+          displayEmpty
+          inputProps={{ "aria-label": "Without label" }}
+          sx={{
+            maxHeight: "40px",
+            "&:before": {
+              borderColor: "red",
+            },
+          }}
+          {...register}
+          placeholder="Gender"
+          required
+        >
+          <MenuItem value={"MALE"}>Male</MenuItem>
+          <MenuItem value={"FEMALE"}>Female</MenuItem>
+        </Select>
+      </FormControl>
     </div>
   );
 }

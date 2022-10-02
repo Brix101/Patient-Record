@@ -1,14 +1,9 @@
-import { Role } from "@prisma/client";
-import { trpc } from "@utils/trpc";
+import Test from "@/components/Test";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
 const Home: NextPage = () => {
-  const { data, isLoading } = trpc.useQuery(["users.me"]);
-  if (data?.role) {
-    console.log(Role[data?.role as keyof typeof Role]);
-  }
   return (
     <>
       <Head>
@@ -105,6 +100,10 @@ const Home: NextPage = () => {
             </div>
           </div>
         </nav>
+
+        <div className="w-full h-full bg-gray-300 flex justify-center items-center">
+          <Test />
+        </div>
       </main>
     </>
   );

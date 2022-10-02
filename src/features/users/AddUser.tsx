@@ -43,7 +43,7 @@ function AddUser() {
     const physician = !isPhysician && { expertise: "", licenseNumber: "" };
     mutate({
       ...values,
-      image: "/user.svg",
+      image: `/${values.gender.toLowerCase()}_pic.svg`,
       birthday: startDate,
       ...physician,
     });
@@ -154,27 +154,12 @@ function AddUser() {
               </select>
             </div>
             <>
-              <div>
-                <label
-                  className={`block text-sm font-medium  dark:text-gray-300 ${
-                    isPhysician ? "text-gray-900" : "text-gray-200"
-                  }`}
-                >
-                  License NUmber
-                </label>
-                <input
-                  type="text"
-                  required
-                  className={`border mt-1 ${
-                    isPhysician
-                      ? "border-gray-300"
-                      : "bg-white border border-gray-100 placeholder:text-gray-200"
-                  } block w-full  bg-white h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm`}
-                  placeholder="License Number"
-                  {...register("licenseNumber")}
-                  disabled={!isPhysician}
-                />
-              </div>
+              <PhysicianInput
+                enable={isPhysician}
+                placeHolder="License Number"
+                label="License Number"
+                register={register("licenseNumber")}
+              />
               <PhysicianInput
                 enable={isPhysician}
                 placeHolder="Expertise"

@@ -10,6 +10,10 @@ export function makeStore() {
       signin: signinReducer,
       users: usersReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }),
   });
 }
 

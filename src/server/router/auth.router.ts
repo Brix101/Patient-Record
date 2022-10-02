@@ -1,4 +1,4 @@
-import { confirmOtpSchema, requestOtpSchema } from "@/schema/user.schema";
+import { confirmOtpSchema, requestOtpSchema } from "@/schema/auth.schema";
 import { createRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 import { decode, encode } from "@utils/base64";

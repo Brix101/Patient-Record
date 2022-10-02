@@ -1,7 +1,7 @@
 import React from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
-function GenericInput({
+function PhysicianInput({
   label,
   placeHolder,
   register,
@@ -41,4 +41,4 @@ function GenericInput({
   );
 }
 
-export default GenericInput;
+export default PhysicianInput;

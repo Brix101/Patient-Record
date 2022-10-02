@@ -1,6 +1,5 @@
 import { useAppSelector } from "@app/hook";
 import { RoleCheck } from "@components/RoleCheck";
-import { useRoleContext } from "@context/role.context";
 import { signinState } from "@features/signin/signinSlice";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -12,7 +11,6 @@ const ConfirmOtpForm = dynamic(() => import("@features/signin/ConfirmOtpForm"));
 const SignInForm = dynamic(() => import("@features/signin/SignInForm"));
 
 const SignInPage: NextPage = () => {
-  const role = useRoleContext();
   const { confirm } = useAppSelector(signinState);
 
   return (
@@ -20,7 +18,7 @@ const SignInPage: NextPage = () => {
       <Head>
         <title>Sign In</title>
       </Head>
-      <RoleCheck check={role ? true : false}>
+      <RoleCheck>
         <main className="h-screen w-full bg-green-100">
           <div className="flex min-h-full justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full min-w-fit h-fit space-y-5 max-w-xl bg-white flex flex-col justify-center pb-10 pt-5 rounded-xl drop-shadow-2xl">

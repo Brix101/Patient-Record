@@ -2,7 +2,7 @@ import GenericInput from "@/components/inputs/GenericInput";
 import { useAppSelector } from "@app/hook";
 import PrimaryButton from "@components/buttons/PrimaryButton";
 import { signinState } from "@features/signin/signinSlice";
-import { ConfirmOtpInput } from "@schema/user.schema";
+import { ConfirmOtpInput } from "@schema/auth.schema";
 import { trpc } from "@utils/trpc";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
