@@ -1,11 +1,11 @@
 import React from "react";
 import { ChevronsLeft, Menu } from "react-feather";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
-import { sideBarState, toggleSideBar } from "./sideBarSlice";
+import { sidebarState, toggleSideBar } from "./sidebarSlice";
 
 function Sidebar({ children }: { children?: React.ReactNode | null }) {
   const dispatch = useAppDispatch();
-  const { open } = useAppSelector(sideBarState);
+  const { open } = useAppSelector(sidebarState);
   return (
     <>
       <div

@@ -3,21 +3,19 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useAppSelector } from "../app/hook";
 import { RoleCheck } from "../components/RoleCheck";
 import { useRoleContext } from "../context/role.context";
-import { Hash } from "../types/next-auth";
+import { signinState } from "../features/signin/signinSlice";
 
-const OtpForm = dynamic(() => import("../components/signin/ConfirmOtpForm"));
-const SignInForm = dynamic(() => import("../components/signin/SignInForm"));
+const ConfirmOtpForm = dynamic(
+  () => import("../features/signin/ConfirmOtpForm")
+);
+const SignInForm = dynamic(() => import("../features/signin/SignInForm"));
 
 const SignInPage: NextPage = () => {
   const role = useRoleContext();
-  const [confirmMode, setConfirmMode] = useState(false);
-  const [hash, setHash] = useState<Hash>({
-    email: "",
-    hash: "",
-  });
+  const { confirm } = useAppSelector(signinState);
 
   return (
     <>
@@ -43,11 +41,7 @@ const SignInPage: NextPage = () => {
                   </div>
                 </div>
               </Link>
-              {confirmMode ? (
-                <OtpForm email={hash.email} hash={hash.hash} />
-              ) : (
-                <SignInForm setConfirmMode={setConfirmMode} setHash={setHash} />
-              )}
+              {confirm ? <ConfirmOtpForm /> : <SignInForm />}
             </div>
           </div>
         </main>

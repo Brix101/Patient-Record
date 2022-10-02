@@ -1,10 +1,12 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import sideBarReducer from "../features/sideBar/sideBarSlice";
+import sidebarReducer from "../features/sideBar/sidebarSlice";
+import signinReducer from "../features/signin/signinSlice";
 
 export function makeStore() {
   return configureStore({
     reducer: {
-      sideBar: sideBarReducer,
+      sidebar: sidebarReducer,
+      signin: signinReducer,
     },
   });
 }
