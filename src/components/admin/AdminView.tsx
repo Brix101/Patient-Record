@@ -1,10 +1,10 @@
 import Link from "next/link";
 import React from "react";
 import { Clipboard, Columns, Server, User, Users } from "react-feather";
+import Sidebar from "../../features/sideBar/Sidebar";
 import AccountButton from "../buttons/AccountButton";
 import SideBarButton from "../buttons/SideBarButton";
 import { RoleCheck } from "../RoleCheck";
-import Sidebar from "./Sidebar";
 
 function AdminView({ children }: { children?: React.ReactNode }) {
   return (

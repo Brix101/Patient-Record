@@ -5,7 +5,9 @@ import { withTRPC } from "@trpc/next";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
+import { Provider } from "react-redux";
 import superjson from "superjson";
+import store from "../app/store";
 import { RoleContextProvider } from "../context/role.context";
 import type { AppRouter } from "../server/router";
 import "../styles/globals.css";
@@ -19,9 +21,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
-      <RoleContextProvider value={data?.role.toLowerCase()}>
-        <Component {...pageProps} />
-      </RoleContextProvider>
+      <Provider store={store}>
+        <RoleContextProvider value={data?.role.toLowerCase()}>
+          <Component {...pageProps} />
+        </RoleContextProvider>
+      </Provider>
     </SessionProvider>
   );
 };
