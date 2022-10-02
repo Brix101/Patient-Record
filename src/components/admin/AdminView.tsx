@@ -1,10 +1,10 @@
+import ProfileButton from "@components/buttons/ProfileButton";
+import SideBarButton from "@components/buttons/SideBarButton";
+import { RoleCheck } from "@components/RoleCheck";
+import Sidebar from "@features/sideBar/Sidebar";
 import Link from "next/link";
 import React from "react";
 import { Clipboard, Columns, Server, User, Users } from "react-feather";
-import Sidebar from "../../features/sideBar/Sidebar";
-import AccountButton from "../buttons/AccountButton";
-import SideBarButton from "../buttons/SideBarButton";
-import { RoleCheck } from "../RoleCheck";
 
 function AdminView({ children }: { children?: React.ReactNode }) {
   return (
@@ -17,7 +17,7 @@ function AdminView({ children }: { children?: React.ReactNode }) {
               <h3 className="text-xs">Valencia City, Bukidnon</h3>
             </div>
           </Link>
-          <AccountButton />
+          <ProfileButton />
         </header>
         <div className="flex h-full ">
           <Sidebar>

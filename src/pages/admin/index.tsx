@@ -6,7 +6,7 @@ import Head from "next/head";
 const ManagementPage: NextPage = () => {
   const session = useSession();
 
-  // console.log(session.data);
+  console.log(session.data);
   return (
     <>
       <Head>

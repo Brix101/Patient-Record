@@ -1,3 +1,4 @@
+import GenericInput from "@/components/inputs/GenericInput";
 import { useAppSelector } from "@app/hook";
 import PrimaryButton from "@components/buttons/PrimaryButton";
 import { signinState } from "@features/signin/signinSlice";
@@ -49,18 +50,13 @@ function ConfirmOtpForm() {
             <span className="font-medium">{error.message}</span>
           </div>
         )}
-        <div>
-          <label className="block text-sm font-medium text-grey-700">OTP</label>
-          <div className="relative mt-1 rounded-md shadow-sm ">
-            <input
-              type="text"
-              className="block w-full h-10 rounded-md border  border-green-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-              placeholder="OTP"
-              required
-              {...register("otp")}
-            />
-          </div>
-        </div>
+        <GenericInput
+          label="OTP"
+          type="text"
+          placeHolder="OTP"
+          required
+          register={register("otp")}
+        />
         <div>
           <PrimaryButton
             className="w-full"

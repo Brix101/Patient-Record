@@ -1,6 +1,9 @@
 import { useAppDispatch } from "@/app/hook";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
+import GenderInput from "@components/inputs/GenderInput";
+import GenericInput from "@components/inputs/GenericInput";
+import PhysicianInput from "@components/inputs/PhysicianInput";
 import { setUsersMode } from "@features/users/usersSlice";
 import { Role } from "@prisma/client";
 import { CreateUserInput } from "@schema/user.schema";
@@ -37,7 +40,7 @@ function AddUser() {
   );
 
   function onSubmit(values: CreateUserInput) {
-    const physician = !isPhysician && { expertes: "", licenseNUmber: "" };
+    const physician = !isPhysician && { expertise: "", licenseNumber: "" };
     mutate({
       ...values,
       image: "/user.svg",
@@ -80,99 +83,58 @@ function AddUser() {
         >
           <div className="col-span-1 space-y-3">
             <div className="grid grid-cols-2 gap-2 items-end">
-              <div>
-                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="First Name"
-                  {...register("firstName")}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="Last Name"
-                  {...register("lastName")}
-                />
-              </div>
+              <GenericInput
+                label="First Name"
+                type="text"
+                placeHolder="First Name"
+                required
+                register={register("firstName")}
+              />
+              <GenericInput
+                label="Last Name"
+                type="text"
+                placeHolder="Last Name"
+                required
+                register={register("lastName")}
+              />
             </div>
             <div className="grid grid-cols-2 gap-2 items-end">
-              <div>
-                <label className="bloc text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="john.doe@example.com"
-                  {...register("email")}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Mobile Number
-                </label>
-                <input
-                  type="text"
-                  autoComplete="mobile"
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="Mobile"
-                  {...register("mobile")}
-                />
-              </div>
+              <GenericInput
+                label="Email"
+                type="email"
+                placeHolder="name@example.com"
+                required
+                register={register("email")}
+              />
+              <GenericInput
+                label="Mobile Number"
+                type="text"
+                placeHolder="Mobile"
+                required
+                register={register("mobile")}
+              />
             </div>
             <div className="grid grid-cols-2 gap-2 items-end">
-              <div>
-                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Gender
-                </label>
-                <select
-                  id="gender"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  {...register("gender")}
-                >
-                  <option value="" selected disabled hidden>
-                    Gender
-                  </option>
-                  <option value="MALE">Male</option>
-                  <option value="FEMALE">Female</option>
-                </select>
-              </div>
+              <GenderInput register={register("gender")} />
               <div>
                 <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                   Birthdate
                 </label>
                 <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
                   selected={startDate}
                   onChange={(date: Date) => setStartDate(date)}
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                Address
-              </label>
-              <input
-                type="text"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                placeholder="Address"
-                {...register("address")}
-              />
-            </div>
+
+            <GenericInput
+              label="Address"
+              type="text"
+              placeHolder="Address"
+              required
+              register={register("address")}
+            />
           </div>
           <div className="col-span-1 space-y-3">
             <div>
@@ -181,7 +143,7 @@ function AddUser() {
               </label>
               <select
                 id="role"
-                className="bg-gray-50 border mt-2 border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                className="block w-full mt-1 bg-white h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
                 {...register("role")}
                 onChange={(e) => setPhysician(e.target.value === "PHYSICIAN")}
               >
@@ -203,43 +165,27 @@ function AddUser() {
                 <input
                   type="text"
                   required
-                  className={`border ${
+                  className={`border mt-1 ${
                     isPhysician
-                      ? "bg-gray-50 border-gray-300"
+                      ? "border-gray-300"
                       : "bg-white border border-gray-100 placeholder:text-gray-200"
-                  } text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500`}
+                  } block w-full  bg-white h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm`}
                   placeholder="License Number"
-                  {...register("licenseNUmber")}
+                  {...register("licenseNumber")}
                   disabled={!isPhysician}
                 />
               </div>
-              <div>
-                <label
-                  className={`block text-sm font-medium  dark:text-gray-300 ${
-                    isPhysician ? "text-gray-900" : "text-gray-200"
-                  }`}
-                >
-                  Expertise
-                </label>
-                <input
-                  type="text"
-                  required
-                  className={`border ${
-                    isPhysician
-                      ? "bg-gray-50 border-gray-300"
-                      : "bg-white border border-gray-100 placeholder:text-gray-200"
-                  } text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500`}
-                  placeholder="Expertise"
-                  {...register("expertes")}
-                  disabled={!isPhysician}
-                />
-              </div>
+              <PhysicianInput
+                enable={isPhysician}
+                placeHolder="Expertise"
+                label="Expertise"
+                register={register("expertise")}
+              />
             </>
             <div className="py-3 text-right">
               <PrimaryButton
                 className="w-1/2"
                 isLoading={isLoading}
-                isSuccess={isSuccess}
                 type="submit"
               >
                 Register

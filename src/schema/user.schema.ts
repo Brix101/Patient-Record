@@ -11,8 +11,8 @@ export const createUserSchema = z.object({
   birthday: z.date(),
   address: z.string().nullable(),
   mobile: z.string().nullable(),
-  expertes: z.string().nullable(),
-  licenseNUmber: z.string().nullable(),
+  expertise: z.string().nullable(),
+  licenseNumber: z.string().nullable(),
 });
 
 export const createUserOutputSchema = z.object({

@@ -3,7 +3,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { Fragment } from "react";
 
-export default function AccountButton() {
+export default function ProfileButton() {
   const { data } = useSession();
   const userImage = data?.user?.image as string;
   const useAlt = data?.user?.name as string;

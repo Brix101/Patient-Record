@@ -1,7 +1,9 @@
 import { useAppDispatch } from "@/app/hook";
 import OutlinedButton from "@/components/buttons/OutlinedButton";
+import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { setUsersMode } from "@features/users/usersSlice";
 import React from "react";
+import { Edit, XSquare } from "react-feather";
 
 function EditUser() {
   const dispatch = useAppDispatch();
@@ -12,14 +14,11 @@ function EditUser() {
           <OutlinedButton
             onClick={() => dispatch(setUsersMode({ mode: "View" }))}
           >
-            Cancel
+            <XSquare size={24} />
           </OutlinedButton>
-          <button
-            type="button"
-            className="rounded-lg border border-transparent bg-green-600 py-2.5 px-5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          >
-            Update User
-          </button>
+          <PrimaryButton>
+            <Edit size={24} />
+          </PrimaryButton>
         </div>
         <form className="md:grid md:grid-cols-2 md:gap-6">
           <div className="col-span-1 space-y-3">

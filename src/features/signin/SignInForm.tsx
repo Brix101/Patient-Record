@@ -1,3 +1,4 @@
+import GenericInput from "@/components/inputs/GenericInput";
 import { useAppDispatch } from "@app/hook";
 import PrimaryButton from "@components/buttons/PrimaryButton";
 import { confirmMode } from "@features/signin/signinSlice";
@@ -38,20 +39,13 @@ function SignInForm() {
             <span className="font-medium">{error.message}</span>
           </div>
         )}
-        <div>
-          <label className="block text-sm font-medium text-grey-700">
-            Email
-          </label>
-          <div className="relative mt-1 rounded-md shadow-sm ">
-            <input
-              type="email"
-              className="block w-full h-10 rounded-md border  border-green-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-              placeholder="john.doe@example.com"
-              required
-              {...register("email")}
-            />
-          </div>
-        </div>
+        <GenericInput
+          label="Email"
+          type="email"
+          placeHolder="name@example.com"
+          required
+          register={register("email")}
+        />
         <div>
           <PrimaryButton
             className="w-full"

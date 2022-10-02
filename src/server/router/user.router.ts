@@ -18,41 +18,52 @@ export const usersRouter = createProtectedRouter()
         address,
         birthday,
         mobile,
-        expertes,
-        licenseNUmber,
+        expertise,
+        licenseNumber,
       } = input;
 
       try {
-        const user = await ctx.prisma.user.create({
-          data: {
-            email,
-            firstName,
-            lastName,
-            role: Role[role as keyof typeof Role],
-            image,
-            gender,
-            address,
-            birthday,
-            mobile,
-          },
-        });
-
-        if (role === Role.PHYSICIAN) {
-          await ctx.prisma.physician.create({
+        if (role === "PHYSICIAN") {
+          const user = await ctx.prisma.user.create({
             data: {
-              expertes,
-              licenseNUmber,
-              user: {
-                connect: {
-                  id: user.id,
+              email,
+              firstName,
+              lastName,
+              role,
+              image,
+              gender,
+              address,
+              birthday,
+              mobile,
+              Physician: {
+                create: {
+                  expertise,
+                  licenseNumber,
                 },
               },
             },
           });
-        }
 
-        return user;
+          return user;
+        } else {
+          const user = await ctx.prisma.user.create({
+            data: {
+              email,
+              firstName,
+              lastName,
+              role,
+              image,
+              gender,
+              address,
+              birthday,
+              mobile,
+            },
+          });
+
+          return user;
+        }
       } catch (e) {
+        console.log(e);
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === "P2002") {
             throw new trpc.TRPCError({
