@@ -2,16 +2,21 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 // Prisma adapter for NextAuth, optional and can be removed
+import { env } from "@env/server.mjs";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { env } from "../../../env/server.mjs";
-import { prisma } from "../../../server/db/client";
+import { prisma } from "@server/db/client";
 
 export const authOptions: NextAuthOptions = {
-  // callbacks: {
-  // async jwt({ token }) {
-  //   return token;
-  // },
-  // },
+  callbacks: {
+    async jwt({ token, user }) {
+      user && (token = { ...user });
+      return token;
+    },
+    async session({ session, token }) {
+      session = { expires: session.expires, user: { ...token } };
+      return session;
+    },
+  },
 
   adapter: PrismaAdapter(prisma),
   providers: [

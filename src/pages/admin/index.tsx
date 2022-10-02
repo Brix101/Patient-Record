@@ -4,9 +4,9 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 
 const ManagementPage: NextPage = () => {
-  const { data } = useSession();
+  const session = useSession();
 
-  console.log(data?.user);
+  // console.log(session.data);
   return (
     <>
       <Head>
