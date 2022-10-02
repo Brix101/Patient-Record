@@ -35,8 +35,6 @@ function Users({
     return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
   };
 
-  console.log(editMode);
-
   return (
     <>
       <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
