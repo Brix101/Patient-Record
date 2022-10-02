@@ -1,7 +1,7 @@
+import { useAppDispatch, useAppSelector } from "@app/hook";
+import { sidebarState, toggleSideBar } from "@features/sideBar/sidebarSlice";
 import React from "react";
 import { ChevronsLeft, Menu } from "react-feather";
-import { useAppDispatch, useAppSelector } from "../../app/hook";
-import { sidebarState, toggleSideBar } from "./sidebarSlice";
 
 function Sidebar({ children }: { children?: React.ReactNode | null }) {
   const dispatch = useAppDispatch();

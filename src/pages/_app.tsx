@@ -1,17 +1,17 @@
 // src/pages/_app.tsx
+import store from "@app/store";
+import { RoleContextProvider } from "@context/role.context";
+import type { AppRouter } from "@server/router";
+import "@styles/globals.css";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { loggerLink } from "@trpc/client/links/loggerLink";
 import { withTRPC } from "@trpc/next";
+import { trpc } from "@utils/trpc";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import { Provider } from "react-redux";
 import superjson from "superjson";
-import store from "../app/store";
-import { RoleContextProvider } from "../context/role.context";
-import type { AppRouter } from "../server/router";
-import "../styles/globals.css";
-import { trpc } from "../utils/trpc";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

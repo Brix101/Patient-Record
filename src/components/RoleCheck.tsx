@@ -1,6 +1,6 @@
+import { useRoleContext } from "@context/role.context";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useRoleContext } from "../context/role.context";
 
 export function RoleCheck({
   children,

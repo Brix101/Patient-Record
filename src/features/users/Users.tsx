@@ -2,8 +2,8 @@ import { Physician, User } from "@prisma/client";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Edit } from "react-feather";
-import { trpc } from "../../../utils/trpc";
-import LinearLoading from "../../LinearLoading";
+import LinearLoading from "../../components/LinearLoading";
+import { trpc } from "../../utils/trpc";
 import EditUser from "./EditUser";
 
 function Users({

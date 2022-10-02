@@ -1,4 +1,4 @@
-import { createProtectedRouter } from "./context";
+import { createProtectedRouter } from "@server/router/context";
 
 // Example router with queries that can only be hit if the user requesting is signed in
 export const protectedExampleRouter = createProtectedRouter()

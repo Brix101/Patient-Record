@@ -1,30 +1,32 @@
 import type { AppState } from "@app/store";
+import { Physician, User } from "@prisma/client";
 import { createSlice } from "@reduxjs/toolkit";
 
-export interface SideBarState {
-  open: boolean;
+export interface UsersState {
+  mode: "View" | "Edit" | "Add";
+  user?: User & { Physician: Physician[] };
 }
 
-const initialState: SideBarState = {
-  open: true,
+const initialState: UsersState = {
+  mode: "View",
 };
 
-export const sidebarSlice = createSlice({
-  name: "sidebar",
+export const usersSlice = createSlice({
+  name: "users",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     toggleSideBar: (state) => {
-      state.open = !state.open;
+      // state.open = !state.open;
     },
   },
 });
 
-export const { toggleSideBar } = sidebarSlice.actions;
+export const { toggleSideBar } = usersSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const sidebarState = (state: AppState) => state.sidebar;
+export const usersState = (state: AppState) => state.users;
 
-export default sidebarSlice.reducer;
+export default usersSlice.reducer;

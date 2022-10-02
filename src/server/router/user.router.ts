@@ -1,15 +1,15 @@
 import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import * as trpc from "@trpc/server";
 import {
   confirmOtpSchema,
   createUserSchema,
   requestOtpSchema,
   searchUserSchema,
-} from "../../schema/user.schema";
-import { decode, encode } from "../../utils/base64";
-import { generateOtp } from "../../utils/otp";
-import { createRouter } from "./context";
+} from "@schema/user.schema";
+import { createRouter } from "@server/router/context";
+import * as trpc from "@trpc/server";
+import { decode, encode } from "@utils/base64";
+import { generateOtp } from "@utils/otp";
 
 export const usersRouter = createRouter()
   .mutation("register-user", {

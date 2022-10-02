@@ -1,5 +1,5 @@
+import { createRouter } from "@server/router/context";
 import { z } from "zod";
-import { createRouter } from "./context";
 
 export const exampleRouter = createRouter()
   .query("hello", {

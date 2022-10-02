@@ -1,17 +1,15 @@
+import { useAppSelector } from "@app/hook";
+import { RoleCheck } from "@components/RoleCheck";
+import { useRoleContext } from "@context/role.context";
+import { signinState } from "@features/signin/signinSlice";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useAppSelector } from "../app/hook";
-import { RoleCheck } from "../components/RoleCheck";
-import { useRoleContext } from "../context/role.context";
-import { signinState } from "../features/signin/signinSlice";
 
-const ConfirmOtpForm = dynamic(
-  () => import("../features/signin/ConfirmOtpForm")
-);
-const SignInForm = dynamic(() => import("../features/signin/SignInForm"));
+const ConfirmOtpForm = dynamic(() => import("@features/signin/ConfirmOtpForm"));
+const SignInForm = dynamic(() => import("@features/signin/SignInForm"));
 
 const SignInPage: NextPage = () => {
   const role = useRoleContext();

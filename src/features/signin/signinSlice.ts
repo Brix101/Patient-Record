@@ -1,5 +1,5 @@
+import type { AppState } from "@app/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { AppState } from "../../app/store";
 
 export interface SignInState {
   confirm: boolean;

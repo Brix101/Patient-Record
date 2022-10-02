@@ -1,8 +1,8 @@
+import { useAppDispatch } from "@app/hook";
+import PrimaryLoaderButton from "@components/buttons/PrimaryLoaderButton";
+import { RequestOtpInput } from "@schema/user.schema";
+import { trpc } from "@utils/trpc";
 import { useForm } from "react-hook-form";
-import { useAppDispatch } from "../../app/hook";
-import PrimaryLoaderButton from "../../components/buttons/PrimaryLoaderButton";
-import { RequestOtpInput } from "../../schema/user.schema";
-import { trpc } from "../../utils/trpc";
 import { confirmMode } from "./signinSlice";
 
 function SignInForm() {
