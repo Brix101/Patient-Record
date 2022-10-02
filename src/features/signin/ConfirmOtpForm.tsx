@@ -10,7 +10,7 @@ function ConfirmOtpForm() {
   const { email, hash } = useAppSelector(signinState);
   const { handleSubmit, register } = useForm<ConfirmOtpInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
-    ["users.confirm-otp"],
+    ["auth.confirm-otp"],
     {
       onSuccess: ({ email, role }) => {
         signIn("credentials", {

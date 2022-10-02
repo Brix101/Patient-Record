@@ -10,7 +10,7 @@ function SignInForm() {
   const { handleSubmit, register } = useForm<RequestOtpInput>();
 
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
-    ["users.request-otp"],
+    ["auth.request-otp"],
     {
       onSuccess: ({ hash, email }) => {
         if (email && hash) {
