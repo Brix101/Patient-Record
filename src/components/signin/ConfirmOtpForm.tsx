@@ -5,15 +5,18 @@ import { trpc } from "../../utils/trpc";
 
 function ConfirmOtpForm({ email, hash }: { email?: string; hash?: string }) {
   const { handleSubmit, register } = useForm<ConfirmOtpInput>();
-  const { mutate, error, isLoading } = trpc.useMutation(["users.confirm-otp"], {
-    onSuccess: ({ email, role }) => {
-      signIn("credentials", {
-        email,
-        expires: Date,
-        callbackUrl: `${window.location.origin}/${role.toLowerCase()}`,
-      });
-    },
-  });
+  const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
+    ["users.confirm-otp"],
+    {
+      onSuccess: ({ email, role }) => {
+        signIn("credentials", {
+          email,
+          expires: Date,
+          callbackUrl: `${window.location.origin}/${role.toLowerCase()}`,
+        });
+      },
+    }
+  );
 
   function onSubmit(values: ConfirmOtpInput) {
     if (email && hash) {
@@ -57,9 +60,15 @@ function ConfirmOtpForm({ email, hash }: { email?: string; hash?: string }) {
         <div>
           <button
             type="submit"
-            className="group relative flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-lg font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className={`inline-flex justify-center w-full
+            ${
+              isLoading || isSuccess
+                ? " text-white bg-green-400 dark:bg-green-500 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                : " rounded-lg border border-transparent bg-green-600 py-2.5 px-5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            }`}
+            disabled={isLoading || isSuccess}
           >
-            {isLoading ? (
+            {isLoading || isSuccess ? (
               <svg
                 aria-hidden="true"
                 className="mr-2 w-5 h-5 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
