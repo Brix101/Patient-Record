@@ -21,7 +21,7 @@ function AdminView({ children }: { children?: React.ReactNode }) {
         </header>
         <div className="flex h-full ">
           <Sidebar>
-            <div className="mx-4 my-2 space-y-1">
+            <div className="mx-1 my-2 space-y-1">
               <SideBarButton href={"/admin"}>
                 <Server size={20} />
                 <a>Dashboard</a>

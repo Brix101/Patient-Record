@@ -10,11 +10,11 @@ function Sidebar({ children }: { children?: React.ReactNode | null }) {
           !sidebarOpen && "-ml-64"
         }`}
       >
-        <div className="h-full  bg-green-500">
+        <div className="h-full  bg-green-50">
           <div className="w-full relative h-12 bg-green-50">
             <div
-              className={`absolute w-full bg-green-50  h-full flex justify-end items-center rounded-b-3xl transition-all duration-300 ${
-                !sidebarOpen ? "-right-14" : "right-0"
+              className={`absolute w-full h-full bg-inherit flex justify-end items-center rounded-b-3xl transition-all duration-300 ${
+                sidebarOpen ? "right-0" : "-right-14"
               }`}
             >
               <button

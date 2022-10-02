@@ -10,17 +10,21 @@ function SideBarButton({
   children?: React.ReactNode;
 }) {
   const { pathname } = useRouter();
+  const active = pathname === href;
 
   return (
     <Link href={href}>
       <div
-        className={`h-12 w-full rounded-lg px-4 space-x-2 flex items-center border select-none 
+        className={`h-12 w-full space-x-2 rounded-md flex items-center select-none 
         ${
-          pathname === href
-            ? "border-green-100 bg-gray-100"
-            : "cursor-pointer hover:bg-green-700 hover:border-green-400 hover:text-white"
+          active
+            ? "border-green-100 bg-green-100 text-green-800 font-semibold"
+            : "cursor-pointer hover:bg-green-100 hover:border-green-400"
         }`}
       >
+        <div
+          className={`h-full w-2 rounded-l-md ${active && "bg-green-600"}`}
+        ></div>
         <>{children}</>
       </div>
     </Link>
