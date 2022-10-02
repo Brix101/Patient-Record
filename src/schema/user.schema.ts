@@ -28,7 +28,7 @@ export const requestOtpSchema = z.object({
   email: z.string().email(),
 });
 
-export type requestOtpInput = z.TypeOf<typeof requestOtpSchema>;
+export type RequestOtpInput = z.TypeOf<typeof requestOtpSchema>;
 
 export const confirmOtpSchema = z.object({
   email: z.string().email(),

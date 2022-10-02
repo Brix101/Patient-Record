@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
-import { requestOtpInput } from "../../schema/user.schema";
+import { RequestOtpInput } from "../../schema/user.schema";
 import { Hash } from "../../types/next-auth";
 import { trpc } from "../../utils/trpc";
 
@@ -11,7 +11,7 @@ function SignInForm({
   setConfirmMode: Dispatch<SetStateAction<boolean>>;
   setHash: Dispatch<SetStateAction<Hash>>;
 }) {
-  const { handleSubmit, register } = useForm<requestOtpInput>();
+  const { handleSubmit, register } = useForm<RequestOtpInput>();
 
   const { mutate, error, isLoading } = trpc.useMutation(["users.request-otp"], {
     onSuccess: ({ hash, email }) => {
@@ -22,7 +22,7 @@ function SignInForm({
     },
   });
 
-  function onSubmit(values: requestOtpInput) {
+  function onSubmit(values: RequestOtpInput) {
     mutate(values);
   }
   return (

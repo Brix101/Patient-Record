@@ -1,10 +1,10 @@
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
-import { confirmOtpInput } from "../../schema/user.schema";
+import { ConfirmOtpInput } from "../../schema/user.schema";
 import { trpc } from "../../utils/trpc";
 
 function ConfirmOtpForm({ email, hash }: { email?: string; hash?: string }) {
-  const { handleSubmit, register } = useForm<confirmOtpInput>();
+  const { handleSubmit, register } = useForm<ConfirmOtpInput>();
   const { mutate, error, isLoading } = trpc.useMutation(["users.confirm-otp"], {
     onSuccess: ({ email, role }) => {
       signIn("credentials", {
@@ -15,7 +15,7 @@ function ConfirmOtpForm({ email, hash }: { email?: string; hash?: string }) {
     },
   });
 
-  function onSubmit(values: confirmOtpInput) {
+  function onSubmit(values: ConfirmOtpInput) {
     if (email && hash) {
       mutate({ ...values, email, hash });
     }
