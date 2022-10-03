@@ -19,12 +19,6 @@ export const authRouter = createRouter()
           message: "User Not Found",
         });
       }
-      if (user.disabled) {
-        throw new trpc.TRPCError({
-          code: "FORBIDDEN",
-          message: "Account disabled please contact the adminstrator",
-        });
-      }
 
       const otp = await ctx.prisma.otp.create({
         data: {
