@@ -37,9 +37,9 @@ export const updateUserSchema = z.object({
   birthday: z.date(),
   address: z.string().nullable(),
   mobile: z.string().nullable(),
+  physicianId: z.number(),
   expertise: z.string().nullable(),
   licenseNumber: z.string().nullable(),
-  disabled: z.boolean(),
 });
 
 export type CreateUserInput = z.TypeOf<typeof createUserSchema>;

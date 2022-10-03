@@ -61,9 +61,6 @@ function ViewUsers() {
                 Role
               </th>
               <th scope="col" className="py-3 px-6">
-                Account Status
-              </th>
-              <th scope="col" className="py-3 px-6">
                 Action
               </th>
             </tr>
@@ -81,23 +78,6 @@ function ViewUsers() {
                     </th>
                     <td className="py-4 px-6">{user.email}</td>
                     <td className="py-4 px-6 capitalize">{user.role}</td>
-                    <td className="py-4 px-6">
-                      {user.disabled ? (
-                        <div
-                          className="px-4 py-2 w-fit text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300"
-                          role="alert"
-                        >
-                          <span className="font-medium">Disabled</span>
-                        </div>
-                      ) : (
-                        <div
-                          className="px-4 py-2 w-fit text-sm text-teal-700 bg-teal-100 rounded-full dark:bg-teal-200 dark:text-teal-800"
-                          role="alert"
-                        >
-                          <span className="font-medium">Active</span>
-                        </div>
-                      )}
-                    </td>
                     <td className="py-4 px-6">
                       <span
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"

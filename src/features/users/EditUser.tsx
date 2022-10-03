@@ -6,11 +6,10 @@ import PhysicianInput from "@/components/inputs/PhysicianInput";
 import { UpdateUserInput } from "@/schema/user.schema";
 import { trpc } from "@/utils/trpc";
 import { setUsersMode, usersState } from "@features/users/usersSlice";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { Role } from "@prisma/client";
+import { Physician, Role } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { XSquare } from "react-feather";
@@ -19,9 +18,6 @@ import { useForm } from "react-hook-form";
 function EditUser() {
   const dispatch = useAppDispatch();
   const [startDate, setStartDate] = useState<Date>();
-  const [disableAccount, setAccountDisable] = React.useState<
-    boolean | undefined
-  >();
   const [gender, setGender] = React.useState("");
   const [role, setRole] = React.useState<Role>("NURSE");
   const { user } = useAppSelector(usersState);
@@ -35,6 +31,7 @@ function EditUser() {
       },
     }
   );
+
   useEffect(() => {
     if (user) {
       reset({
@@ -44,13 +41,14 @@ function EditUser() {
         email: user.email as string,
         mobile: user.mobile as string,
         address: user.address as string,
+        licenseNumber: user?.Physician?.licenseNumber,
+        expertise: user?.Physician?.expertise,
       });
       const gen = user.gender as string;
       const bday = user.birthday as Date;
       setGender(gen);
       setStartDate(bday);
       setRole(user.role);
-      setAccountDisable(user.disabled);
     }
   }, [user]);
 
@@ -71,6 +69,7 @@ function EditUser() {
 
   function onSubmit(values: UpdateUserInput) {
     const physician = role !== "PHYSICIAN" && {
+      physicianId: 0,
       expertise: "",
       licenseNumber: "",
     };
@@ -82,7 +81,7 @@ function EditUser() {
       birthday: startDate as Date,
       role: role,
       gender: gender,
-      disabled: disableAccount as boolean,
+      physicianId: user?.Physician ? (user?.Physician?.id as number) : 0,
       ...physician,
     });
   }
@@ -218,34 +217,7 @@ function EditUser() {
                   </Select>
                 </FormControl>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Account Status
-                </label>
-                <FormControl sx={{ width: "100%", height: "40px" }}>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue={disableAccount ? "Disabled" : "Enabled"}
-                    name="radio-buttons-group"
-                    onChange={(e) => {
-                      const val = e.target.value === "Disabled" ? true : false;
-                      setAccountDisable(val);
-                    }}
-                  >
-                    <FormControlLabel
-                      value="Disabled"
-                      control={<Radio />}
-                      label="Disabled"
-                    />
-                    <FormControlLabel
-                      value="Enabled"
-                      control={<Radio />}
-                      label="Enabled"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
+
               <PhysicianInput
                 enable={role === "PHYSICIAN"}
                 placeHolder="License Number"

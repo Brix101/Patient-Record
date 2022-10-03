@@ -16,21 +16,20 @@ model Example {
 }
 
 model User {
-    id        Int         @id @default(autoincrement())
+    id        Int        @id @default(autoincrement())
     firstName String?
     lastName  String?
-    email     String?     @unique
-    role      Role        @default(ADMIN)
+    email     String?    @unique
+    role      Role       @default(ADMIN)
     image     String?
     gender    String?
     birthday  DateTime?
     address   String?
     mobile    String?
-    disabled  Boolean     @default(false)
-    createAt  DateTime    @default(now())
-    updateAt  DateTime    @updatedAt
+    createAt  DateTime   @default(now())
+    updateAt  DateTime   @updatedAt
     Otp       Otp[]
-    Physician Physician[]
+    Physician Physician?
     Patient   Patient[]
 }
 
@@ -38,7 +37,7 @@ model Physician {
     id            Int     @id @default(autoincrement())
     expertise     String?
     licenseNumber String?
-    userId        Int
+    userId        Int     @unique
     user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

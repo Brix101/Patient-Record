@@ -4,7 +4,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UsersState {
   mode: "View" | "Edit" | "Add";
-  user?: User & { Physician: Physician[] };
+  user?: User & {
+    Physician: Physician | null;
+  };
 }
 
 const initialState: UsersState = {

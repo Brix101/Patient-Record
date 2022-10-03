@@ -147,9 +147,9 @@ export const usersRouter = createProtectedRouter()
         address,
         birthday,
         mobile,
+        physicianId,
         expertise,
         licenseNumber,
-        disabled,
       } = input;
 
       try {
@@ -167,16 +167,18 @@ export const usersRouter = createProtectedRouter()
             address,
             birthday,
             mobile,
-            disabled,
             Physician:
               role === "PHYSICIAN"
                 ? {
-                    create: {
+                    update: {
                       expertise,
                       licenseNumber,
                     },
                   }
                 : undefined,
+          },
+          include: {
+            Physician: true,
           },
         });
         return user;
