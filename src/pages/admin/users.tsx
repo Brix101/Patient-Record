@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/app/hook";
+import Admin from "@/components/Layout/Admin";
 import { usersState } from "@/features/users/usersSlice";
-import AdminView from "@components/admin/AdminView";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -22,11 +22,11 @@ const UsersPage: NextPage = () => {
       <Head>
         <title>Management - Users</title>
       </Head>
-      <AdminView>
+      <Admin>
         {mode === "View" && <ViewUsers />}
         {mode === "Add" && <AddUser />}
         {mode === "Edit" && <EditUser />}
-      </AdminView>
+      </Admin>
     </>
   );
 };

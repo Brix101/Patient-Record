@@ -1,4 +1,4 @@
-import AdminView from "@components/admin/AdminView";
+import Admin from "@/components/Layout/Admin";
 import { trpc } from "@utils/trpc";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -11,7 +11,7 @@ const PhysicianPage: NextPage = () => {
       <Head>
         <title>Management - Physician</title>
       </Head>
-      <AdminView>Physician</AdminView>
+      <Admin>Physician</Admin>
     </>
   );
 };

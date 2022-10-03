@@ -1,4 +1,4 @@
-import AdminView from "@components/admin/AdminView";
+import Admin from "@/components/Layout/Admin";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -12,7 +12,7 @@ const ManagementPage: NextPage = () => {
       <Head>
         <title>Management</title>
       </Head>
-      <AdminView>Dashboard</AdminView>
+      <Admin>Dashboard</Admin>
     </>
   );
 };

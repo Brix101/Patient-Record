@@ -8,14 +8,10 @@ import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Edit, PlusSquare, Trash2 } from "react-feather";
 
-function DeleteUser() {
-  return <></>;
-}
-
 function ViewUsers() {
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
-  const { data, isLoading, refetch } = trpc.useQuery(
+  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "users.all-users",
       {
@@ -61,7 +57,7 @@ function ViewUsers() {
           <PlusSquare size={24} />
         </SecondaryButton>
       </div>
-      {isLoading ? (
+      {isLoading || isRefetching ? (
         <LinearLoading />
       ) : (
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

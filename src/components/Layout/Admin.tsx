@@ -6,7 +6,7 @@ import Link from "next/link";
 import React from "react";
 import { Clipboard, Columns, Server, User, Users } from "react-feather";
 
-function AdminView({ children }: { children?: React.ReactNode }) {
+function Admin({ children }: { children?: React.ReactNode }) {
   return (
     <RoleCheck>
       <main className="overflow-hidden h-screen">
@@ -55,4 +55,4 @@ function AdminView({ children }: { children?: React.ReactNode }) {
   );
 }
 
-export default AdminView;
+export default Admin;
