@@ -57,6 +57,7 @@ function ViewUsers() {
           <PlusSquare size={24} />
         </SecondaryButton>
       </div>
+      {(isLoading || isRefetching) && <LinearLoading />}
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -109,7 +110,6 @@ function ViewUsers() {
             })}
         </tbody>
       </table>
-      {(isLoading || isRefetching) && <LinearLoading />}
     </div>
   );
 }
