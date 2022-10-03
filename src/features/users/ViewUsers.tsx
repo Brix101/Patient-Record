@@ -57,62 +57,59 @@ function ViewUsers() {
           <PlusSquare size={24} />
         </SecondaryButton>
       </div>
-      {isLoading || isRefetching ? (
-        <LinearLoading />
-      ) : (
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="py-3 px-6">
-                Name
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Email
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Role
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data &&
-              data.map((user, i) => {
-                return (
-                  <tr key={i} className={`${TableStyle(i)}`}>
-                    <th
-                      scope="row"
-                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" className="py-3 px-6">
+              Name
+            </th>
+            <th scope="col" className="py-3 px-6">
+              Email
+            </th>
+            <th scope="col" className="py-3 px-6">
+              Role
+            </th>
+            <th scope="col" className="py-3 px-6">
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data &&
+            data.map((user, i) => {
+              return (
+                <tr key={i} className={`${TableStyle(i)}`}>
+                  <th
+                    scope="row"
+                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                  >
+                    {user.lastName}, {user.firstName}
+                  </th>
+                  <td className="py-4 px-6">{user.email}</td>
+                  <td className="py-4 px-6 capitalize">{user.role}</td>
+                  <td className="py-4 px-6 flex gap-5">
+                    <span
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                      onClick={() =>
+                        dispatch(setUsersMode({ mode: "Edit", user: user }))
+                      }
                     >
-                      {user.lastName}, {user.firstName}
-                    </th>
-                    <td className="py-4 px-6">{user.email}</td>
-                    <td className="py-4 px-6 capitalize">{user.role}</td>
-                    <td className="py-4 px-6 flex gap-5">
-                      <span
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                        onClick={() =>
-                          dispatch(setUsersMode({ mode: "Edit", user: user }))
-                        }
-                      >
-                        <Edit size={20} />
-                      </span>
+                      <Edit size={20} />
+                    </span>
 
-                      <span
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                        onClick={() => deleteDialog({ id: user.id })}
-                      >
-                        <Trash2 size={20} />
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      )}
+                    <span
+                      className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                      onClick={() => deleteDialog({ id: user.id })}
+                    >
+                      <Trash2 size={20} />
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+        </tbody>
+      </table>
+      {(isLoading || isRefetching) && <LinearLoading />}
     </div>
   );
 }
