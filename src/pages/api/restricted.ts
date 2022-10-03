@@ -7,7 +7,6 @@ const restricted = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
 
   if (session) {
-    console.log(session);
     res.send({
       content:
         "This is protected content. You can access this content because you are signed in.",

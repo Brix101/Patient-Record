@@ -136,7 +136,6 @@ export const usersRouter = createProtectedRouter()
   .mutation("update-user", {
     input: updateUserSchema,
     resolve: async ({ input, ctx }) => {
-      console.log(input);
       const {
         id,
         email,
@@ -153,7 +152,6 @@ export const usersRouter = createProtectedRouter()
         disabled,
       } = input;
 
-      console.log(disabled);
       try {
         const user = await ctx.prisma.user.update({
           where: {

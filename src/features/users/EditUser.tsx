@@ -19,7 +19,9 @@ import { useForm } from "react-hook-form";
 function EditUser() {
   const dispatch = useAppDispatch();
   const [startDate, setStartDate] = useState<Date>();
-  const [disableAccount, setAccountDisable] = React.useState(false);
+  const [disableAccount, setAccountDisable] = React.useState<
+    boolean | undefined
+  >();
   const [gender, setGender] = React.useState("");
   const [role, setRole] = React.useState<Role>("NURSE");
   const { user } = useAppSelector(usersState);
@@ -73,7 +75,6 @@ function EditUser() {
       licenseNumber: "",
     };
 
-    console.log(disableAccount);
     mutate({
       ...values,
       id: user?.id as number,
@@ -81,7 +82,7 @@ function EditUser() {
       birthday: startDate as Date,
       role: role,
       gender: gender,
-      disabled: disableAccount,
+      disabled: disableAccount as boolean,
       ...physician,
     });
   }
@@ -221,7 +222,7 @@ function EditUser() {
                 <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                   Account Status
                 </label>
-                <FormControl sx={{ width: "100%", maxHeight: "40px" }}>
+                <FormControl sx={{ width: "100%", height: "40px" }}>
                   <RadioGroup
                     row
                     aria-labelledby="demo-radio-buttons-group-label"
