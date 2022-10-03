@@ -81,7 +81,6 @@ function EditUser() {
       birthday: startDate as Date,
       role: role,
       gender: gender,
-      physicianId: user?.Physician ? (user?.Physician?.id as number) : 0,
       ...physician,
     });
   }

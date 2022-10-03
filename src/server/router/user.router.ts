@@ -2,6 +2,7 @@ import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import {
   createUserSchema,
+  deleteUserSchema,
   searchUserSchema,
   updateUserSchema,
 } from "@schema/user.schema";
@@ -147,7 +148,6 @@ export const usersRouter = createProtectedRouter()
         address,
         birthday,
         mobile,
-        physicianId,
         expertise,
         licenseNumber,
       } = input;
@@ -196,5 +196,25 @@ export const usersRouter = createProtectedRouter()
           message: "Something went wrong",
         });
       }
+    },
+  })
+  .mutation("delete-user", {
+    input: deleteUserSchema,
+    resolve: async ({ ctx, input }) => {
+      const { role } = ctx.session.user;
+
+      if (role === Role.ADMIN) {
+        const deletedUser = await ctx.prisma.user.delete({
+          where: {
+            id: input.id,
+          },
+        });
+        return { detail: "User Deleted", deletedUser };
+      }
+
+      throw new trpc.TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid User",
+      });
     },
   });

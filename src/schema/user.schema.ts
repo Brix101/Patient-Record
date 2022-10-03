@@ -37,9 +37,12 @@ export const updateUserSchema = z.object({
   birthday: z.date(),
   address: z.string().nullable(),
   mobile: z.string().nullable(),
-  physicianId: z.number(),
   expertise: z.string().nullable(),
   licenseNumber: z.string().nullable(),
+});
+
+export const deleteUserSchema = z.object({
+  id: z.number(),
 });
 
 export type CreateUserInput = z.TypeOf<typeof createUserSchema>;
@@ -47,3 +50,5 @@ export type CreateUserInput = z.TypeOf<typeof createUserSchema>;
 export type SearchUserInput = z.TypeOf<typeof searchUserSchema>;
 
 export type UpdateUserInput = z.TypeOf<Omit<typeof updateUserSchema, "id">>;
+
+export type DelereUserInpit = z.TypeOf<typeof deleteUserSchema>;

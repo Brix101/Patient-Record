@@ -6,12 +6,16 @@ import { setUsersMode } from "@features/users/usersSlice";
 import { trpc } from "@utils/trpc";
 import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { Edit, PlusSquare } from "react-feather";
+import { Edit, PlusSquare, Trash2 } from "react-feather";
+
+function DeleteUser() {
+  return <></>;
+}
 
 function ViewUsers() {
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
-  const { data, isLoading } = trpc.useQuery(
+  const { data, isLoading, refetch } = trpc.useQuery(
     [
       "users.all-users",
       {
@@ -21,11 +25,23 @@ function ViewUsers() {
     { enabled: true }
   );
 
+  const { mutate } = trpc.useMutation(["users.delete-user"], {
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
   const TableStyle = (x: number) => {
     if (x % 2) {
       return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
     }
     return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
+  };
+
+  const deleteDialog = ({ id }: { id: number }) => {
+    if (window.confirm("Are you sure to Delete this User")) {
+      mutate({ id: id });
+    }
   };
 
   return (
@@ -78,7 +94,7 @@ function ViewUsers() {
                     </th>
                     <td className="py-4 px-6">{user.email}</td>
                     <td className="py-4 px-6 capitalize">{user.role}</td>
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-6 flex gap-5">
                       <span
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
                         onClick={() =>
@@ -86,6 +102,13 @@ function ViewUsers() {
                         }
                       >
                         <Edit size={20} />
+                      </span>
+
+                      <span
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                        onClick={() => deleteDialog({ id: user.id })}
+                      >
+                        <Trash2 size={20} />
                       </span>
                     </td>
                   </tr>
