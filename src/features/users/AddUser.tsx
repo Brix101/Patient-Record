@@ -52,7 +52,10 @@ function AddUser() {
   return (
     <>
       <div className="shadow sm:overflow-hidden sm:rounded-md  p-5 mx-5">
-        <div className="h-20 w-full flex items-start justify-end pt-2 px-5">
+        <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold text-gray-900">Add User</h1>
+          </div>
           <SecondaryButton
             className="w-11"
             onClick={() => dispatch(setUsersMode({ mode: "View" }))}

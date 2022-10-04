@@ -87,8 +87,11 @@ function EditUser() {
 
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
-      <div className="bg-white w-full h-full">
-        <div className="h-20 w-full flex items-start justify-end pt-2 px-5 gap-5">
+      <div className=" w-full h-full">
+        <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold text-gray-900">Edit User</h1>
+          </div>
           <OutlinedButton
             onClick={() => dispatch(setUsersMode({ mode: "View" }))}
           >
