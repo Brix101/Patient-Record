@@ -5,6 +5,7 @@ export const generateOtp = () => {
   const otp = OtpGenerator.generate(6, {
     lowerCaseAlphabets: false,
     specialChars: false,
+    upperCaseAlphabets: false,
   });
 
   //   10 minutes
