@@ -2,10 +2,9 @@ import OtpGenerator from "otp-generator";
 
 export const generateOtp = () => {
   const now = new Date();
-  const otp = OtpGenerator.generate(6, {
+  const otp = OtpGenerator.generate(10, {
     lowerCaseAlphabets: false,
     specialChars: false,
-    upperCaseAlphabets: false,
   });
 
   //   10 minutes

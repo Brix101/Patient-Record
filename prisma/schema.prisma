@@ -26,9 +26,10 @@ model User {
     birthday  DateTime?
     address   String?
     mobile    String?
+    password  String?
     createAt  DateTime   @default(now())
     updateAt  DateTime   @updatedAt
-    Otp       Otp[]
+    Otp       Otp?
     Physician Physician?
 
     attendingNurse       Patient? @relation("attendingNurse", fields: [attendingNurseId], references: [id])
@@ -62,7 +63,7 @@ model Otp {
     otp             String
     expiration_time DateTime
     verified        Boolean  @default(false)
-    userId          Int
+    userId          Int      @unique
     user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     createAt        DateTime @default(now())
     updateAt        DateTime @updatedAt

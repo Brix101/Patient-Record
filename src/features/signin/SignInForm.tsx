@@ -1,13 +1,15 @@
-import GenericInput from "@/components/inputs/GenericInput";
 import { useAppDispatch } from "@app/hook";
 import PrimaryButton from "@components/buttons/PrimaryButton";
 import { confirmMode } from "@features/signin/signinSlice";
 import { RequestOtpInput } from "@schema/auth.schema";
 import { trpc } from "@utils/trpc";
+import { useState } from "react";
+import { Eye, EyeOff } from "react-feather";
 import { useForm } from "react-hook-form";
 
 function SignInForm() {
   const dispatch = useAppDispatch();
+  const [show, setShow] = useState<boolean>(false);
   const { handleSubmit, register } = useForm<RequestOtpInput>();
 
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
@@ -39,13 +41,34 @@ function SignInForm() {
             <span className="font-medium">{error.message}</span>
           </div>
         )}
-        <GenericInput
-          label="Email"
-          type="email"
-          placeHolder="name@example.com"
-          required
-          register={register("email")}
-        />
+        <div>
+          <label className="block text-sm font-medium text-grey-700">
+            Email
+          </label>
+          <div className="relative mt-1 rounded-md shadow-sm ">
+            <input
+              type={"email"}
+              className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-grey-700">
+            Password
+          </label>
+          <div className="relative flex items-center mt-1 rounded-md shadow-sm ">
+            <input
+              type={show ? "text" : "password"}
+              className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+            />
+            <div
+              onClick={() => setShow(!show)}
+              className="absolute right-5  text-slate-500 cursor-pointer"
+            >
+              {show ? <EyeOff size={24} /> : <Eye size={24} />}
+            </div>
+          </div>
+        </div>
         <div>
           <PrimaryButton
             className="w-full"
@@ -55,15 +78,6 @@ function SignInForm() {
           >
             Sign In
           </PrimaryButton>
-        </div>
-        <div className="bg-green-50 py-2 px-5 rounded-md text-center">
-          <span className=" text-gray-700 text-md">
-            We’ll email you a magic code for a
-          </span>
-          <br />
-          <span className=" text-gray-700 text-md ">
-            password-free sign in.
-          </span>
         </div>
       </form>
     </>
