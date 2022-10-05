@@ -51,7 +51,7 @@ function AddUser() {
 
   return (
     <>
-      <div className="shadow sm:overflow-hidden sm:rounded-md  p-5 mx-5">
+      <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
         <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold text-gray-900">Add User</h1>

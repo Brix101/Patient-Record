@@ -20,7 +20,7 @@ model User {
     firstName String?
     lastName  String?
     email     String?    @unique
-    role      Role       @default(ADMIN)
+    role      Role       @default(NURSE)
     image     String?
     gender    String?
     birthday  DateTime?
@@ -30,7 +30,13 @@ model User {
     updateAt  DateTime   @updatedAt
     Otp       Otp[]
     Physician Physician?
-    Patient   Patient[]
+
+    attendingNurse       Patient? @relation("attendingNurse", fields: [attendingNurseId], references: [id])
+    attendingNurseId     Int?
+    attendingPhysician   Patient? @relation("attendingPhysician", fields: [attendingPhysicianId], references: [id])
+    attendingPhysicianId Int?
+
+    attendedPatient Patient[] @relation("attendedPatient")
 }
 
 model Physician {
@@ -42,13 +48,13 @@ model Physician {
 }
 
 model Room {
-    id      Int     @id @default(autoincrement())
-    code    String?
-    type    String?
-    station String?
-    status  String?
-    floor   String?
-    price   String?
+    id       Int        @id @default(autoincrement())
+    roomNo   String?
+    category RoomCat    @default(WARD)
+    station  String?
+    status   RoomStatus @default(VACANT)
+    floor    String?
+    price    Decimal?   @db.Decimal(10, 2)
 }
 
 model Otp {
@@ -79,12 +85,11 @@ model Patient {
     createAt       DateTime @default(now())
     updateAt       DateTime @updatedAt
 
-    attendingPhysician String?
-    attendingNurse     String?
-    attendingGuardian  String?
+    attendingNurse     User[] @relation("attendingNurse")
+    attendingPhysician User[] @relation("attendingPhysician")
 
-    addedBy Int
-    user    User @relation(fields: [addedBy], references: [id])
+    attendedPatient User? @relation("attendedPatient", fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
+    addedById       Int?
 }
 
 enum Role {
@@ -92,4 +97,16 @@ enum Role {
     NURSE
     PHYSICIAN
     PHARMACIST
+}
+
+enum RoomCat {
+    WARD
+    SEMI
+    PRIVATE
+}
+
+enum RoomStatus {
+    VACANT
+    OCCUPIED
+    OUTOFSERVICE
 }

@@ -51,4 +51,4 @@ export type SearchUserInput = z.TypeOf<typeof searchUserSchema>;
 
 export type UpdateUserInput = z.TypeOf<Omit<typeof updateUserSchema, "id">>;
 
-export type DelereUserInpit = z.TypeOf<typeof deleteUserSchema>;
+export type DeleteUserInput = z.TypeOf<typeof deleteUserSchema>;

@@ -113,7 +113,7 @@ function ConfirmOtpForm() {
             <br />
             <span className=" text-gray-700 text-md ">a magic code.</span>
           </div>
-          <LinearLoading isLoading={isLoading} />
+          <LinearLoading isLoading={isLoading || isSuccess} />
           <div className="flex justify-center items-center ">
             {otp.map((_, index) => {
               return (

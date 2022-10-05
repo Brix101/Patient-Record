@@ -19,10 +19,11 @@ export const authRouter = createRouter()
           message: "User Not Found",
         });
       }
-
-      const otp = await ctx.prisma.otp.create({
+      const { otp, expiration_time } = generateOtp();
+      const savedOtp = await ctx.prisma.otp.create({
         data: {
-          ...generateOtp(),
+          otp,
+          expiration_time,
           user: {
             connect: {
               id: user.id,
@@ -31,7 +32,7 @@ export const authRouter = createRouter()
         },
       });
       return {
-        hash: encode(`${otp.id}`),
+        hash: encode(`${savedOtp.id}`),
         email: user.email,
       };
       // return await ctx.prisma.example.findMany();
