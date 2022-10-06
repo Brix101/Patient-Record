@@ -13,7 +13,6 @@ export const serverSchema = z.object({
   EMAIL_SECRET: z.string(),
   TOKEN_SECRET: z.string(),
   DEFAULT_SECRET: z.string(),
-  SALTWORKFACTORY: z.number(),
 });
 
 /**

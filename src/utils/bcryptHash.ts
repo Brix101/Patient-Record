@@ -6,7 +6,7 @@ export const hashPassword = async ({
 }: {
   password: string;
 }): Promise<string> => {
-  const hash = hashSync(password, await genSalt(env.SALTWORKFACTORY));
+  const hash = hashSync(password, await genSalt(10));
   return hash;
 };
 
