@@ -29,7 +29,6 @@ model User {
     password  String?
     createAt  DateTime   @default(now())
     updateAt  DateTime   @updatedAt
-    Otp       Otp?
     Physician Physician?
 
     attendingNurse       Patient? @relation("attendingNurse", fields: [attendingNurseId], references: [id])
@@ -56,17 +55,6 @@ model Room {
     status   RoomStatus @default(VACANT)
     floor    String?
     price    Decimal?   @db.Decimal(10, 2)
-}
-
-model Otp {
-    id              Int      @id @default(autoincrement())
-    otp             String
-    expiration_time DateTime
-    verified        Boolean  @default(false)
-    userId          Int      @unique
-    user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    createAt        DateTime @default(now())
-    updateAt        DateTime @updatedAt
 }
 
 model Patient {

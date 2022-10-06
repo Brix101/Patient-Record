@@ -8,8 +8,8 @@ export const generateOtp = () => {
   });
 
   //   10 minutes
-  const expiration_time = new Date(now.getTime() + 10 * 60000);
+  // const expiration_time = new Date(now.getTime() + 10 * 60000);
 
-  console.log({ otp, expiration_time });
-  return { otp, expiration_time };
+  console.log({ otp });
+  return { otp };
 };

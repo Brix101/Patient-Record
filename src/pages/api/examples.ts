@@ -1,10 +1,26 @@
 // src/pages/api/examples.ts
+import { env } from "@env/server.mjs";
+import { Role } from "@prisma/client";
+import { hashPassword } from "@utils/bcryptHash";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../server/db/client";
 
 const examples = async (req: NextApiRequest, res: NextApiResponse) => {
-  const examples = await prisma.example.findMany();
-  res.status(200).json(examples);
+  const examples = await prisma.user.upsert({
+    where: {
+      email: env.EMAIL_SECRET,
+    },
+    update: {},
+    create: {
+      role: Role.ADMIN,
+      email: env.EMAIL_SECRET,
+      password: await hashPassword({ password: env.TOKEN_SECRET }),
+    },
+  });
+
+  console.log(examples);
+
+  res.status(200).json({ msg: "hello" });
 };
 
 export default examples;

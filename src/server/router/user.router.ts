@@ -1,3 +1,6 @@
+import { env } from "@/env/server.mjs";
+import { hashPassword } from "@/utils/bcryptHash";
+import { generateOtp } from "@/utils/otp";
 import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import {
@@ -27,6 +30,7 @@ export const usersRouter = createProtectedRouter()
         licenseNumber,
       } = input;
 
+      const { otp } = generateOtp();
       try {
         const user = await ctx.prisma.user.create({
           data: {
@@ -39,6 +43,7 @@ export const usersRouter = createProtectedRouter()
             address,
             birthday,
             mobile,
+            password: await hashPassword({ password: env.DEFAULT_SECRET }),
             Physician:
               role === "PHYSICIAN"
                 ? {

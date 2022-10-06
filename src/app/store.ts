@@ -1,5 +1,4 @@
 import sidebarReducer from "@features/sideBar/sidebarSlice";
-import signinReducer from "@features/signin/signinSlice";
 import usersReducer from "@features/users/usersSlice";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 
@@ -7,7 +6,6 @@ export function makeStore() {
   return configureStore({
     reducer: {
       sidebar: sidebarReducer,
-      signin: signinReducer,
       users: usersReducer,
     },
     middleware: (getDefaultMiddleware) =>

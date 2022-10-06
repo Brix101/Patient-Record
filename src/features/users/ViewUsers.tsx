@@ -89,7 +89,8 @@ function ViewUsers() {
                     scope="row"
                     className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
                   >
-                    {user.lastName}, {user.firstName}
+                    {user.lastName && user.lastName},{" "}
+                    {user.firstName && user.firstName}
                   </th>
                   <td className="py-4 px-6">{user.email}</td>
                   <td className="py-4 px-6 capitalize">{user.role}</td>
