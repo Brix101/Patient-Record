@@ -6,22 +6,17 @@ import PhysicianInput from "@/components/inputs/PhysicianInput";
 import { UpdateUserInput } from "@/schema/user.schema";
 import { trpc } from "@/utils/trpc";
 import { setUsersMode, usersState } from "@features/users/usersSlice";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { Physician, Role } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import { Role } from "@prisma/client";
+import React, { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { XSquare } from "react-feather";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
 
 function EditUser() {
   const dispatch = useAppDispatch();
-  const [startDate, setStartDate] = useState<Date>();
-  const [gender, setGender] = React.useState("");
-  const [role, setRole] = React.useState<Role>("NURSE");
   const { user } = useAppSelector(usersState);
-  const { handleSubmit, register, reset } = useForm<UpdateUserInput>();
+  const { handleSubmit, register, reset, control } = useForm<UpdateUserInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["users.update-user"],
     {
@@ -43,32 +38,30 @@ function EditUser() {
         address: user.address as string,
         licenseNumber: user?.Physician?.licenseNumber,
         expertise: user?.Physician?.expertise,
+        role: user?.role,
+        gender: user?.gender as string,
+        image: user?.image as string,
+        birthday: user.birthday as Date,
       });
-      const gen = user.gender as string;
-      const bday = user.birthday as Date;
-      setGender(gen);
-      setStartDate(bday);
-      setRole(user.role);
     }
-  }, [user]);
+  }, [user, reset]);
 
   const userRoles = (Object.keys(Role) as (keyof typeof Role)[]).map(
     (enumKey) => {
-      return (
-        <MenuItem key={enumKey} value={Role[enumKey]}>
-          {Role[enumKey]}
-        </MenuItem>
-      );
+      return {
+        label: Role[enumKey].toLowerCase(),
+        value: Role[enumKey],
+      };
     }
   );
-
-  const handleRoleChange = (e: SelectChangeEvent) => {
-    const value = e.target.value;
-    setRole(value as Role);
-  };
+  const genderOptions = [
+    { label: "Prefer not to respond", value: "NO_RESPOND" },
+    { label: "male", value: "MALE" },
+    { label: "female", value: "FEMALE" },
+  ];
 
   function onSubmit(values: UpdateUserInput) {
-    const physician = role !== "PHYSICIAN" && {
+    const physician = values.role !== "PHYSICIAN" && {
       physicianId: 0,
       expertise: "",
       licenseNumber: "",
@@ -77,10 +70,6 @@ function EditUser() {
     mutate({
       ...values,
       id: user?.id as number,
-      image: user?.image as string,
-      birthday: startDate as Date,
-      role: role,
-      gender: gender,
       ...physician,
     });
   }
@@ -158,33 +147,36 @@ function EditUser() {
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                     Gender
                   </label>
-                  <FormControl sx={{ width: "100%", maxHeight: "40px" }}>
-                    <Select
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                      displayEmpty
-                      inputProps={{ "aria-label": "Without label" }}
-                      sx={{
-                        maxHeight: "40px",
-                        "&:before": {
-                          borderColor: "red",
-                        },
-                      }}
-                      required
-                    >
-                      <MenuItem value={"MALE"}>Male</MenuItem>
-                      <MenuItem value={"FEMALE"}>Female</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <Controller
+                    control={control}
+                    defaultValue={user?.gender ? user?.gender : "NO_RESPOND"}
+                    name="gender"
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        classNamePrefix="addl-class"
+                        options={genderOptions}
+                        value={genderOptions.find((c) => c.value === value)}
+                        onChange={(gender) => onChange(gender?.value)}
+                      />
+                    )}
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                     Birthdate
                   </label>
-                  <DatePicker
-                    className="bg-white border border-gray-300 text-gray-900 text-sm rounded-md  focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                    selected={startDate}
-                    onChange={(date: Date) => setStartDate(date)}
+                  <Controller
+                    control={control}
+                    name="birthday"
+                    render={({ field }) => (
+                      <DatePicker
+                        className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                        placeholderText="Select date"
+                        onChange={(date) => field.onChange(date)}
+                        selected={field.value ? field.value : new Date()}
+                        dateFormat="MMMM-dd-yyyy"
+                      />
+                    )}
                   />
                 </div>
               </div>
@@ -201,33 +193,29 @@ function EditUser() {
                 <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                   User Role
                 </label>
-                <FormControl sx={{ width: "100%", maxHeight: "40px" }}>
-                  <Select
-                    value={role}
-                    onChange={handleRoleChange}
-                    displayEmpty
-                    inputProps={{ "aria-label": "Without label" }}
-                    sx={{
-                      maxHeight: "40px",
-                      "&:before": {
-                        borderColor: "red",
-                      },
-                    }}
-                    required
-                  >
-                    {userRoles}
-                  </Select>
-                </FormControl>
+                <Controller
+                  control={control}
+                  defaultValue={Role[user?.role as keyof typeof Role]}
+                  name="role"
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      classNamePrefix="addl-class"
+                      options={userRoles}
+                      value={userRoles.find((c) => c.value === value)}
+                      onChange={(role) => onChange(role?.value)}
+                    />
+                  )}
+                />
               </div>
 
               <PhysicianInput
-                enable={role === "PHYSICIAN"}
+                enable={user?.role === "PHYSICIAN"}
                 placeHolder="License Number"
                 label="License Number"
                 register={register("licenseNumber")}
               />
               <PhysicianInput
-                enable={role === "PHYSICIAN"}
+                enable={user?.role === "PHYSICIAN"}
                 placeHolder="Expertise"
                 label="Expertise"
                 register={register("expertise")}

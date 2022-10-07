@@ -1,7 +1,6 @@
 import { useAppDispatch } from "@/app/hook";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
-import GenderInput from "@components/inputs/GenderInput";
 import GenericInput from "@components/inputs/GenericInput";
 import PhysicianInput from "@components/inputs/PhysicianInput";
 import { setUsersMode } from "@features/users/usersSlice";
@@ -12,13 +11,13 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { List } from "react-feather";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
 
 function AddUser() {
   const dispatch = useAppDispatch();
-  const [startDate, setStartDate] = useState(new Date());
   const [isPhysician, setPhysician] = useState(false);
-  const { handleSubmit, register, reset } = useForm<CreateUserInput>();
+  const { handleSubmit, register, reset, control } = useForm<CreateUserInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["users.register-user"],
     {
@@ -31,20 +30,23 @@ function AddUser() {
 
   const userRoles = (Object.keys(Role) as (keyof typeof Role)[]).map(
     (enumKey) => {
-      return (
-        <>
-          <option value={Role[enumKey]}>{Role[enumKey]}</option>
-        </>
-      );
+      return {
+        label: Role[enumKey].toLowerCase(),
+        value: Role[enumKey],
+      };
     }
   );
+  const genderOptions = [
+    { label: "Prefer not to respond", value: "NO_RESPOND" },
+    { label: "male", value: "MALE" },
+    { label: "female", value: "FEMALE" },
+  ];
 
   function onSubmit(values: CreateUserInput) {
     const physician = !isPhysician && { expertise: "", licenseNumber: "" };
     mutate({
       ...values,
       image: `/${values.gender.toLowerCase()}_pic.svg`,
-      birthday: startDate,
       ...physician,
     });
   }
@@ -118,15 +120,40 @@ function AddUser() {
               />
             </div>
             <div className="grid grid-cols-2 gap-2 items-end">
-              <GenderInput register={register("gender")} />
+              <div>
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Gender
+                </label>
+                <Controller
+                  control={control}
+                  defaultValue={"NO_RESPOND"}
+                  name="gender"
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      classNamePrefix="addl-class"
+                      options={genderOptions}
+                      value={genderOptions.find((c) => c.value === value)}
+                      onChange={(gender) => onChange(gender?.value)}
+                    />
+                  )}
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                   Birthdate
                 </label>
-                <DatePicker
-                  className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-                  selected={startDate}
-                  onChange={(date: Date) => setStartDate(date)}
+                <Controller
+                  control={control}
+                  name="birthday"
+                  render={({ field }) => (
+                    <DatePicker
+                      className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                      placeholderText="Select date"
+                      onChange={(date) => field.onChange(date)}
+                      selected={field.value ? field.value : new Date()}
+                      dateFormat="MMMM-dd-yyyy"
+                    />
+                  )}
                 />
               </div>
             </div>
@@ -144,17 +171,26 @@ function AddUser() {
               <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                 User Role
               </label>
-              <select
-                id="role"
-                className="block w-full mt-1 bg-white h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-                {...register("role")}
-                onChange={(e) => setPhysician(e.target.value === "PHYSICIAN")}
-              >
-                <option value="" selected disabled hidden>
-                  User Role
-                </option>
-                {userRoles}
-              </select>
+              <Controller
+                control={control}
+                defaultValue={Role["NURSE" as keyof typeof Role]}
+                name="role"
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    classNamePrefix="addl-class"
+                    options={userRoles}
+                    value={userRoles.find((c) => c.value === value)}
+                    onChange={(role) => {
+                      onChange(role?.value);
+                      if (role?.value === "PHYSICIAN") {
+                        setPhysician(true);
+                      } else {
+                        setPhysician(false);
+                      }
+                    }}
+                  />
+                )}
+              />
             </div>
             <>
               <PhysicianInput

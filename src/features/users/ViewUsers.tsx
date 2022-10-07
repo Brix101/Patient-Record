@@ -11,7 +11,7 @@ import { Edit, PlusSquare, Trash2 } from "react-feather";
 function ViewUsers() {
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
-  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
+  const { data, isLoading, isRefetching, refetch, isFetching } = trpc.useQuery(
     [
       "users.all-users",
       {
@@ -26,7 +26,6 @@ function ViewUsers() {
       refetch();
     },
   });
-
   const TableStyle = (x: number) => {
     if (x % 2) {
       return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
@@ -62,7 +61,7 @@ function ViewUsers() {
           </SecondaryButton>
         </div>
       </div>
-      <LinearLoading isLoading={isLoading || isRefetching} />
+      <LinearLoading isLoading={isLoading || isRefetching || isFetching} />
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
