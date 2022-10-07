@@ -3,6 +3,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
 import { CreateRoomInput } from "@/schema/room.schema";
+import { ErrorMessage } from "@hookform/error-message";
 import { RoomCat, RoomStatus } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import React from "react";
@@ -13,12 +14,20 @@ import { setRoomsMode } from "./roomsSlice";
 
 function AddRoom() {
   const dispatch = useAppDispatch();
-  const { handleSubmit, register, reset, control } = useForm<CreateRoomInput>();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    control,
+    clearErrors,
+    formState: { errors: validationError },
+  } = useForm<CreateRoomInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["room.create-room"],
     {
       onSuccess: () => {
         reset();
+        clearErrors();
       },
     }
   );
@@ -54,23 +63,31 @@ function AddRoom() {
           <List size={24} />
         </SecondaryButton>
       </div>
-      {error && (
+
+      {(!isSuccess || error || validationError) && (
         <div
-          className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+          className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
           role="alert"
         >
-          <span className="font-medium">Error alert!</span>
-          {error.message}
+          <span className="font-medium">Error alert! </span>
+          {error && error.message}
+          <ErrorMessage
+            errors={validationError}
+            name="price"
+            render={({ message }) => <p> Max Value Exceeded</p>}
+          />
         </div>
       )}
-      {isSuccess && (
-        <div
-          className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-          role="alert"
-        >
-          <span className="font-medium">Success alert!</span> Room Added
-        </div>
-      )}
+      {isSuccess ||
+        !error ||
+        (!validationError && (
+          <div
+            className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+            role="alert"
+          >
+            <span className="font-medium">Success alert!</span> Room Added
+          </div>
+        ))}
       <form
         className="md:grid md:grid-cols-2 md:gap-6"
         onSubmit={handleSubmit(onSubmit)}
@@ -105,6 +122,7 @@ function AddRoom() {
             register={register("price", {
               valueAsNumber: true,
               validate: (value) => value > 0,
+              max: 999999999,
             })}
           />
         </div>
