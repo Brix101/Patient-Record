@@ -21,11 +21,14 @@ function ViewUsers() {
     { enabled: true }
   );
 
-  const { mutate } = trpc.useMutation(["users.delete-user"], {
-    onSuccess: () => {
-      refetch();
-    },
-  });
+  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
+    ["users.delete-user"],
+    {
+      onSuccess: () => {
+        refetch();
+      },
+    }
+  );
   const TableStyle = (x: number) => {
     if (x % 2) {
       return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
@@ -61,7 +64,9 @@ function ViewUsers() {
           </SecondaryButton>
         </div>
       </div>
-      <LinearLoading isLoading={isLoading || isRefetching || isFetching} />
+      <LinearLoading
+        isLoading={isLoading || isRefetching || isFetching || isDeleteLoading}
+      />
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>

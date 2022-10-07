@@ -148,10 +148,11 @@ function AddUser() {
                   render={({ field }) => (
                     <DatePicker
                       className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-                      placeholderText="Select date"
+                      placeholderText="Select date (MMMM-dd-yyyy)"
                       onChange={(date) => field.onChange(date)}
-                      selected={field.value ? field.value : new Date()}
+                      selected={field.value}
                       dateFormat="MMMM-dd-yyyy"
+                      required
                     />
                   )}
                 />

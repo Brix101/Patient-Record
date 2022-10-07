@@ -1,3 +1,4 @@
+import roomssReducer from "@features/rooms/roomsSlice";
 import sidebarReducer from "@features/sideBar/sidebarSlice";
 import usersReducer from "@features/users/usersSlice";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
@@ -7,6 +8,7 @@ export function makeStore() {
     reducer: {
       sidebar: sidebarReducer,
       users: usersReducer,
+      rooms: roomssReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

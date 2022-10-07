@@ -4,7 +4,7 @@ import {
   searchRoomSchema,
   updateRoomSchema,
 } from "@/schema/room.schema";
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
@@ -13,10 +13,16 @@ export const roomRouter = createProtectedRouter()
   .mutation("create-room", {
     input: createRoomSchema,
     resolve: async ({ input, ctx }) => {
+      const { category, floor, price, roomNo, station, status } = input;
       try {
         const user = await ctx.prisma.room.create({
           data: {
-            ...input,
+            category,
+            floor,
+            price: new Prisma.Decimal(price),
+            roomNo,
+            station,
+            status,
           },
         });
 
@@ -75,7 +81,7 @@ export const roomRouter = createProtectedRouter()
           data: {
             category,
             floor,
-            price,
+            price: new Prisma.Decimal(price),
             roomNo,
             station,
             status,
@@ -83,6 +89,7 @@ export const roomRouter = createProtectedRouter()
         });
         return room;
       } catch (e) {
+        console.log(e);
         throw new trpc.TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Something went wrong",

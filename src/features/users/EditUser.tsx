@@ -21,7 +21,6 @@ function EditUser() {
     ["users.update-user"],
     {
       onSuccess: () => {
-        // reset();
         console.log("success");
       },
     }

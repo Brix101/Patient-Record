@@ -90,12 +90,12 @@ enum Role {
 
 enum RoomCat {
     WARD
-    SEMI
+    SEMI_PRIVATE
     PRIVATE
 }
 
 enum RoomStatus {
     VACANT
     OCCUPIED
-    OUTOFSERVICE
+    OUT_OF_SERVICE
 }
