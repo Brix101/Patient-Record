@@ -28,7 +28,6 @@ export const roomRouter = createProtectedRouter()
 
         return user;
       } catch (e) {
-        console.log(e);
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === "P2002") {
             throw new trpc.TRPCError({
@@ -89,7 +88,6 @@ export const roomRouter = createProtectedRouter()
         });
         return room;
       } catch (e) {
-        console.log(e);
         throw new trpc.TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Something went wrong",
