@@ -77,18 +77,13 @@ function EditRoom() {
             <XSquare size={24} />
           </OutlinedButton>
         </div>
-        {(!isSuccess || error || validationError) && (
+        {error && (
           <div
             className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
             role="alert"
           >
             <span className="font-medium">Error alert! </span>
             {error && error.message}
-            <ErrorMessage
-              errors={validationError}
-              name="price"
-              render={({ message }) => <p> Max Value Exceeded</p>}
-            />
           </div>
         )}
         {isSuccess ||
@@ -139,6 +134,16 @@ function EditRoom() {
                 validate: (value) => value > 0,
                 max: 999999999,
               })}
+            />
+
+            <ErrorMessage
+              errors={validationError}
+              name="price"
+              render={() => (
+                <p className="text-red-500 bg-red-100 p-2 text-sm font-bold">
+                  Max Value Exceeded
+                </p>
+              )}
             />
           </div>
 

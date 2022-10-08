@@ -6,12 +6,12 @@ const NursePage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Nurse Page</title>
+        <title>Pharmacist Page</title>
       </Head>
       <Main>
         <main>
           <div className="pt-6 text-2xl text-blue-500 flex justify-center items-center w-full">
-            Nurse
+            Pharmacist
           </div>
         </main>
       </Main>

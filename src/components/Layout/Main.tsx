@@ -1,13 +1,11 @@
 import ProfileButton from "@components/buttons/ProfileButton";
-import SideBarButton from "@components/buttons/SideBarButton";
 import { RoleCheck } from "@components/RoleCheck";
-import Sidebar from "@features/sideBar/Sidebar";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Clipboard, Columns, Server, Users } from "react-feather";
+import NavigationButton from "../buttons/NavigationButton";
 
-function Admin({ children }: { children?: React.ReactNode }) {
+function Main({ children }: { children?: React.ReactNode }) {
   return (
     <RoleCheck>
       <main className="overflow-hidden h-screen">
@@ -27,31 +25,30 @@ function Admin({ children }: { children?: React.ReactNode }) {
               </div>
             </div>
           </Link>
-          <ProfileButton />
+          <div className="flex gap-10 items-center">
+            <div
+              className="hidden w-full md:block md:w-auto"
+              id="navbar-default"
+            >
+              <ul className="flex flex-row gap-5">
+                <li>
+                  <NavigationButton href="/pharmacist">
+                    Medicines
+                  </NavigationButton>
+                </li>
+                <li>
+                  <NavigationButton href="/pharmacist/requests">
+                    Requests
+                  </NavigationButton>
+                </li>
+              </ul>
+            </div>
+            <ProfileButton />
+          </div>
         </header>
         <div className="flex h-full ">
-          <Sidebar>
-            <div className="my-2 space-y-1">
-              <SideBarButton href={"/admin"}>
-                <Server size={20} />
-                <a>Dashboard</a>
-              </SideBarButton>
-              <SideBarButton href={"/admin/room"}>
-                <Columns size={20} />
-                <a>Room</a>
-              </SideBarButton>
-              <SideBarButton href={"/admin/patient"}>
-                <Clipboard size={20} />
-                <a>Patient</a>
-              </SideBarButton>
-              <SideBarButton href={"/admin/users"}>
-                <Users size={20} />
-                <a>Users</a>
-              </SideBarButton>
-            </div>
-          </Sidebar>
           <div className="flex-1">
-            <main className="mx-10 my-5 h-[85vh] min-h-0 overflow-y-scroll">
+            <main className="mx-10 my-5 flex justify-center h-[85vh] min-h-0 overflow-y-scroll">
               {children}
             </main>
           </div>
@@ -61,4 +58,4 @@ function Admin({ children }: { children?: React.ReactNode }) {
   );
 }
 
-export default Admin;
+export default Main;
