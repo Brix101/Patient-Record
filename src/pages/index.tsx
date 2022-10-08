@@ -1,9 +1,12 @@
-import Test from "@/components/Test";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+
+  router.push("/signin");
   return (
     <>
       <Head>
@@ -11,7 +14,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/logo.svg" />
       </Head>
 
-      <main className="h-screen">
+      {/* <main className="h-screen">
         <nav className="bg-white border-b border-green-200 px-2 sm:px-4 py-2.5 rounded dark:bg-green-900">
           <div className="container flex flex-wrap justify-between items-center mx-auto">
             <Link href="/">
@@ -101,9 +104,9 @@ const Home: NextPage = () => {
         </nav>
 
         <div className="w-full h-full bg-gray-300 flex justify-center items-center">
-          <Test />
+        
         </div>
-      </main>
+      </main> */}
     </>
   );
 };
