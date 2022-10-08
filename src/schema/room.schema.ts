@@ -34,4 +34,4 @@ export type SearchRoomInput = z.TypeOf<typeof searchRoomSchema>;
 
 export type UpdateRoomInput = z.TypeOf<typeof updateRoomSchema>;
 
-export type DeleteUserInput = z.TypeOf<typeof deleteRoomSchema>;
+export type DeleteRoomInput = z.TypeOf<typeof deleteRoomSchema>;

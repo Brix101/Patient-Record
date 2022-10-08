@@ -81,6 +81,26 @@ model Patient {
     addedById       Int?
 }
 
+model Medicine {
+    id       Int      @id @default(autoincrement())
+    name     String?
+    quantity Int?
+    unit     Unit
+    price    Decimal? @db.Decimal(10, 2)
+}
+
+enum Unit {
+    kg
+    g
+    mg
+    mcg
+    L
+    ml
+    cc
+    mol
+    mmol
+}
+
 enum Role {
     ADMIN
     NURSE
