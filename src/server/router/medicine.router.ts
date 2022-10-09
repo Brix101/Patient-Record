@@ -10,7 +10,7 @@ import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 
 export const mediceneRouter = createProtectedRouter()
-  .mutation("create-medecine", {
+  .mutation("create-medicine", {
     input: createMedicineSchema,
     resolve: async ({ input, ctx }) => {
       const { name, price, quantity, unit } = input;
@@ -42,12 +42,12 @@ export const mediceneRouter = createProtectedRouter()
       }
     },
   })
-  .query("get-medecines", {
+  .query("get-medicines", {
     input: searchMedicineSchema,
     async resolve({ ctx, input }) {
       const { name } = input;
       if (ctx.session) {
-        const medecines = await ctx.prisma.medicine.findMany({
+        const medicines = await ctx.prisma.medicine.findMany({
           where: {
             name: { contains: name ? name : "" },
           },
@@ -55,7 +55,7 @@ export const mediceneRouter = createProtectedRouter()
             name: "asc",
           },
         });
-        return medecines;
+        return medicines;
       }
       throw new trpc.TRPCError({
         code: "UNAUTHORIZED",

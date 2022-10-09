@@ -4,6 +4,7 @@ import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
 import { Role } from "@prisma/client";
 import { trpc } from "@utils/trpc";
+import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { Edit, PlusSquare, Trash2 } from "react-feather";
@@ -15,7 +16,7 @@ const ViewRoom: NextPage = () => {
   const [name, setName] = useState("");
   const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
-      "medicine.get-medecines",
+      "medicine.get-medicines",
       {
         name: name,
       },

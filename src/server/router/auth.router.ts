@@ -29,7 +29,16 @@ export const authRouter = createRouter().mutation("login-user", {
         message: "Incorrect Password",
       });
     }
-
+    await ctx.prisma.userLogs.create({
+      data: {
+        type: "Time In",
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
     return {
       email: user.email,
       role: user.role,

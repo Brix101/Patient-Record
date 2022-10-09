@@ -23,7 +23,7 @@ const AddMedicine: NextPage = () => {
     formState: { errors: validationError },
   } = useForm<CreateMedicineInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
-    ["medicine.create-medecine"],
+    ["medicine.create-medicine"],
     {
       onSuccess: () => {
         reset();

@@ -16,7 +16,7 @@ const Home: NextPage = () => {
         <title>Home</title>
         <link rel="icon" href="/logo.svg" />
       </Head>
-      <nav className="sticky z-50 w-full bg-white/20 backdrop-blur-sm border-b border-green-200 px-2 sm:px-4 py-2.5 rounded dark:bg-green-900">
+      <nav className="sticky z-50 w-full bg-green-50 backdrop-blur-sm border-b border-green-200 px-2 sm:px-4 py-2.5 rounded dark:bg-green-900">
         <div className="container flex flex-wrap justify-between items-center mx-auto">
           <Link href="/">
             <div className="flex gap-5 cursor-pointer rounded-full select-none hover:bg-gray-50 hover:text-green-800 px-5 py-1">
@@ -97,16 +97,18 @@ const Home: NextPage = () => {
             layout="fill"
           />
           <div className="absolute w-full h-screen bg-black/[.25] z-10 flex justify-start items-center">
-            <div className="flex flex-col self-center text-center text-gray-900 select-none bg-green-500/.5 backdrop-blur-sm h-full w-full">
-              <Image
-                width="100%"
-                height="80%"
-                className="mr-5 pt-10"
-                src="/medical_research.svg"
-                alt="logo"
-                objectFit="contain"
-                layout="fill"
-              />
+            <div className="flex flex-col items-start text-gray-900 select-none bg-green-500/.5 backdrop-blur-sm h-full w-full">
+              <div className="mt-10">
+                <Image
+                  width="100%"
+                  height="80%"
+                  className="m-10"
+                  src="/medical_research.svg"
+                  alt="logo"
+                  objectFit="scale-down"
+                  layout="fill"
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -8,7 +8,7 @@ import React from "react";
 import NavigationButton from "../buttons/NavigationButton";
 
 function Main({ children }: { children?: React.ReactNode }) {
-  const { data, status } = useSession();
+  const { data } = useSession();
 
   return (
     <RoleCheck>
@@ -53,12 +53,12 @@ function Main({ children }: { children?: React.ReactNode }) {
                   <>
                     <li>
                       <NavigationButton href="/nurse">
-                        Medicines
+                        Patients
                       </NavigationButton>
                     </li>
                     <li>
-                      <NavigationButton href="/nurse/requests">
-                        Requests
+                      <NavigationButton href="/nurse/appointment">
+                        Appointments
                       </NavigationButton>
                     </li>
                   </>
