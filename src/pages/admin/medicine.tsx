@@ -21,6 +21,7 @@ const RoomPage: NextPage = () => {
     <>
       <Head>
         <title>Management - Rooms</title>
+        <link rel="icon" href="/logo.svg" />
       </Head>
       <Admin>
         {mode === "View" && <ViewMedicine />}

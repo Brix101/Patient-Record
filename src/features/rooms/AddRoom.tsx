@@ -12,7 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { setRoomsMode } from "./roomsSlice";
 
-function AddRoom() {
+const AddRoom: NextPage = () => {
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
@@ -81,94 +81,95 @@ function AddRoom() {
           <span className="font-medium">Success alert!</span> Room Added
         </div>
       )}
-      <form
-        className="md:grid md:grid-cols-2 md:gap-6"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="col-span-1 space-y-3">
-          <GenericInput
-            label="Floor"
-            type="text"
-            placeHolder="Floor"
-            required
-            register={register("floor")}
-          />
-          <GenericInput
-            label="Room No"
-            type="text"
-            placeHolder="Room No"
-            required
-            register={register("roomNo")}
-          />
-          <GenericInput
-            label="Station"
-            type="text"
-            placeHolder="Station"
-            required
-            register={register("station")}
-          />
-          <GenericInput
-            label="Price"
-            type="number"
-            placeHolder="Price"
-            required
-            register={register("price", {
-              valueAsNumber: true,
-              validate: (value) => value > 0,
-              max: 999999999,
-            })}
-          />
-          <ErrorMessage
-            errors={validationError}
-            name="price"
-            render={() => (
-              <p className="text-red-500 bg-red-100 p-2 text-sm font-bold">
-                Max Value Exceeded
-              </p>
-            )}
-          />
-        </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="md:grid md:grid-cols-2 md:gap-6">
+          <div className="col-span-1 space-y-3">
+            <GenericInput
+              label="Floor"
+              type="text"
+              placeHolder="Floor"
+              required
+              register={register("floor")}
+            />
+            <GenericInput
+              label="Room No"
+              type="text"
+              placeHolder="Room No"
+              required
+              register={register("roomNo")}
+            />
+            <GenericInput
+              label="Station"
+              type="text"
+              placeHolder="Station"
+              required
+              register={register("station")}
+            />
+            <GenericInput
+              label="Price"
+              type="number"
+              placeHolder="Price"
+              required
+              register={register("price", {
+                valueAsNumber: true,
+                validate: (value) => value > 0,
+                max: 999999999,
+              })}
+            />
+            <ErrorMessage
+              errors={validationError}
+              name="price"
+              render={() => (
+                <p className="text-red-500 bg-red-100 p-2 text-sm font-bold">
+                  Max Value Exceeded
+                </p>
+              )}
+            />
+          </div>
 
-        <div className="col-span-1 space-y-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-              Room Category
-            </label>
-            <Controller
-              control={control}
-              defaultValue={RoomCat["WARD" as keyof typeof RoomCat]}
-              name="category"
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  classNamePrefix="addl-class"
-                  options={roomCat}
-                  value={roomCat.find((c) => c.value === value)}
-                  onChange={(category) => onChange(category?.value)}
-                />
-              )}
-            />
+          <div className="col-span-1 space-y-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                Room Category
+              </label>
+              <Controller
+                control={control}
+                defaultValue={RoomCat["WARD" as keyof typeof RoomCat]}
+                name="category"
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    classNamePrefix="addl-class"
+                    options={roomCat}
+                    value={roomCat.find((c) => c.value === value)}
+                    onChange={(category) => onChange(category?.value)}
+                  />
+                )}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                Room Status
+              </label>
+              <Controller
+                control={control}
+                defaultValue={RoomStatus["VACANT" as keyof typeof RoomStatus]}
+                name="status"
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    classNamePrefix="addl-class"
+                    options={roomStatus}
+                    value={roomStatus.find((c) => c.value === value)}
+                    onChange={(status) => onChange(status?.value)}
+                  />
+                )}
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-              Room Status
-            </label>
-            <Controller
-              control={control}
-              defaultValue={RoomStatus["VACANT" as keyof typeof RoomStatus]}
-              name="status"
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  classNamePrefix="addl-class"
-                  options={roomStatus}
-                  value={roomStatus.find((c) => c.value === value)}
-                  onChange={(status) => onChange(status?.value)}
-                />
-              )}
-            />
-          </div>
+        </div>
+        <div className="w-full">
           <div className="py-3 text-right">
             <PrimaryButton
-              className="w-1/2"
+              className="w-1/3"
               isLoading={isLoading}
               type="submit"
             >
@@ -179,6 +180,6 @@ function AddRoom() {
       </form>
     </div>
   );
-}
+};
 
 export default AddRoom;

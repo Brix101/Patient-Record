@@ -7,13 +7,14 @@ import { UpdateUserInput } from "@/schema/user.schema";
 import { trpc } from "@/utils/trpc";
 import { setUsersMode, usersState } from "@features/users/usersSlice";
 import { Role } from "@prisma/client";
+import { NextPage } from "next";
 import React, { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { XSquare } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 
-function EditUser() {
+const EditUser: NextPage = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(usersState);
   const { handleSubmit, register, reset, control } = useForm<UpdateUserInput>();
@@ -104,125 +105,125 @@ function EditUser() {
           </div>
         )}
         {user && (
-          <form
-            className="md:grid md:grid-cols-2 md:gap-6"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <div className="col-span-1 space-y-3">
-              <div className="grid grid-cols-2 gap-2 items-end">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="md:grid md:grid-cols-2 md:gap-6">
+              <div className="col-span-1 space-y-3">
+                <div className="grid grid-cols-2 gap-2 items-end">
+                  <GenericInput
+                    label="First Name"
+                    type="text"
+                    placeHolder="First Name"
+                    required
+                    register={register("firstName")}
+                  />
+                  <GenericInput
+                    label="Last Name"
+                    type="text"
+                    placeHolder="Last Name"
+                    required
+                    register={register("lastName")}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2 items-end">
+                  <GenericInput
+                    label="Email"
+                    type="email"
+                    placeHolder="name@example.com"
+                    required
+                    register={register("email")}
+                  />
+                  <GenericInput
+                    label="Mobile Number"
+                    type="text"
+                    placeHolder="Mobile"
+                    required
+                    register={register("mobile")}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2 items-end">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Gender
+                    </label>
+                    <Controller
+                      control={control}
+                      defaultValue={user?.gender ? user?.gender : "NO_RESPOND"}
+                      name="gender"
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          classNamePrefix="addl-class"
+                          options={genderOptions}
+                          value={genderOptions.find((c) => c.value === value)}
+                          onChange={(gender) => onChange(gender?.value)}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Birthdate
+                    </label>
+                    <Controller
+                      control={control}
+                      name="birthday"
+                      render={({ field }) => (
+                        <DatePicker
+                          className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                          placeholderText="Select date"
+                          onChange={(date) => field.onChange(date)}
+                          selected={field.value ? field.value : new Date()}
+                          dateFormat="MMMM-dd-yyyy"
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
                 <GenericInput
-                  label="First Name"
+                  label="Address"
                   type="text"
-                  placeHolder="First Name"
+                  placeHolder="Address"
                   required
-                  register={register("firstName")}
-                />
-                <GenericInput
-                  label="Last Name"
-                  type="text"
-                  placeHolder="Last Name"
-                  required
-                  register={register("lastName")}
+                  register={register("address")}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-2 items-end">
-                <GenericInput
-                  label="Email"
-                  type="email"
-                  placeHolder="name@example.com"
-                  required
-                  register={register("email")}
-                />
-                <GenericInput
-                  label="Mobile Number"
-                  type="text"
-                  placeHolder="Mobile"
-                  required
-                  register={register("mobile")}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2 items-end">
+              <div className="col-span-1 space-y-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Gender
+                    User Role
                   </label>
                   <Controller
                     control={control}
-                    defaultValue={user?.gender ? user?.gender : "NO_RESPOND"}
-                    name="gender"
+                    defaultValue={Role[user?.role as keyof typeof Role]}
+                    name="role"
                     render={({ field: { onChange, value } }) => (
                       <Select
                         classNamePrefix="addl-class"
-                        options={genderOptions}
-                        value={genderOptions.find((c) => c.value === value)}
-                        onChange={(gender) => onChange(gender?.value)}
+                        options={userRoles}
+                        value={userRoles.find((c) => c.value === value)}
+                        onChange={(role) => onChange(role?.value)}
                       />
                     )}
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Birthdate
-                  </label>
-                  <Controller
-                    control={control}
-                    name="birthday"
-                    render={({ field }) => (
-                      <DatePicker
-                        className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-                        placeholderText="Select date"
-                        onChange={(date) => field.onChange(date)}
-                        selected={field.value ? field.value : new Date()}
-                        dateFormat="MMMM-dd-yyyy"
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-              <GenericInput
-                label="Address"
-                type="text"
-                placeHolder="Address"
-                required
-                register={register("address")}
-              />
-            </div>
-            <div className="col-span-1 space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  User Role
-                </label>
-                <Controller
-                  control={control}
-                  defaultValue={Role[user?.role as keyof typeof Role]}
-                  name="role"
-                  render={({ field: { onChange, value } }) => (
-                    <Select
-                      classNamePrefix="addl-class"
-                      options={userRoles}
-                      value={userRoles.find((c) => c.value === value)}
-                      onChange={(role) => onChange(role?.value)}
-                    />
-                  )}
+
+                <PhysicianInput
+                  enable={user?.role === "PHYSICIAN"}
+                  placeHolder="License Number"
+                  label="License Number"
+                  register={register("licenseNumber")}
+                />
+                <PhysicianInput
+                  enable={user?.role === "PHYSICIAN"}
+                  placeHolder="Expertise"
+                  label="Expertise"
+                  register={register("expertise")}
                 />
               </div>
-
-              <PhysicianInput
-                enable={user?.role === "PHYSICIAN"}
-                placeHolder="License Number"
-                label="License Number"
-                register={register("licenseNumber")}
-              />
-              <PhysicianInput
-                enable={user?.role === "PHYSICIAN"}
-                placeHolder="Expertise"
-                label="Expertise"
-                register={register("expertise")}
-              />
-
+            </div>
+            <div className="w-full">
               <div className="py-3 text-right">
                 <PrimaryButton
-                  className="w-1/2"
+                  className="w-1/3"
                   isLoading={isLoading}
                   type="submit"
                 >
@@ -235,6 +236,6 @@ function EditUser() {
       </div>
     </div>
   );
-}
+};
 
 export default EditUser;

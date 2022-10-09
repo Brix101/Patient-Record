@@ -4,11 +4,12 @@ import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@components/LinearLoading";
 import { setUsersMode } from "@features/users/usersSlice";
 import { trpc } from "@utils/trpc";
+import { NextPage } from "next";
 import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { Edit, PlusSquare, Trash2 } from "react-feather";
+import { Edit, Trash2, UserPlus } from "react-feather";
 
-function ViewUsers() {
+const ViewUsers: NextPage = () => {
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
   const { data, isLoading, isRefetching, refetch, isFetching } = trpc.useQuery(
@@ -60,7 +61,7 @@ function ViewUsers() {
             className="w-11"
             onClick={() => dispatch(setUsersMode({ mode: "Add" }))}
           >
-            <PlusSquare size={24} />
+            <UserPlus size={24} />
           </SecondaryButton>
         </div>
       </div>
@@ -75,6 +76,9 @@ function ViewUsers() {
             </th>
             <th scope="col" className="py-3 px-6">
               Email
+            </th>
+            <th scope="col" className="py-3 px-6">
+              Mobile
             </th>
             <th scope="col" className="py-3 px-6">
               Role
@@ -97,6 +101,7 @@ function ViewUsers() {
                     {user.firstName && user.firstName}
                   </th>
                   <td className="py-4 px-6">{user.email}</td>
+                  <td className="py-4 px-6">{user.mobile}</td>
                   <td className="py-4 px-6 capitalize">{user.role}</td>
                   <td className="py-4 px-6 flex gap-5">
                     <span
@@ -122,6 +127,6 @@ function ViewUsers() {
       </table>
     </div>
   );
-}
+};
 
 export default ViewUsers;

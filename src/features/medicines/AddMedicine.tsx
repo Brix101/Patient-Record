@@ -5,13 +5,14 @@ import GenericInput from "@/components/inputs/GenericInput";
 import { CreateMedicineInput } from "@/schema/medicine.schema";
 import { Unit } from "@prisma/client";
 import { trpc } from "@utils/trpc";
+import { NextPage } from "next";
 import React from "react";
 import { List } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { setMedicinesMode } from "./medicinesSlice";
 
-function AddMedicine() {
+const AddMedicine: NextPage = () => {
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
@@ -131,6 +132,6 @@ function AddMedicine() {
       </form>
     </div>
   );
-}
+};
 
 export default AddMedicine;

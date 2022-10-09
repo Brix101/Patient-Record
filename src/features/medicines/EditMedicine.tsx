@@ -4,15 +4,15 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
 import { UpdateMedicineInput } from "@/schema/medicine.schema";
 import { trpc } from "@/utils/trpc";
-import { ErrorMessage } from "@hookform/error-message";
 import { Unit } from "@prisma/client";
+import { NextPage } from "next";
 import React, { useEffect } from "react";
 import { XSquare } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { medicinesState, setMedicinesMode } from "./medicinesSlice";
 
-function EditMedicine() {
+const EditMedicine: NextPage = () => {
   const dispatch = useAppDispatch();
   const { medicine } = useAppSelector(medicinesState);
   const {
@@ -150,6 +150,6 @@ function EditMedicine() {
       )}
     </div>
   );
-}
+};
 
 export default EditMedicine;

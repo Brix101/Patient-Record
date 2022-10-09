@@ -35,6 +35,7 @@ const SignInPage: NextPage = () => {
     <>
       <Head>
         <title>Sign In</title>
+        <link rel="icon" href="/logo.svg" />
       </Head>
       <RoleCheck>
         <main className="h-screen w-full bg-green-50 flex justify-center ">

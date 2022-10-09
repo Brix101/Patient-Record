@@ -7,6 +7,7 @@ const NursePage: NextPage = () => {
     <>
       <Head>
         <title>Nurse Page</title>
+        <link rel="icon" href="/logo.svg" />
       </Head>
       <Main>
         <main>

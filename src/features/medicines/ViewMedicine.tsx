@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { Edit, PlusSquare, Trash2 } from "react-feather";
 import { setMedicinesMode } from "./medicinesSlice";
 
-function ViewRoom() {
+const ViewRoom: NextPage = () => {
   const { data: userData } = useSession();
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
@@ -124,6 +124,6 @@ function ViewRoom() {
       </table>
     </div>
   );
-}
+};
 
 export default ViewRoom;

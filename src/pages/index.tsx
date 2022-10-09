@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -19,9 +20,18 @@ const Home: NextPage = () => {
         <nav className="bg-white border-b border-green-200 px-2 sm:px-4 py-2.5 rounded dark:bg-green-900">
           <div className="container flex flex-wrap justify-between items-center mx-auto">
             <Link href="/">
-              <div className="flex flex-col text-center cursor-pointer select-none">
-                <h1 className="text-2xl">Medidas Medical Center</h1>
-                <h3 className="text-lg">Valencia City, Bukidnon</h3>
+              <div className="flex gap-5 cursor-pointer select-none hover:bg-gray-50 hover:text-gray-800">
+                <Image
+                  width={70}
+                  height={70}
+                  className="mr-5"
+                  src="/logo.svg"
+                  alt="logo"
+                />
+                <div className="flex flex-col self-center text-center ">
+                  <h1 className="text-lg">Medidas Medical Center</h1>
+                  <h3 className="text-xs">Valencia City, Bukidnon</h3>
+                </div>
               </div>
             </Link>
             <button
@@ -51,7 +61,7 @@ const Home: NextPage = () => {
               id="navbar-default"
             >
               <ul className="flex flex-col p-4 mt-4 bg-green-50 rounded-lg border border-green-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-green-800 md:dark:bg-green-900 dark:border-green-700">
-                <li>
+                {/* <li>
                   <a
                     href="#"
                     className="block py-2 pr-4 pl-3 text-white bg-green-700 rounded md:bg-transparent md:text-green-700 md:p-0 dark:text-white"
@@ -91,8 +101,8 @@ const Home: NextPage = () => {
                   >
                     Contact
                   </a>
-                </li>
-                <li>
+                </li> */}
+                <li className="bg-green-300 p-2 rounded-full hover:bg-green-200">
                   <Link href="/signin">
                     <a className="block py-2 pr-4 pl-3 text-grey-700 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-green-400 md:dark:hover:text-white dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent">
                       Sign In

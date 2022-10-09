@@ -11,6 +11,7 @@ const ManagementPage: NextPage = () => {
     <>
       <Head>
         <title>Management</title>
+        <link rel="icon" href="/logo.svg" />
       </Head>
       <Admin>Dashboard</Admin>
     </>

@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { Edit, PlusSquare, Trash2 } from "react-feather";
 import { setRoomsMode } from "./roomsSlice";
 
-function ViewRoom() {
+const ViewRoom: NextPage = () => {
   const dispatch = useAppDispatch();
   const [searchInput, setSearchInput] = useState("");
   const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
@@ -64,7 +64,7 @@ function ViewRoom() {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="py-3 px-6">
-              roomNo
+              room No
             </th>
             <th scope="col" className="py-3 px-6">
               floor
@@ -144,6 +144,6 @@ function ViewRoom() {
       </table>
     </div>
   );
-}
+};
 
 export default ViewRoom;

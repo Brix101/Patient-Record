@@ -21,6 +21,7 @@ const UsersPage: NextPage = () => {
     <>
       <Head>
         <title>Management - Users</title>
+        <link rel="icon" href="/logo.svg" />
       </Head>
       <Admin>
         {mode === "View" && <ViewUsers />}

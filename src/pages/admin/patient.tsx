@@ -10,6 +10,7 @@ const PatientPage: NextPage = () => {
     <>
       <Head>
         <title>Management - Patient</title>
+        <link rel="icon" href="/logo.svg" />
       </Head>
       <Admin>Patient</Admin>
     </>
