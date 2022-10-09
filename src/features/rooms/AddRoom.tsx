@@ -6,6 +6,7 @@ import { CreateRoomInput } from "@/schema/room.schema";
 import { ErrorMessage } from "@hookform/error-message";
 import { RoomCat, RoomStatus } from "@prisma/client";
 import { trpc } from "@utils/trpc";
+import { NextPage } from "next";
 import React from "react";
 import { List } from "react-feather";
 import { Controller, useForm } from "react-hook-form";

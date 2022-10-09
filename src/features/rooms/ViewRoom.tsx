@@ -3,6 +3,7 @@ import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
 import { trpc } from "@utils/trpc";
+import { NextPage } from "next";
 import React, { useState } from "react";
 import { Edit, PlusSquare, Trash2 } from "react-feather";
 import { setRoomsMode } from "./roomsSlice";
