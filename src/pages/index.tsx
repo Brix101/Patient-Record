@@ -6,17 +6,16 @@ import { useEffect } from "react";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  useEffect(() => {
-    router.push("/signin");
-  });
+  // useEffect(() => {
+  //   router.push("/signin");
+  // });
   return (
     <>
       <Head>
         <title>Home</title>
         <link rel="icon" href="/logo.svg" />
       </Head>
-
-      {/* <main className="h-screen">
+      <main className="h-screen">
         <nav className="bg-white border-b border-green-200 px-2 sm:px-4 py-2.5 rounded dark:bg-green-900">
           <div className="container flex flex-wrap justify-between items-center mx-auto">
             <Link href="/">
@@ -95,7 +94,7 @@ const Home: NextPage = () => {
                 </li>
                 <li>
                   <Link href="/signin">
-                    <a className="bg-transparent hover:bg-green-700 text-grey-700 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded-full">
+                    <a className="block py-2 pr-4 pl-3 text-grey-700 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-green-400 md:dark:hover:text-white dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent">
                       Sign In
                     </a>
                   </Link>
@@ -105,10 +104,8 @@ const Home: NextPage = () => {
           </div>
         </nav>
 
-        <div className="w-full h-full bg-gray-300 flex justify-center items-center">
-        
-        </div>
-      </main> */}
+        <div className="w-full h-full bg-gray-300 flex justify-center items-center"></div>
+      </main>
     </>
   );
 };

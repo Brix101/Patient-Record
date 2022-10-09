@@ -99,7 +99,7 @@ function AddMedicine() {
             </label>
             <Controller
               control={control}
-              defaultValue={Unit["kg" as keyof typeof Unit]}
+              defaultValue={Unit["g" as keyof typeof Unit]}
               name="unit"
               render={({ field: { onChange, value } }) => (
                 <Select

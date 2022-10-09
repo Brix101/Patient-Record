@@ -65,30 +65,23 @@ function EditMedicine() {
             <XSquare size={24} />
           </OutlinedButton>
         </div>
-        {(!isSuccess || error || validationError) && (
+        {error && (
           <div
             className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
             role="alert"
           >
             <span className="font-medium">Error alert! </span>
             {error && error.message}
-            <ErrorMessage
-              errors={validationError}
-              name="price"
-              render={({ message }) => <p> Max Value Exceeded</p>}
-            />
           </div>
         )}
-        {isSuccess ||
-          !error ||
-          (!validationError && (
-            <div
-              className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-              role="alert"
-            >
-              <span className="font-medium">Success alert!</span> Medicine Added
-            </div>
-          ))}
+        {isSuccess && (
+          <div
+            className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+            role="alert"
+          >
+            <span className="font-medium">Success alert!</span> Medicine Added
+          </div>
+        )}
       </div>
       {medicine && (
         <form
@@ -150,7 +143,7 @@ function EditMedicine() {
               isLoading={isLoading}
               type="submit"
             >
-              Add
+              Update
             </PrimaryButton>
           </div>
         </form>

@@ -1,11 +1,36 @@
 import ProfileButton from "@components/buttons/ProfileButton";
 import { RoleCheck } from "@components/RoleCheck";
+import { Role } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import NavigationButton from "../buttons/NavigationButton";
 
 function Main({ children }: { children?: React.ReactNode }) {
+  const { data, status } = useSession();
+
+  const roleRoutes: React.ReactNode[] = [];
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (data.user?.role === Role.PHARMACIST) {
+        roleRoutes.push(
+          <>
+            <li>
+              <NavigationButton href="/pharmacist">Medicines</NavigationButton>
+            </li>
+            <li>
+              <NavigationButton href="/pharmacist/requests">
+                Requests
+              </NavigationButton>
+            </li>
+          </>
+        );
+      }
+    }
+  });
+
   return (
     <RoleCheck>
       <main className="overflow-hidden h-screen">
@@ -31,16 +56,8 @@ function Main({ children }: { children?: React.ReactNode }) {
               id="navbar-default"
             >
               <ul className="flex flex-row gap-5">
-                <li>
-                  <NavigationButton href="/pharmacist">
-                    Medicines
-                  </NavigationButton>
-                </li>
-                <li>
-                  <NavigationButton href="/pharmacist/requests">
-                    Requests
-                  </NavigationButton>
-                </li>
+                {/* TODO update user role routes */}
+                {roleRoutes && roleRoutes}
               </ul>
             </div>
             <ProfileButton />
