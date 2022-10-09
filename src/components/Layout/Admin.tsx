@@ -5,7 +5,7 @@ import Sidebar from "@features/sideBar/Sidebar";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Clipboard, Columns, Server, Users } from "react-feather";
+import { Clipboard, Columns, Server, Sliders, Users } from "react-feather";
 
 function Admin({ children }: { children?: React.ReactNode }) {
   return (
@@ -33,7 +33,7 @@ function Admin({ children }: { children?: React.ReactNode }) {
           <Sidebar>
             <div className="my-2 space-y-1">
               <SideBarButton href={"/admin"}>
-                <Server size={20} />
+                <Sliders size={20} />
                 <a>Dashboard</a>
               </SideBarButton>
               <SideBarButton href={"/admin/room"}>
@@ -47,6 +47,10 @@ function Admin({ children }: { children?: React.ReactNode }) {
               <SideBarButton href={"/admin/users"}>
                 <Users size={20} />
                 <a>Users</a>
+              </SideBarButton>
+              <SideBarButton href={"/admin/logs"}>
+                <Server size={20} />
+                <a>Logs</a>
               </SideBarButton>
             </div>
           </Sidebar>

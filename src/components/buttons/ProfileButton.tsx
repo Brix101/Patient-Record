@@ -1,3 +1,4 @@
+import { trpc } from "@/utils/trpc";
 import { Menu, Transition } from "@headlessui/react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -7,6 +8,9 @@ export default function ProfileButton() {
   const { data } = useSession();
   const userImage = data?.user?.image as string;
   const useAlt = data?.user?.name as string;
+
+  const { mutate } = trpc.useMutation(["logs.time-out"]);
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="flex items-center">
@@ -32,7 +36,10 @@ export default function ProfileButton() {
               <button
                 type="submit"
                 className="text-gray-700 block w-full px-4 py-2 text-left text-sm hover:bg-green-100"
-                onClick={() => signOut()}
+                onClick={() => {
+                  mutate();
+                  signOut();
+                }}
               >
                 Sign out
               </button>

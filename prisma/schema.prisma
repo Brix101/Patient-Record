@@ -31,12 +31,12 @@ model User {
     updateAt  DateTime   @updatedAt
     Physician Physician?
 
-    attendingNurse       Patient? @relation("attendingNurse", fields: [attendingNurseId], references: [id])
+    attendingNurse       MedicalRecord?  @relation("attendingNurse", fields: [attendingNurseId], references: [id])
     attendingNurseId     Int?
-    attendingPhysician   Patient? @relation("attendingPhysician", fields: [attendingPhysicianId], references: [id])
+    attendingPhysician   MedicalRecord?  @relation("attendingPhysician", fields: [attendingPhysicianId], references: [id])
     attendingPhysicianId Int?
-
-    attendedPatient Patient[] @relation("attendedPatient")
+    addedPatient         MedicalRecord[] @relation("addedPatient")
+    UserLogs             UserLogs[]
 }
 
 model Physician {
@@ -48,37 +48,63 @@ model Physician {
 }
 
 model Room {
-    id       Int        @id @default(autoincrement())
-    roomNo   String?
-    category RoomCat    @default(WARD)
-    station  String?
-    status   RoomStatus @default(VACANT)
-    floor    String?
-    price    Decimal?   @db.Decimal(10, 2)
+    id            Int             @id @default(autoincrement())
+    roomNo        String?
+    category      RoomCat         @default(WARD)
+    station       String?
+    status        RoomStatus      @default(VACANT)
+    floor         String?
+    price         Decimal?        @db.Decimal(10, 2)
+    MedicalRecord MedicalRecord[]
 }
 
 model Patient {
-    id             Int      @id @default(autoincrement())
-    name           String?
-    gender         String?
-    birthday       DateTime
-    address        String?
-    mobile         String?
-    civilStatus    String?
-    nationality    String?
-    religion       String?
+    id          Int         @id @default(autoincrement())
+    firstName   String?
+    lastName    String?
+    middleName  String?
+    gender      String?
+    birthday    DateTime
+    address     String?
+    mobile      String?
+    civilStatus CivilStatus
+    nationality String?
+    religion    String?
+    createAt    DateTime    @default(now())
+    updateAt    DateTime    @updatedAt
+
+    medicalRecord MedicalRecord[]
+}
+
+model MedicalRecord {
+    id             Int           @id @default(autoincrement())
     weight         String?
     height         String?
     bloodPressure  String?
     chiefComplaint String?
-    createAt       DateTime @default(now())
-    updateAt       DateTime @updatedAt
+    guardian       String?
+    status         MedicalStatus @default(Admit)
+    createAt       DateTime      @default(now())
+    updateAt       DateTime      @updatedAt
+
+    room Room @relation(fields: [roomId], references: [id])
 
     attendingNurse     User[] @relation("attendingNurse")
     attendingPhysician User[] @relation("attendingPhysician")
+    addedPatient       User?  @relation("addedPatient", fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
+    addedById          Int?
 
-    attendedPatient User? @relation("attendedPatient", fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
-    addedById       Int?
+    patient   Patient @relation(fields: [patientId], references: [id])
+    patientId Int
+    roomId    Int
+}
+
+model UserLogs {
+    id       Int      @id @default(autoincrement())
+    type     String?
+    createAt DateTime @default(now())
+    user     User     @relation(fields: [userId], references: [id])
+    userId   Int
 }
 
 model Medicine {
@@ -87,6 +113,19 @@ model Medicine {
     quantity Int?
     unit     Unit
     price    Decimal? @db.Decimal(10, 2)
+}
+
+enum MedicalStatus {
+    Admit
+    Discharge
+}
+
+enum CivilStatus {
+    Single
+    Married
+    Divorced
+    Separated
+    Widowed
 }
 
 enum Unit {
