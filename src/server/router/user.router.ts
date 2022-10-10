@@ -131,6 +131,9 @@ export const usersRouter = createProtectedRouter()
             where: {
               email,
             },
+            include: {
+              Physician: true,
+            },
           });
 
           return userData;

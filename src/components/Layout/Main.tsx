@@ -1,3 +1,4 @@
+import UpdateUser from "@/features/user/UpdateUser";
 import ProfileButton from "@components/buttons/ProfileButton";
 import { RoleCheck } from "@components/RoleCheck";
 import { Role } from "@prisma/client";
@@ -75,6 +76,7 @@ function Main({ children }: { children?: React.ReactNode }) {
             </main>
           </div>
         </div>
+        <UpdateUser />
       </main>
     </RoleCheck>
   );

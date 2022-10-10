@@ -1,6 +1,7 @@
 import medicinesReducer from "@/features/medicines/medicinesSlice";
 import roomsReducer from "@features/rooms/roomsSlice";
 import sidebarReducer from "@features/sideBar/sidebarSlice";
+import userReducer from "@features/user/userSlice";
 import usersReducer from "@features/users/usersSlice";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 
@@ -11,6 +12,7 @@ export function makeStore() {
       users: usersReducer,
       rooms: roomsReducer,
       medicines: medicinesReducer,
+      user: userReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

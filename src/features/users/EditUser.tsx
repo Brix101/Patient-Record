@@ -16,7 +16,7 @@ import Select from "react-select";
 
 const EditUser: NextPage = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector(usersState);
+  const { user, account } = useAppSelector(usersState);
   const { handleSubmit, register, reset, control } = useForm<UpdateUserInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["users.update-user"],
@@ -69,7 +69,6 @@ const EditUser: NextPage = () => {
 
     mutate({
       ...values,
-      id: user?.id as number,
       ...physician,
     });
   }
@@ -77,16 +76,18 @@ const EditUser: NextPage = () => {
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className=" w-full h-full">
-        <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-gray-900">Edit User</h1>
+        {!account && (
+          <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-gray-900">Edit User</h1>
+            </div>
+            <OutlinedButton
+              onClick={() => dispatch(setUsersMode({ mode: "View" }))}
+            >
+              <XSquare size={24} />
+            </OutlinedButton>
           </div>
-          <OutlinedButton
-            onClick={() => dispatch(setUsersMode({ mode: "View" }))}
-          >
-            <XSquare size={24} />
-          </OutlinedButton>
-        </div>
+        )}
         {error && (
           <div
             className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
@@ -159,7 +160,7 @@ const EditUser: NextPage = () => {
                       )}
                     />
                   </div>
-                  <div>
+                  <div className="z-50">
                     <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                       Birthdate
                     </label>
@@ -168,7 +169,7 @@ const EditUser: NextPage = () => {
                       name="birthday"
                       render={({ field }) => (
                         <DatePicker
-                          className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                          className="block z-50 h-10 w-full rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
                           placeholderText="Select date"
                           onChange={(date) => field.onChange(date)}
                           selected={field.value ? field.value : new Date()}
@@ -187,37 +188,40 @@ const EditUser: NextPage = () => {
                 />
               </div>
               <div className="col-span-1 space-y-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    User Role
-                  </label>
-                  <Controller
-                    control={control}
-                    defaultValue={Role[user?.role as keyof typeof Role]}
-                    name="role"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        classNamePrefix="addl-class"
-                        options={userRoles}
-                        value={userRoles.find((c) => c.value === value)}
-                        onChange={(role) => onChange(role?.value)}
+                {!account && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                        User Role
+                      </label>
+                      <Controller
+                        control={control}
+                        defaultValue={Role[user?.role as keyof typeof Role]}
+                        name="role"
+                        render={({ field: { onChange, value } }) => (
+                          <Select
+                            classNamePrefix="addl-class"
+                            options={userRoles}
+                            value={userRoles.find((c) => c.value === value)}
+                            onChange={(role) => onChange(role?.value)}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </div>
-
-                <PhysicianInput
-                  enable={user?.role === "PHYSICIAN"}
-                  placeHolder="License Number"
-                  label="License Number"
-                  register={register("licenseNumber")}
-                />
-                <PhysicianInput
-                  enable={user?.role === "PHYSICIAN"}
-                  placeHolder="Expertise"
-                  label="Expertise"
-                  register={register("expertise")}
-                />
+                    </div>
+                    <PhysicianInput
+                      enable={user?.role === "PHYSICIAN"}
+                      placeHolder="License Number"
+                      label="License Number"
+                      register={register("licenseNumber")}
+                    />
+                    <PhysicianInput
+                      enable={user?.role === "PHYSICIAN"}
+                      placeHolder="Expertise"
+                      label="Expertise"
+                      register={register("expertise")}
+                    />
+                  </>
+                )}
               </div>
             </div>
             <div className="w-full">
