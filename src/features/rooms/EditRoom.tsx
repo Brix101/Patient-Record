@@ -87,16 +87,14 @@ const EditRoom: NextPage = () => {
             {error && error.message}
           </div>
         )}
-        {isSuccess ||
-          !error ||
-          (!validationError && (
-            <div
-              className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-              role="alert"
-            >
-              <span className="font-medium">Success alert!</span> Room Added
-            </div>
-          ))}
+        {isSuccess && (
+          <div
+            className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+            role="alert"
+          >
+            <span className="font-medium">Success alert!</span> Room Added
+          </div>
+        )}
       </div>
       {room && (
         <form onSubmit={handleSubmit(onSubmit)}>

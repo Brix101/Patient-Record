@@ -45,6 +45,12 @@ export const deleteUserSchema = z.object({
   id: z.number(),
 });
 
+export const changePasswordSchema = z.object({
+  oldPassword: z.string(),
+  newPassword: z.string(),
+  confirmPassword: z.string(),
+});
+
 export type CreateUserInput = z.TypeOf<typeof createUserSchema>;
 
 export type SearchUserInput = z.TypeOf<typeof searchUserSchema>;
@@ -52,3 +58,5 @@ export type SearchUserInput = z.TypeOf<typeof searchUserSchema>;
 export type UpdateUserInput = z.TypeOf<Omit<typeof updateUserSchema, "id">>;
 
 export type DeleteUserInput = z.TypeOf<typeof deleteUserSchema>;
+
+export type ChangePasswordInput = z.TypeOf<typeof changePasswordSchema>;

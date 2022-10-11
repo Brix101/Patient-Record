@@ -1,9 +1,10 @@
 import { env } from "@/env/server.mjs";
-import { hashPassword } from "@/utils/bcryptHash";
+import { comparePassword, hashPassword } from "@/utils/bcryptHash";
 import { generateOtp } from "@/utils/otp";
 import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import {
+  changePasswordSchema,
   createUserSchema,
   deleteUserSchema,
   searchUserSchema,
@@ -210,6 +211,56 @@ export const usersRouter = createProtectedRouter()
           },
         });
         return { detail: "User Deleted", deletedUser };
+      }
+
+      throw new trpc.TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid User",
+      });
+    },
+  })
+  .mutation("change-password", {
+    input: changePasswordSchema,
+    resolve: async ({ ctx, input }) => {
+      const { oldPassword, newPassword, confirmPassword } = input;
+      const { user } = ctx.session;
+
+      if (user) {
+        const userData = await ctx.prisma.user.findUnique({
+          where: {
+            email: user.email as string,
+          },
+        });
+
+        const passwordCorrect = await comparePassword({
+          candidatePassword: oldPassword,
+          hashedPassword: userData?.password as string,
+        });
+
+        if (!passwordCorrect) {
+          throw new trpc.TRPCError({
+            code: "NOT_FOUND",
+            message: "Incorrect Password",
+          });
+        }
+
+        if (newPassword !== confirmPassword) {
+          throw new trpc.TRPCError({
+            code: "BAD_REQUEST",
+            message: "Please Confirm Password",
+          });
+        }
+
+        const updateUser = await ctx.prisma.user.update({
+          where: {
+            email: user.email as string,
+          },
+          data: {
+            password: await hashPassword({ password: newPassword }),
+          },
+        });
+
+        return { detail: "Change Password Sucess", updateUser };
       }
 
       throw new trpc.TRPCError({
