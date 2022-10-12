@@ -121,6 +121,7 @@ const ViewRoom: NextPage = () => {
                 </tr>
               );
             })}
+          {!data && <>No Medicines Data</>}
         </tbody>
       </table>
     </div>

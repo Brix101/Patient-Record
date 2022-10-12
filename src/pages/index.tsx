@@ -1,9 +1,15 @@
+import { Disclosure, Menu, Transition } from "@headlessui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { Fragment } from "react";
+import { X } from "react-feather";
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -16,6 +22,7 @@ const Home: NextPage = () => {
         <title>Home</title>
         <link rel="icon" href="/logo.svg" />
       </Head>
+
       <nav className="sticky z-50 w-full bg-green-50 backdrop-blur-sm border-b border-green-200 px-2 sm:px-4 py-2.5 rounded dark:bg-green-900">
         <div className="container flex flex-wrap justify-between items-center mx-auto">
           <Link href="/">

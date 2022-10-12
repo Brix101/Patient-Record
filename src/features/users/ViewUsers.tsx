@@ -123,6 +123,8 @@ const ViewUsers: NextPage = () => {
                 </tr>
               );
             })}
+
+          {!data && <>No Users Data</>}
         </tbody>
       </table>
     </div>
