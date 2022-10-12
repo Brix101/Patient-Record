@@ -59,21 +59,22 @@ model Room {
 }
 
 model Patient {
-    id          Int         @id @default(autoincrement())
-    firstName   String?
-    lastName    String?
-    middleName  String?
-    gender      String?
-    birthday    DateTime
-    address     String?
-    mobile      String?
-    civilStatus CivilStatus
-    nationality String?
-    religion    String?
-    createAt    DateTime    @default(now())
-    updateAt    DateTime    @updatedAt
-
-    medicalRecord MedicalRecord[]
+    id            Int         @id @default(autoincrement())
+    firstName     String?
+    lastName      String?
+    middleName    String?
+    gender        String?
+    birthday      DateTime
+    address       String?
+    mobile        String?
+    civilStatus   CivilStatus
+    nationality   String?
+    religion      String?
+    weight        String?
+    height        String?
+    bloodPressure String?
+    createAt      DateTime    @default(now())
+    updateAt      DateTime    @updatedAt
 }
 
 model MedicalRecord {
@@ -94,9 +95,7 @@ model MedicalRecord {
     addedPatient       User?  @relation("addedPatient", fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
     addedById          Int?
 
-    patient   Patient @relation(fields: [patientId], references: [id])
-    patientId Int
-    roomId    Int
+    roomId Int
 }
 
 model UserLogs {

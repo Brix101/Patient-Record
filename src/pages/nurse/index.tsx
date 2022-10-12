@@ -16,7 +16,7 @@ const NursePage: NextPage = () => {
       </Head>
       <Main>
         <main className="h-auto w-full px-2">
-          <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+          <div className="h-14 w-full flex justify-between items-center  px-5">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">Patients</h1>
             </div>

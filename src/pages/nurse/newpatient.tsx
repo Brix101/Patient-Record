@@ -42,7 +42,7 @@ const NewPatient: NextPage = () => {
       </Head>
       <Main>
         <main className="h-auto w-full px-2">
-          <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+          <div className="h-14 w-full flex justify-between items-center px-5">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">New Patient</h1>
             </div>
@@ -73,20 +73,6 @@ const NewPatient: NextPage = () => {
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-2 items-end">
-                    <GenericInput
-                      label="Email"
-                      type="email"
-                      placeHolder="name@example.com"
-                      required
-                    />
-                    <GenericInput
-                      label="Mobile Number"
-                      type="text"
-                      placeHolder="Mobile"
-                      required
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 items-end">
                     <div>
                       <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                         Gender
@@ -97,6 +83,7 @@ const NewPatient: NextPage = () => {
                         name="gender"
                         render={({ field: { onChange, value } }) => (
                           <Select
+                            className="capitalize"
                             classNamePrefix="addl-class"
                             options={genderOptions}
                             value={genderOptions.find((c) => c.value === value)}
@@ -125,6 +112,12 @@ const NewPatient: NextPage = () => {
                       />
                     </div>
                   </div>
+                  <GenericInput
+                    label="Mobile Number"
+                    type="text"
+                    placeHolder="Mobile"
+                    required
+                  />
 
                   <GenericInput
                     label="Address"
@@ -168,6 +161,12 @@ const NewPatient: NextPage = () => {
                     label="Blood Type"
                     type="text"
                     placeHolder="Blood Type"
+                    required
+                  />
+                  <GenericInput
+                    label="Religion"
+                    type="text"
+                    placeHolder="Religion"
                     required
                   />
                 </div>

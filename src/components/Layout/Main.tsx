@@ -71,7 +71,7 @@ function Main({ children }: { children?: React.ReactNode }) {
         </header>
         <div className="flex h-full ">
           <div className="flex-1">
-            <main className="mx-10 my-5 flex justify-center h-[85vh] min-h-0 overflow-y-scroll">
+            <main className="mx-10 my-2 flex justify-center h-[85vh] min-h-0 overflow-y-scroll">
               {children}
             </main>
           </div>

@@ -152,6 +152,7 @@ const EditUser: NextPage = () => {
                       name="gender"
                       render={({ field: { onChange, value } }) => (
                         <Select
+                          className="capitalize"
                           classNamePrefix="addl-class"
                           options={genderOptions}
                           value={genderOptions.find((c) => c.value === value)}
