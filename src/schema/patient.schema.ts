@@ -17,4 +17,10 @@ export const addPatientSchema = z.object({
   bloodType: z.string().nullable(),
 });
 
+export const searchPatientSchema = z.object({
+  name: z.string(),
+});
+
 export type AddPatientInput = z.TypeOf<typeof addPatientSchema>;
+
+export type SearchPatientInput = z.TypeOf<typeof searchPatientSchema>;

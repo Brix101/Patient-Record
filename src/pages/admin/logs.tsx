@@ -89,7 +89,7 @@ const UsersPage: NextPage = () => {
                         {log.createAt.toDateString()}
                       </td>
                       <td className="py-4 px-6">
-                        {log.createAt.toLocaleTimeString()}
+                        {log.createAt.toLocaleTimeString("en-US")}
                       </td>
                     </tr>
                   );
