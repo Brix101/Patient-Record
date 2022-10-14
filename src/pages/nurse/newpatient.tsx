@@ -2,7 +2,9 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
 import Main from "@/components/Layout/Main";
-import { CreateUserInput } from "@/schema/user.schema";
+import { AddPatientInput } from "@/schema/patient.schema";
+import { trpc } from "@/utils/trpc";
+import { CivilStatus } from "@prisma/client";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -12,7 +14,15 @@ import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 
 const NewPatient: NextPage = () => {
-  const { handleSubmit, register, reset, control } = useForm<CreateUserInput>();
+  const { handleSubmit, register, reset, control } = useForm<AddPatientInput>();
+  const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
+    "patient.add-patient",
+    {
+      onSuccess: () => {
+        reset();
+      },
+    }
+  );
 
   const genderOptions = [
     { label: "male", value: "MALE" },
@@ -29,6 +39,19 @@ const NewPatient: NextPage = () => {
     { label: "AB+", value: "AB+" },
     { label: "AB-", value: "AB-" },
   ];
+
+  const civilStatus = (
+    Object.keys(CivilStatus) as (keyof typeof CivilStatus)[]
+  ).map((enumKey) => {
+    return {
+      label: CivilStatus[enumKey].toLowerCase(),
+      value: CivilStatus[enumKey],
+    };
+  });
+
+  function onSubmit(values: AddPatientInput) {
+    mutate({ ...values });
+  }
 
   return (
     <>
@@ -53,9 +76,25 @@ const NewPatient: NextPage = () => {
               </SecondaryButton>
             </Link>
           </div>
-
+          {error && (
+            <div
+              className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+              role="alert"
+            >
+              <span className="font-medium">Error alert! </span>
+              {error && error.message}
+            </div>
+          )}
+          {isSuccess && (
+            <div
+              className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+              role="alert"
+            >
+              <span className="font-medium">Success alert!</span> Patient Added
+            </div>
+          )}
           <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
-            <form className="max-w-9xl">
+            <form className="max-w-9xl" onSubmit={handleSubmit(onSubmit)}>
               <div className="md:grid md:grid-cols-2 md:gap-6">
                 <div className="col-span-1 space-y-3">
                   <div className="grid grid-cols-2 gap-2 items-end">
@@ -63,12 +102,14 @@ const NewPatient: NextPage = () => {
                       label="First Name"
                       type="text"
                       placeHolder="First Name"
+                      register={register("firstName")}
                       required
                     />
                     <GenericInput
                       label="Last Name"
                       type="text"
                       placeHolder="Last Name"
+                      register={register("lastName")}
                       required
                     />
                   </div>
@@ -106,36 +147,58 @@ const NewPatient: NextPage = () => {
                             onChange={(date) => field.onChange(date)}
                             selected={field.value}
                             dateFormat="MMMM-dd-yyyy"
-                            required
                           />
                         )}
                       />
                     </div>
                   </div>
+                  <div className="grid grid-cols-2 gap-2 items-end">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Civil Status
+                      </label>
+                      <Controller
+                        control={control}
+                        name="civilStatus"
+                        defaultValue={"Single"}
+                        render={({ field: { onChange, value } }) => (
+                          <Select
+                            className="capitalize"
+                            classNamePrefix="addl-class"
+                            options={civilStatus}
+                            value={civilStatus.find((c) => c.value === value)}
+                            onChange={(civilStatus) =>
+                              onChange(civilStatus?.value)
+                            }
+                            placeholder="Civil Status"
+                          />
+                        )}
+                      />
+                    </div>
+                    <GenericInput
+                      label="Religion"
+                      type="text"
+                      placeHolder="Religion"
+                      register={register("religion")}
+                    />
+                  </div>
                   <GenericInput
                     label="Mobile Number"
                     type="text"
                     placeHolder="Mobile"
-                    required
+                    register={register("mobile")}
                   />
-
                   <GenericInput
                     label="Address"
                     type="text"
                     placeHolder="Address"
-                    required
-                  />
-                  <GenericInput
-                    label="Civil Status"
-                    type="text"
-                    placeHolder="Civil Status"
-                    required
+                    register={register("address")}
                   />
                   <GenericInput
                     label="Nationality"
                     type="text"
                     placeHolder="Nationality"
-                    required
+                    register={register("nationality")}
                   />
                 </div>
                 <div className="col-span-1 space-y-3">
@@ -143,37 +206,51 @@ const NewPatient: NextPage = () => {
                     label="Weight"
                     type="text"
                     placeHolder="Weight"
-                    required
+                    register={register("weight")}
                   />
                   <GenericInput
                     label="Height"
                     type="text"
                     placeHolder="Height"
-                    required
+                    register={register("height")}
                   />
-                  <GenericInput
-                    label="Blood Pressure"
-                    type="text"
-                    placeHolder="Blood Pressure"
-                    required
-                  />
-                  <GenericInput
-                    label="Blood Type"
-                    type="text"
-                    placeHolder="Blood Type"
-                    required
-                  />
-                  <GenericInput
-                    label="Religion"
-                    type="text"
-                    placeHolder="Religion"
-                    required
-                  />
+                  <div className="grid grid-cols-2 gap-2 items-end">
+                    <GenericInput
+                      label="Blood Pressure"
+                      type="text"
+                      placeHolder="Blood Pressure"
+                      register={register("bloodPressure")}
+                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Blood Type
+                      </label>
+                      <Controller
+                        control={control}
+                        defaultValue={"O+"}
+                        name="bloodType"
+                        render={({ field: { onChange, value } }) => (
+                          <Select
+                            className="capitalize"
+                            classNamePrefix="addl-class"
+                            options={bloodType}
+                            value={bloodType.find((c) => c.value === value)}
+                            onChange={(gender) => onChange(gender?.value)}
+                            placeholder="Blood Type"
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="w-full">
                 <div className="py-3 text-right">
-                  <PrimaryButton className="w-1/3" type="submit">
+                  <PrimaryButton
+                    className="w-1/3"
+                    type="submit"
+                    isLoading={isLoading}
+                  >
                     Add Patient
                   </PrimaryButton>
                 </div>

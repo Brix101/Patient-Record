@@ -1,22 +1,20 @@
-import { CivilStatus, Role } from "@prisma/client";
+import { CivilStatus } from "@prisma/client";
 import z from "zod";
 
 export const addPatientSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
-  gender: z.string(),
-  birthday: z.date(),
-  address: z.string().nullable(),
+  gender: z.string().nullable(),
+  birthday: z.date().nullable(),
+  civilStatus: z.nativeEnum(CivilStatus).nullable(),
+  religion: z.string().nullable(),
   mobile: z.string().nullable(),
-  civilStatus: z.nativeEnum(CivilStatus),
-  nationality: z.string(),
-  religion: z.string(),
-  weight: z.string(),
-  height: z.string(),
-  bloodPressure: z.string(),
-  chiefComplaint: z.string(),
-  physician_id: z.number(),
-  room_id: z.number(),
+  address: z.string().nullable(),
+  nationality: z.string().nullable(),
+  weight: z.string().nullable(),
+  height: z.string().nullable(),
+  bloodPressure: z.string().nullable(),
+  bloodType: z.string().nullable(),
 });
 
 export type AddPatientInput = z.TypeOf<typeof addPatientSchema>;

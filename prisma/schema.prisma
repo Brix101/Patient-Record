@@ -31,12 +31,13 @@ model User {
     updateAt  DateTime   @updatedAt
     Physician Physician?
 
-    attendingNurse       MedicalRecord?  @relation("attendingNurse", fields: [attendingNurseId], references: [id])
+    attendingNurse       MedicalRecord? @relation("attendingNurse", fields: [attendingNurseId], references: [id])
     attendingNurseId     Int?
-    attendingPhysician   MedicalRecord?  @relation("attendingPhysician", fields: [attendingPhysicianId], references: [id])
+    attendingPhysician   MedicalRecord? @relation("attendingPhysician", fields: [attendingPhysicianId], references: [id])
     attendingPhysicianId Int?
-    addedPatient         MedicalRecord[] @relation("addedPatient")
-    UserLogs             UserLogs[]
+
+    addedPatient Patient[]
+    UserLogs     UserLogs[]
 }
 
 model Physician {
@@ -59,22 +60,25 @@ model Room {
 }
 
 model Patient {
-    id            Int         @id @default(autoincrement())
+    id            Int          @id @default(autoincrement())
     firstName     String?
     lastName      String?
     middleName    String?
     gender        String?
-    birthday      DateTime
+    birthday      DateTime?
     address       String?
     mobile        String?
-    civilStatus   CivilStatus
+    civilStatus   CivilStatus?
     nationality   String?
     religion      String?
     weight        String?
     height        String?
     bloodPressure String?
-    createAt      DateTime    @default(now())
-    updateAt      DateTime    @updatedAt
+    bloodType     String?
+    createAt      DateTime     @default(now())
+    updateAt      DateTime     @updatedAt
+    addedPatient  User?        @relation(fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
+    addedById     Int?
 }
 
 model MedicalRecord {
@@ -92,8 +96,6 @@ model MedicalRecord {
 
     attendingNurse     User[] @relation("attendingNurse")
     attendingPhysician User[] @relation("attendingPhysician")
-    addedPatient       User?  @relation("addedPatient", fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
-    addedById          Int?
 
     roomId Int
 }
