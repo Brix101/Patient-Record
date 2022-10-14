@@ -16,7 +16,7 @@ const NursePage: NextPage = () => {
     [
       "patient.all-patients",
       {
-        name: name.name,
+        ...name,
       },
     ],
     { enabled: true }

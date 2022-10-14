@@ -2,6 +2,7 @@ import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
+import { SearchRoomInput } from "@/schema/room.schema";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
 import React, { useState } from "react";
@@ -10,12 +11,14 @@ import { setRoomsMode } from "./roomsSlice";
 
 const ViewRoom: NextPage = () => {
   const dispatch = useAppDispatch();
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState<SearchRoomInput>({
+    searchInput: "",
+  });
   const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "room.get-rooms",
       {
-        searchInput: searchInput,
+        ...searchInput,
       },
     ],
     { enabled: true }
@@ -47,9 +50,9 @@ const ViewRoom: NextPage = () => {
         <div className="flex flex-row gap-5">
           <div>
             <SearchInput
-              placeholder="Search a Name"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Search Floor/Room no"
+              value={searchInput.searchInput}
+              onChange={(e) => setSearchInput({ searchInput: e.target.value })}
             />
           </div>
           <SecondaryButton

@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
+import { SearchUserInput } from "@/schema/user.schema";
 import LinearLoading from "@components/LinearLoading";
 import { setUsersMode } from "@features/users/usersSlice";
 import { trpc } from "@utils/trpc";
@@ -11,12 +12,12 @@ import { Edit, Trash2, UserPlus } from "react-feather";
 
 const ViewUsers: NextPage = () => {
   const dispatch = useAppDispatch();
-  const [name, setName] = useState("");
+  const [name, setName] = useState<SearchUserInput>({ name: "" });
   const { data, isLoading, isRefetching, refetch, isFetching } = trpc.useQuery(
     [
       "users.all-users",
       {
-        name: name,
+        ...name,
       },
     ],
     { enabled: true }
@@ -53,8 +54,8 @@ const ViewUsers: NextPage = () => {
           <div>
             <SearchInput
               placeholder="Search a Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={name.name}
+              onChange={(e) => setName({ name: e.target.value })}
             />
           </div>
           <SecondaryButton

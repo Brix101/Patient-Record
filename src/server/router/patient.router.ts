@@ -3,7 +3,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 
-// TODO add patient crud
+// TODO add patient update delete to admin
 export const patientRouter = createProtectedRouter()
   .mutation("add-patient", {
     input: addPatientSchema,

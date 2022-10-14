@@ -1,19 +1,19 @@
-import { useAppSelector } from "@/app/hook";
 import SearchInput from "@/components/inputs/SearchInput";
 import Admin from "@/components/Layout/Admin";
 import LinearLoading from "@/components/LinearLoading";
+import { SearchLogInput } from "@/schema/log.schema";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 
 const UsersPage: NextPage = () => {
-  const [name, setName] = useState("");
-  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
+  const [name, setName] = useState<SearchLogInput>({ name: "" });
+  const { data, isLoading, isRefetching } = trpc.useQuery(
     [
       "logs.get-logs",
       {
-        name: name,
+        name: name.name,
       },
     ],
     { enabled: true }
@@ -42,8 +42,8 @@ const UsersPage: NextPage = () => {
               <div>
                 <SearchInput
                   placeholder="Search a Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={name.name}
+                  onChange={(e) => setName({ name: e.target.value })}
                 />
               </div>
             </div>

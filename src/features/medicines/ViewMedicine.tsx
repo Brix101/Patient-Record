@@ -2,6 +2,7 @@ import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
+import { SearchMedicineInput } from "@/schema/medicine.schema";
 import { Role } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
@@ -13,12 +14,12 @@ import { setMedicinesMode } from "./medicinesSlice";
 const ViewRoom: NextPage = () => {
   const { data: userData } = useSession();
   const dispatch = useAppDispatch();
-  const [name, setName] = useState("");
+  const [name, setName] = useState<SearchMedicineInput>({ name: "" });
   const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "medicine.get-medicines",
       {
-        name: name,
+        ...name,
       },
     ],
     { enabled: true }
@@ -50,9 +51,9 @@ const ViewRoom: NextPage = () => {
         <div className="flex flex-row gap-5">
           <div>
             <SearchInput
-              placeholder="Search a Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              placeholder="Search a medicine name"
+              value={name.name}
+              onChange={(e) => setName({ name: e.target.value })}
             />
           </div>
           <SecondaryButton
