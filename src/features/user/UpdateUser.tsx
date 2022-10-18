@@ -42,7 +42,12 @@ const UpdateUser: NextPage = () => {
     }
   }, [dispatch, userData]);
 
-  const { handleSubmit, register, reset } = useForm<ChangePasswordInput>();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { isDirty },
+  } = useForm<ChangePasswordInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["users.change-password"],
     {
@@ -193,6 +198,7 @@ const UpdateUser: NextPage = () => {
                                     className="w-1/3"
                                     type="submit"
                                     isLoading={isLoading}
+                                    disabled={!isDirty}
                                   >
                                     Update
                                   </PrimaryButton>
