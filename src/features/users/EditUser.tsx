@@ -5,6 +5,7 @@ import GenericInput from "@/components/inputs/GenericInput";
 import PhysicianInput from "@/components/inputs/PhysicianInput";
 import { UpdateUserInput } from "@/schema/user.schema";
 import { trpc } from "@/utils/trpc";
+import { userState } from "@features/user/userSlice";
 import { setUsersMode, usersState } from "@features/users/usersSlice";
 import { Role } from "@prisma/client";
 import { NextPage } from "next";
@@ -17,7 +18,14 @@ import Select from "react-select";
 const EditUser: NextPage = () => {
   const dispatch = useAppDispatch();
   const { user, account } = useAppSelector(usersState);
-  const { handleSubmit, register, reset, control } = useForm<UpdateUserInput>();
+  const { edit } = useAppSelector(userState);
+  const {
+    handleSubmit,
+    register,
+    reset,
+    control,
+    formState: { isDirty },
+  } = useForm<UpdateUserInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["users.update-user"],
     {
@@ -76,7 +84,7 @@ const EditUser: NextPage = () => {
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className=" w-full h-full">
-        {!account && (
+        {account && !edit && (
           <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">Edit User</h1>
@@ -231,6 +239,7 @@ const EditUser: NextPage = () => {
                   className="w-1/3"
                   isLoading={isLoading}
                   type="submit"
+                  disabled={!isDirty}
                 >
                   Update
                 </PrimaryButton>

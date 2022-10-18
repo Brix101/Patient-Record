@@ -21,7 +21,7 @@ const AddRoom: NextPage = () => {
     reset,
     control,
     clearErrors,
-    formState: { errors: validationError },
+    formState: { errors: validationError, isDirty },
   } = useForm<CreateRoomInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["room.create-room"],
@@ -172,6 +172,7 @@ const AddRoom: NextPage = () => {
             <PrimaryButton
               className="w-1/3"
               isLoading={isLoading}
+              disabled={!isDirty}
               type="submit"
             >
               Add

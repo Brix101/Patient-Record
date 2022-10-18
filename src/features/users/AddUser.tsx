@@ -18,7 +18,13 @@ import Select from "react-select";
 const AddUser: NextPage = () => {
   const dispatch = useAppDispatch();
   const [isPhysician, setPhysician] = useState(false);
-  const { handleSubmit, register, reset, control } = useForm<CreateUserInput>();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    control,
+    formState: { isDirty },
+  } = useForm<CreateUserInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["users.register-user"],
     {
@@ -215,6 +221,7 @@ const AddUser: NextPage = () => {
                 className="w-1/3"
                 isLoading={isLoading}
                 type="submit"
+                disabled={!isDirty}
               >
                 Register
               </PrimaryButton>

@@ -14,8 +14,14 @@ import { setMedicinesMode } from "./medicinesSlice";
 
 const AddMedicine: NextPage = () => {
   const dispatch = useAppDispatch();
-  const { handleSubmit, register, reset, control, clearErrors } =
-    useForm<CreateMedicineInput>();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    control,
+    clearErrors,
+    formState: { isDirty },
+  } = useForm<CreateMedicineInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["medicine.create-medicine"],
     {
@@ -118,7 +124,12 @@ const AddMedicine: NextPage = () => {
           </div>
         </div>
         <div className="py-3 text-right">
-          <PrimaryButton className="w-1/3" isLoading={isLoading} type="submit">
+          <PrimaryButton
+            className="w-1/3"
+            isLoading={isLoading}
+            disabled={!isDirty}
+            type="submit"
+          >
             Add
           </PrimaryButton>
         </div>

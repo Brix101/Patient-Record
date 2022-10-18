@@ -3,6 +3,7 @@ import React from "react";
 function PrimaryButton({
   isLoading = false,
   isSuccess = false,
+  disabled = false,
   className,
   children,
   type,
@@ -10,6 +11,7 @@ function PrimaryButton({
 }: {
   isLoading?: boolean;
   isSuccess?: boolean;
+  disabled?: boolean;
   className?: string;
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
@@ -18,13 +20,13 @@ function PrimaryButton({
   return (
     <button
       type={type}
-      className={`inline-flex justify-center p-2 h-14 items-center ${className}
+      className={`inline-flex justify-center p-2 h-14 items-center text-2xl text-center font-medium text-white ${className}
   ${
-    isLoading || isSuccess
-      ? " text-white bg-green-400 dark:bg-green-500 cursor-not-allowed font-medium rounded-lg text-sm text-center"
-      : " rounded-lg border border-transparent bg-green-600 text-2xl font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+    isLoading || isSuccess || disabled
+      ? " bg-green-400 dark:bg-green-500 cursor-default rounded-lg "
+      : " rounded-lg border border-transparent bg-green-600  shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
   }`}
-      disabled={isLoading || isSuccess}
+      disabled={isLoading || isSuccess || disabled}
       onClick={onClick}
     >
       {isLoading || isSuccess ? (

@@ -21,7 +21,7 @@ const EditMedicine: NextPage = () => {
     reset,
     control,
     clearErrors,
-    formState: { errors: validationError },
+    formState: { isDirty },
   } = useForm<UpdateMedicineInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["medicine.update-medicine"],
@@ -84,63 +84,63 @@ const EditMedicine: NextPage = () => {
         )}
       </div>
       {medicine && (
-        <form
-          className="md:grid md:grid-cols-2 md:gap-6"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="col-span-1 space-y-3">
-            <GenericInput
-              label="Name"
-              type="text"
-              placeHolder="Name"
-              required
-              register={register("name")}
-            />
-            <GenericInput
-              label="Quantity"
-              type="number"
-              placeHolder="Quantity"
-              required
-              register={register("quantity", {
-                valueAsNumber: true,
-                validate: (value) => value > 0,
-                max: 999999999,
-              })}
-            />
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                Unit
-              </label>
-              <Controller
-                control={control}
-                defaultValue={Unit["kg" as keyof typeof Unit]}
-                name="unit"
-                render={({ field: { onChange, value } }) => (
-                  <Select
-                    classNamePrefix="addl-class"
-                    options={units}
-                    value={units.find((c) => c.value === value)}
-                    onChange={(unit) => onChange(unit?.value)}
-                  />
-                )}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="md:grid md:grid-cols-2 md:gap-6">
+            <div className="col-span-1 space-y-3">
+              <GenericInput
+                label="Name"
+                type="text"
+                placeHolder="Name"
+                required
+                register={register("name")}
+              />
+              <GenericInput
+                label="Quantity"
+                type="number"
+                placeHolder="Quantity"
+                required
+                register={register("quantity", {
+                  valueAsNumber: true,
+                  validate: (value) => value > 0,
+                  max: 999999999,
+                })}
+              />
+              <div>
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Unit
+                </label>
+                <Controller
+                  control={control}
+                  defaultValue={Unit["g" as keyof typeof Unit]}
+                  name="unit"
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      classNamePrefix="addl-class"
+                      options={units}
+                      value={units.find((c) => c.value === value)}
+                      onChange={(unit) => onChange(unit?.value)}
+                    />
+                  )}
+                />
+              </div>
+              <GenericInput
+                label="Price"
+                type="number"
+                placeHolder="Price"
+                required
+                register={register("price", {
+                  valueAsNumber: true,
+                  validate: (value) => value > 0,
+                  max: 999999999,
+                })}
               />
             </div>
-            <GenericInput
-              label="Price"
-              type="number"
-              placeHolder="Price"
-              required
-              register={register("price", {
-                valueAsNumber: true,
-                validate: (value) => value > 0,
-                max: 999999999,
-              })}
-            />
           </div>
           <div className="py-3 text-right">
             <PrimaryButton
-              className="w-1/2"
+              className="w-1/3"
               isLoading={isLoading}
+              disabled={!isDirty}
               type="submit"
             >
               Update

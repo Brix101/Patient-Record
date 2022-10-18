@@ -58,10 +58,6 @@ const NewPatient: NextPage = () => {
       <Head>
         <title>Nurse - New Patient</title>
         <link rel="icon" href="/logo.svg" />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/2.14.1/react-datepicker.min.css"
-        />
       </Head>
       <Main>
         <main className="h-auto w-full px-2">
