@@ -3,12 +3,19 @@ import Admin from "@/components/Layout/Admin";
 import LinearLoading from "@/components/LinearLoading";
 import { SearchLogInput } from "@/schema/log.schema";
 import { trpc } from "@/utils/trpc";
+import { refType } from "@mui/utils";
 import type { NextPage } from "next";
+import { HtmlProps } from "next/dist/shared/lib/html-context";
 import Head from "next/head";
-import { useState } from "react";
+import React, { Ref, useState } from "react";
+import DatePicker from "react-datepicker";
+import { Calendar } from "react-feather";
+import { Controller, useForm } from "react-hook-form";
+import { Props } from "react-select";
 
 const UsersPage: NextPage = () => {
   const [name, setName] = useState<SearchLogInput>({ name: "" });
+  const { handleSubmit, register, control } = useForm<SearchLogInput>();
   const { data, isLoading, isRefetching } = trpc.useQuery(
     [
       "logs.get-logs",
@@ -26,6 +33,7 @@ const UsersPage: NextPage = () => {
     }
     return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
   };
+
   return (
     <>
       <Head>
@@ -38,7 +46,43 @@ const UsersPage: NextPage = () => {
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">User Logs</h1>
             </div>
-            <div className="flex flex-row gap-5">
+            <div className="flex gap-2 w-auto items-center">
+              <div>
+                <Controller
+                  control={control}
+                  name="fromDate"
+                  render={({ field }) => (
+                    <DatePicker
+                      className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                      placeholderText="Date From"
+                      onChange={(date) => field.onChange(date)}
+                      selected={field.value}
+                      dateFormat="MMMM-dd-yyyy"
+                      onKeyDown={(e) => {
+                        e.preventDefault();
+                      }}
+                    />
+                  )}
+                />
+              </div>
+              <div>
+                <Controller
+                  control={control}
+                  name="toDate"
+                  render={({ field }) => (
+                    <DatePicker
+                      className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                      placeholderText="Date To"
+                      onChange={(date) => field.onChange(date)}
+                      selected={field.value}
+                      dateFormat="MMMM-dd-yyyy"
+                      onKeyDown={(e) => {
+                        e.preventDefault();
+                      }}
+                    />
+                  )}
+                />
+              </div>
               <div>
                 <SearchInput
                   placeholder="Search a Name"
