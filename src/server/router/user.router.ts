@@ -77,7 +77,6 @@ export const usersRouter = createProtectedRouter()
     input: searchUserSchema,
     async resolve({ ctx, input }) {
       const { name, role } = input;
-      console.log(role);
 
       if (ctx.session) {
         const email = ctx.session.user?.email;
