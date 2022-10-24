@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
+import useDebounce from "@/hooks/useDebounce";
 import { SearchUserInput } from "@/schema/user.schema";
 import LinearLoading from "@components/LinearLoading";
 import { setUsersMode } from "@features/users/usersSlice";
@@ -13,11 +14,13 @@ import { Edit, Trash2, UserPlus } from "react-feather";
 const ViewUsers: NextPage = () => {
   const dispatch = useAppDispatch();
   const [name, setName] = useState<SearchUserInput>({ name: "" });
+
+  const debouncedValue = useDebounce<SearchUserInput>(name, 500);
   const { data, isLoading, isRefetching, refetch, isFetching } = trpc.useQuery(
     [
       "users.all-users",
       {
-        ...name,
+        ...debouncedValue,
       },
     ],
     { enabled: true }

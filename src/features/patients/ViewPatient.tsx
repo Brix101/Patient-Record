@@ -1,6 +1,7 @@
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
+import useDebounce from "@/hooks/useDebounce";
 import { SearchPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
@@ -10,11 +11,13 @@ import { PlusSquare } from "react-feather";
 
 const ViewPatient: NextPage = () => {
   const [name, setName] = useState<SearchPatientInput>({ name: "" });
+
+  const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
   const { data, isLoading, isRefetching } = trpc.useQuery(
     [
       "patient.all-patients",
       {
-        ...name,
+        ...debouncedValue,
       },
     ],
     { enabled: true }

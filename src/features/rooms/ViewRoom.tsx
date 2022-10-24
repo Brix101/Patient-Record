@@ -2,6 +2,7 @@ import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
+import useDebounce from "@/hooks/useDebounce";
 import { SearchRoomInput } from "@/schema/room.schema";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
@@ -14,11 +15,13 @@ const ViewRoom: NextPage = () => {
   const [searchInput, setSearchInput] = useState<SearchRoomInput>({
     searchInput: "",
   });
+
+  const debouncedValue = useDebounce<SearchRoomInput>(searchInput, 500);
   const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "room.get-rooms",
       {
-        ...searchInput,
+        ...debouncedValue,
       },
     ],
     { enabled: true }
