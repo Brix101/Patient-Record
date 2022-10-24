@@ -1,6 +1,5 @@
 import { env } from "@/env/server.mjs";
 import { comparePassword, hashPassword } from "@/utils/bcryptHash";
-import { generateOtp } from "@/utils/otp";
 import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import {
@@ -31,7 +30,6 @@ export const usersRouter = createProtectedRouter()
         licenseNumber,
       } = input;
 
-      const { otp } = generateOtp();
       try {
         const user = await ctx.prisma.user.create({
           data: {
