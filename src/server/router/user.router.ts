@@ -78,7 +78,9 @@ export const usersRouter = createProtectedRouter()
   .query("all-users", {
     input: searchUserSchema,
     async resolve({ ctx, input }) {
-      const { name } = input;
+      const { name, role } = input;
+      console.log(role);
+
       if (ctx.session) {
         const email = ctx.session.user?.email;
 
@@ -96,6 +98,7 @@ export const usersRouter = createProtectedRouter()
                   { firstName: { contains: name ? name : "" } },
                   { lastName: { contains: name ? name : "" } },
                 ],
+                role: Role[role as keyof typeof Role],
               },
               orderBy: {
                 lastName: "asc",

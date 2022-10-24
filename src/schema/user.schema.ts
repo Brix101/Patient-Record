@@ -24,6 +24,7 @@ export const createUserOutputSchema = z.object({
 
 export const searchUserSchema = z.object({
   name: z.string(),
+  role: z.nativeEnum(Role).nullable(),
 });
 
 export const updateUserSchema = z.object({

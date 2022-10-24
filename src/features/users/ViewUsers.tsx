@@ -5,17 +5,22 @@ import useDebounce from "@/hooks/useDebounce";
 import { SearchUserInput } from "@/schema/user.schema";
 import LinearLoading from "@components/LinearLoading";
 import { setUsersMode } from "@features/users/usersSlice";
+import { Role } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
 import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Edit, Trash2, UserPlus } from "react-feather";
+import Select from "react-select";
 
 const ViewUsers: NextPage = () => {
   const dispatch = useAppDispatch();
-  const [name, setName] = useState<SearchUserInput>({ name: "" });
+  const [searchInput, setSearchInput] = useState<SearchUserInput>({
+    name: "",
+    role: null,
+  });
 
-  const debouncedValue = useDebounce<SearchUserInput>(name, 500);
+  const debouncedValue = useDebounce<SearchUserInput>(searchInput, 500);
   const { data, isLoading, isRefetching, refetch, isFetching } = trpc.useQuery(
     [
       "users.all-users",
@@ -47,6 +52,15 @@ const ViewUsers: NextPage = () => {
     }
   };
 
+  const userRoles = (Object.keys(Role) as (keyof typeof Role)[]).map(
+    (enumKey) => {
+      return {
+        label: Role[enumKey].toLowerCase(),
+        value: Role[enumKey],
+      };
+    }
+  );
+
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
@@ -54,11 +68,28 @@ const ViewUsers: NextPage = () => {
           <h1 className="text-2xl font-bold text-gray-900">Users</h1>
         </div>
         <div className="flex flex-row gap-5">
+          <div className="flex items-center">
+            <Select
+              className="w-40"
+              defaultValue={{ label: "All" }}
+              options={[{ label: "All" }, ...userRoles]}
+              onChange={(role) => {
+                const isValid = userRoles.find((userRole) => userRole === role);
+                if (isValid) {
+                  setSearchInput({ ...searchInput, role: isValid.value });
+                } else {
+                  setSearchInput({ ...searchInput, role: null });
+                }
+              }}
+            />
+          </div>
           <div>
             <SearchInput
               placeholder="Search a Name"
-              value={name.name}
-              onChange={(e) => setName({ name: e.target.value })}
+              value={searchInput.name}
+              onChange={(e) =>
+                setSearchInput({ ...searchInput, name: e.target.value })
+              }
             />
           </div>
           <SecondaryButton
