@@ -28,6 +28,7 @@ function SearchInput({
           required={required}
           value={value}
           onChange={onChange}
+          z
         />
       </div>
     </div>

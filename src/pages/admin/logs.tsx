@@ -1,31 +1,28 @@
 import SearchInput from "@/components/inputs/SearchInput";
 import Admin from "@/components/Layout/Admin";
 import LinearLoading from "@/components/LinearLoading";
+import useDebounce from "@/hooks/useDebounce";
 import { SearchLogInput } from "@/schema/log.schema";
 import { trpc } from "@/utils/trpc";
-import { refType } from "@mui/utils";
 import type { NextPage } from "next";
-import { HtmlProps } from "next/dist/shared/lib/html-context";
 import Head from "next/head";
-import React, { Ref, useState } from "react";
+import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import { Calendar } from "react-feather";
-import { Controller, useForm } from "react-hook-form";
-import { Props } from "react-select";
 
 const UsersPage: NextPage = () => {
-  const [name, setName] = useState<SearchLogInput>({ name: "" });
-  const { handleSubmit, register, control } = useForm<SearchLogInput>();
+  const defaultDate = new Date();
+  defaultDate.setDate(defaultDate.getDate() - 7);
+  const [searchInput, setSearchInput] = useState<SearchLogInput>({ name: "" });
+  const debouncedValue = useDebounce<SearchLogInput>(searchInput, 500);
   const { data, isLoading, isRefetching } = trpc.useQuery(
     [
       "logs.get-logs",
       {
-        name: name.name,
+        ...debouncedValue,
       },
     ],
     { enabled: true }
   );
-  console.log(data);
 
   const TableStyle = (x: number) => {
     if (x % 2) {
@@ -47,47 +44,61 @@ const UsersPage: NextPage = () => {
               <h1 className="text-2xl font-bold text-gray-900">User Logs</h1>
             </div>
             <div className="flex gap-2 w-auto items-center">
-              <div>
-                <Controller
-                  control={control}
-                  name="fromDate"
-                  render={({ field }) => (
-                    <DatePicker
-                      className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-                      placeholderText="Date From"
-                      onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      dateFormat="MMMM-dd-yyyy"
-                      onKeyDown={(e) => {
-                        e.preventDefault();
-                      }}
-                    />
-                  )}
+              <div className="flex gap-1 items-center">
+                <p>From: </p>
+                <DatePicker
+                  className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                  placeholderText="Date From"
+                  onChange={(dateValue) =>
+                    setSearchInput({
+                      ...searchInput,
+                      fromDate: dateValue as Date,
+                    })
+                  }
+                  selected={
+                    searchInput.fromDate ? searchInput.fromDate : defaultDate
+                  }
+                  dateFormat="MMM-dd-yyyy"
+                  selectsStart
+                  startDate={searchInput.fromDate}
+                  endDate={searchInput.toDate}
+                  onKeyDown={(e) => {
+                    e.preventDefault();
+                  }}
                 />
               </div>
-              <div>
-                <Controller
-                  control={control}
-                  name="toDate"
-                  render={({ field }) => (
-                    <DatePicker
-                      className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-                      placeholderText="Date To"
-                      onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      dateFormat="MMMM-dd-yyyy"
-                      onKeyDown={(e) => {
-                        e.preventDefault();
-                      }}
-                    />
-                  )}
+              <div className="flex gap-1 items-center">
+                <p>To: </p>
+                <DatePicker
+                  className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                  placeholderText="Date To"
+                  onChange={(dateValue) =>
+                    setSearchInput({
+                      ...searchInput,
+                      toDate: dateValue as Date,
+                    })
+                  }
+                  selected={
+                    searchInput.toDate ? searchInput.toDate : new Date()
+                  }
+                  dateFormat="MMM-dd-yyyy"
+                  selectsEnd
+                  startDate={searchInput.fromDate}
+                  endDate={searchInput.toDate}
+                  minDate={searchInput.fromDate}
+                  onKeyDown={(e) => {
+                    console.log(e);
+                    // e.preventDefault();
+                  }}
                 />
               </div>
               <div>
                 <SearchInput
                   placeholder="Search a Name"
-                  value={name.name}
-                  onChange={(e) => setName({ name: e.target.value })}
+                  value={searchInput.name}
+                  onChange={(e) =>
+                    setSearchInput({ ...searchInput, name: e.target.value })
+                  }
                 />
               </div>
             </div>
