@@ -12,7 +12,11 @@ import DatePicker from "react-datepicker";
 const UsersPage: NextPage = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() - 7);
-  const [searchInput, setSearchInput] = useState<SearchLogInput>({ name: "" });
+  const [searchInput, setSearchInput] = useState<SearchLogInput>({
+    name: "",
+    fromDate: defaultDate,
+    toDate: new Date(),
+  });
   const debouncedValue = useDebounce<SearchLogInput>(searchInput, 500);
   const { data, isLoading, isRefetching } = trpc.useQuery(
     [

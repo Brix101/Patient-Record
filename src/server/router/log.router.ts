@@ -7,7 +7,7 @@ export const logsRouter = createProtectedRouter()
     input: searchLogchema,
     async resolve({ ctx, input }) {
       const { name, fromDate, toDate } = input;
-      console.log(toDate);
+
       if (ctx.session) {
         const logs = await ctx.prisma.userLogs.findMany({
           where: {
