@@ -159,7 +159,7 @@ const ViewUsers: NextPage = () => {
               );
             })}
 
-          {!data && <>No Users Data</>}
+          {(!data && !isLoading) && <>No Users Data</>}
         </tbody>
       </table>
     </div>

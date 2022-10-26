@@ -147,7 +147,7 @@ const ViewRoom: NextPage = () => {
                 </tr>
               );
             })}
-          {!data && <>No Rooms Data</>}
+          {!data && !isLoading && <>No Rooms Data</>}
         </tbody>
       </table>
     </div>
