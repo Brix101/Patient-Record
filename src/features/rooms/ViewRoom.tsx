@@ -48,7 +48,7 @@ const ViewRoom: NextPage = () => {
   };
 
   const deleteDialog = ({ room }: { room: Room }) => {
-    if (window.confirm("Are you sure to Delete this Room")) {
+    if (window.confirm("Are you sure to Delete this Room Data?")) {
       mutate({ id: room.id });
       setRoomsData((prev) => prev?.filter((items) => items !== room));
     }
@@ -155,7 +155,7 @@ const ViewRoom: NextPage = () => {
               </tr>
             );
           })}
-          {!data && !isLoading && <>No Rooms Data</>}
+          {!data && !isLoading ? <>No Rooms Data</> : null}
         </tbody>
       </table>
     </div>

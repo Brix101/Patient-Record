@@ -51,7 +51,7 @@ const UsersPage: NextPage = () => {
               <div className="flex gap-1 items-center">
                 <p>From: </p>
                 <DatePicker
-                  className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                  className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm cursor-pointer"
                   placeholderText="Date From"
                   onChange={(dateValue) =>
                     setSearchInput({
@@ -74,7 +74,7 @@ const UsersPage: NextPage = () => {
               <div className="flex gap-1 items-center">
                 <p>To: </p>
                 <DatePicker
-                  className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+                  className="block w-full max-w-[150px] h-10 rounded-md border  border-gray-300 px-2 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm cursor-pointer"
                   placeholderText="Date To"
                   onChange={(dateValue) =>
                     setSearchInput({

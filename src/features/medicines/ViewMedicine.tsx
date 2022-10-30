@@ -21,7 +21,7 @@ const ViewRoom: NextPage = () => {
   const [medicine, setMedicine] = useState<SearchMedicineInput>({ name: "" });
 
   const debouncedValue = useDebounce<SearchMedicineInput>(medicine, 500);
-  const { data, isLoading, isRefetching } = trpc.useQuery(
+  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "medicine.get-medicines",
       {
@@ -49,11 +49,12 @@ const ViewRoom: NextPage = () => {
   };
 
   const deleteDialog = ({ medicine }: { medicine: Medicine }) => {
-    if (window.confirm("Are you sure to Delete this Medicine")) {
+    if (window.confirm("Are you sure to Delete this Medicine Data?")) {
       mutate({ id: medicine.id });
       setMedicinesData((prev) => prev?.filter((items) => items !== medicine));
     }
   };
+
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
@@ -133,7 +134,7 @@ const ViewRoom: NextPage = () => {
               </tr>
             );
           })}
-          {!data && !isLoading && <>No Medicines Data</>}
+          {!data && !isLoading ? <>No Medicines Data</> : null}
         </tbody>
       </table>
     </div>
