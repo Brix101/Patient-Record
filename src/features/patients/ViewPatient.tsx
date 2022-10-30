@@ -31,7 +31,6 @@ const ViewPatient: NextPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log("hello");
       setPatientsData(data);
     }
   }, [data]);
