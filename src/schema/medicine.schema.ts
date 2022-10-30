@@ -21,7 +21,7 @@ export const deleteMedicineSchema = z.object({
 });
 
 export const searchMedicineSchema = z.object({
-  name: z.string(),
+  name: z.string().optional(),
 });
 
 export type CreateMedicineInput = z.TypeOf<typeof createMedicineSchema>;

@@ -23,8 +23,8 @@ export const createUserOutputSchema = z.object({
 });
 
 export const searchUserSchema = z.object({
-  name: z.string(),
-  role: z.nativeEnum(Role).nullable(),
+  name: z.string().optional(),
+  role: z.nativeEnum(Role).optional(),
 });
 
 export const updateUserSchema = z.object({

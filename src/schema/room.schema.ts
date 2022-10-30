@@ -25,7 +25,7 @@ export const deleteRoomSchema = z.object({
 });
 
 export const searchRoomSchema = z.object({
-  searchInput: z.string(),
+  searchInput: z.string().optional(),
 });
 
 export type CreateRoomInput = z.TypeOf<typeof createRoomSchema>;

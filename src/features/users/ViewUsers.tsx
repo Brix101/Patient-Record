@@ -19,8 +19,8 @@ const ViewUsers: NextPage = () => {
     (User & { Physician: Physician | null })[] | undefined
   >([]);
   const [searchInput, setSearchInput] = useState<SearchUserInput>({
-    name: "",
-    role: null,
+    name: undefined,
+    role: undefined,
   });
 
   const debouncedValue = useDebounce<SearchUserInput>(searchInput, 500);
@@ -95,7 +95,7 @@ const ViewUsers: NextPage = () => {
                 if (isValid) {
                   setSearchInput({ ...searchInput, role: isValid.value });
                 } else {
-                  setSearchInput({ ...searchInput, role: null });
+                  setSearchInput({ ...searchInput, role: undefined });
                 }
               }}
             />

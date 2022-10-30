@@ -16,7 +16,7 @@ const ViewPatient: NextPage = () => {
   const dispatch = useAppDispatch();
   const { data: sessionData } = useSession();
   const [patientsData, setPatientsData] = useState<Patient[] | undefined>([]);
-  const [name, setName] = useState<SearchPatientInput>({ name: "" });
+  const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
   const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
   const { data, isLoading, isRefetching } = trpc.useQuery(
@@ -31,6 +31,7 @@ const ViewPatient: NextPage = () => {
 
   useEffect(() => {
     if (data) {
+      console.log("++++");
       setPatientsData(data);
     }
   }, [data]);

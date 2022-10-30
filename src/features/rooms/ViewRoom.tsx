@@ -15,7 +15,7 @@ const ViewRoom: NextPage = () => {
   const dispatch = useAppDispatch();
   const [roomsData, setRoomsData] = useState<Room[] | undefined>([]);
   const [searchInput, setSearchInput] = useState<SearchRoomInput>({
-    searchInput: "",
+    searchInput: undefined,
   });
 
   const debouncedValue = useDebounce<SearchRoomInput>(searchInput, 500);
