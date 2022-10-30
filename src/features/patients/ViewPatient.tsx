@@ -1,3 +1,4 @@
+import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
@@ -5,11 +6,14 @@ import useDebounce from "@/hooks/useDebounce";
 import { SearchPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
-import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { PlusSquare } from "react-feather";
+import { PlusSquare, Trash2 } from "react-feather";
+import { setPatientsMode } from "./patientsSlice";
 
 const ViewPatient: NextPage = () => {
+  const dispatch = useAppDispatch();
+  const { data: sessionData } = useSession();
   const [name, setName] = useState<SearchPatientInput>({ name: "" });
 
   const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
@@ -29,7 +33,6 @@ const ViewPatient: NextPage = () => {
     }
     return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
   };
-
   return (
     <main className="h-auto w-full px-2">
       <div className="h-14 w-full flex justify-between items-center  px-5">
@@ -44,11 +47,12 @@ const ViewPatient: NextPage = () => {
               onChange={(e) => setName({ name: e.target.value })}
             />
           </div>
-          <Link href="/nurse/newpatient">
-            <SecondaryButton className="w-11">
-              <PlusSquare size={24} />
-            </SecondaryButton>
-          </Link>
+          <SecondaryButton
+            className="w-11"
+            onClick={() => dispatch(setPatientsMode({ mode: "Add" }))}
+          >
+            <PlusSquare size={24} />
+          </SecondaryButton>
         </div>
       </div>
       <div className="w-full h-[200vh] p-2 shadow-xl">
@@ -102,7 +106,16 @@ const ViewPatient: NextPage = () => {
                     <td className="py-4 px-6">{patient.address}</td>
                     <td className="py-4 px-6">{patient.mobile}</td>
                     <td className="py-4 px-6">{patient.bloodType}</td>
-                    <td className="py-4 px-6 flex gap-5"></td>
+                    <td className="py-4 px-6 flex gap-5">
+                      {sessionData?.user?.role === "ADMIN" ? (
+                        <span
+                          className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                          // onClick={() => deleteDialog({ id: room.id })}
+                        >
+                          <Trash2 size={20} />
+                        </span>
+                      ) : null}
+                    </td>
                   </tr>
                 );
               })}

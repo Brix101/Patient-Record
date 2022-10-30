@@ -1,3 +1,4 @@
+import { useAppDispatch } from "@/app/hook";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
@@ -5,13 +6,14 @@ import { AddPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import { CivilStatus } from "@prisma/client";
 import type { NextPage } from "next";
-import Link from "next/link";
 import ReactDatePicker from "react-datepicker";
 import { List } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
+import { setPatientsMode } from "./patientsSlice";
 
 const NewPatient: NextPage = () => {
+  const dispatch = useAppDispatch();
   const { handleSubmit, register, reset, control } = useForm<AddPatientInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     "patient.add-patient",
@@ -57,12 +59,12 @@ const NewPatient: NextPage = () => {
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">New Patient</h1>
         </div>
-
-        <Link href="/nurse">
-          <SecondaryButton className="w-11">
-            <List size={24} />
-          </SecondaryButton>
-        </Link>
+        <SecondaryButton
+          className="w-11"
+          onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
+        >
+          <List size={24} />
+        </SecondaryButton>
       </div>
       {error && (
         <div

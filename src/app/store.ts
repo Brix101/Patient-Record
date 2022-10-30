@@ -1,4 +1,5 @@
 import medicinesReducer from "@/features/medicines/medicinesSlice";
+import patientReducer from "@features/patients/patientsSlice";
 import roomsReducer from "@features/rooms/roomsSlice";
 import sidebarReducer from "@features/sideBar/sidebarSlice";
 import userReducer from "@features/user/userSlice";
@@ -13,6 +14,7 @@ export function makeStore() {
       rooms: roomsReducer,
       medicines: medicinesReducer,
       user: userReducer,
+      patient: patientReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
