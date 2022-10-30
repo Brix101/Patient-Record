@@ -20,7 +20,7 @@ const ViewRoom: NextPage = () => {
 
   const debouncedValue = useDebounce<SearchRoomInput>(searchInput, 500);
 
-  const { data, isLoading, isRefetching } = trpc.useQuery(
+  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "room.get-rooms",
       {
@@ -30,9 +30,14 @@ const ViewRoom: NextPage = () => {
     { enabled: true }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation([
-    "room.delete-room",
-  ]);
+  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
+    ["room.delete-room"],
+    {
+      onSuccess: () => {
+        refetch();
+      },
+    }
+  );
 
   useEffect(() => {
     if (data) {

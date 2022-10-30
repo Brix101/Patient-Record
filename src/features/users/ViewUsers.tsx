@@ -24,7 +24,7 @@ const ViewUsers: NextPage = () => {
   });
 
   const debouncedValue = useDebounce<SearchUserInput>(searchInput, 500);
-  const { data, isLoading, isRefetching, isFetching } = trpc.useQuery(
+  const { data, isLoading, isRefetching, isFetching, refetch } = trpc.useQuery(
     [
       "users.all-users",
       {
@@ -34,9 +34,14 @@ const ViewUsers: NextPage = () => {
     { enabled: true }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation([
-    "users.delete-user",
-  ]);
+  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
+    ["users.delete-user"],
+    {
+      onSuccess: () => {
+        refetch();
+      },
+    }
+  );
 
   useEffect(() => {
     if (data) {

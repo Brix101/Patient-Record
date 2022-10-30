@@ -21,7 +21,7 @@ const ViewRoom: NextPage = () => {
   const [medicine, setMedicine] = useState<SearchMedicineInput>({ name: "" });
 
   const debouncedValue = useDebounce<SearchMedicineInput>(medicine, 500);
-  const { data, isLoading, isRefetching } = trpc.useQuery(
+  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "medicine.get-medicines",
       {
@@ -31,9 +31,14 @@ const ViewRoom: NextPage = () => {
     { enabled: true }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation([
-    "medicine.delete-medicine",
-  ]);
+  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
+    ["medicine.delete-medicine"],
+    {
+      onSuccess: () => {
+        refetch();
+      },
+    }
+  );
 
   useEffect(() => {
     if (data) {
