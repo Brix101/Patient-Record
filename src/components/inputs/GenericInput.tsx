@@ -12,7 +12,7 @@ function GenericInput({
   placeHolder?: string;
   type?: React.HTMLInputTypeAttribute;
   required?: boolean;
-  register?: UseFormRegisterReturn<any>;
+  register?: UseFormRegisterReturn<string>;
 }) {
   return (
     <div>

@@ -21,7 +21,7 @@ const ViewRoom: NextPage = () => {
   const [medicine, setMedicine] = useState<SearchMedicineInput>({ name: "" });
 
   const debouncedValue = useDebounce<SearchMedicineInput>(medicine, 500);
-  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
+  const { data, isLoading, isRefetching } = trpc.useQuery(
     [
       "medicine.get-medicines",
       {
