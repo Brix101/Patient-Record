@@ -6,7 +6,6 @@ import { exampleRouter } from "@server/router/example";
 import { logsRouter } from "@server/router/log.router";
 import { mediceneRouter } from "@server/router/medicine.router";
 import { patientRouter } from "@server/router/patient.router";
-import { protectedExampleRouter } from "@server/router/protected-example-router";
 import { roomRouter } from "@server/router/room.router";
 import { usersRouter } from "@server/router/user.router";
 import superjson from "superjson";
@@ -20,8 +19,7 @@ export const appRouter = createRouter()
   .merge("patient.", patientRouter)
   .merge("room.", roomRouter)
   .merge("users.", usersRouter)
-  .merge("example.", exampleRouter)
-  .merge("authExample.", protectedExampleRouter);
+  .merge("example.", exampleRouter);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

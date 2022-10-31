@@ -1,21 +1,13 @@
-import { Disclosure, Menu, Transition } from "@headlessui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { Fragment } from "react";
-import { X } from "react-feather";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const Home: NextPage = () => {
-  const router = useRouter();
-  // useEffect(() => {
-  //   router.push("/signin");
-  // });
   return (
     <>
       <Head>

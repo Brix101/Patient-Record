@@ -1,14 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/app/hook";
 import OutlinedButton from "@/components/buttons/OutlinedButton";
-import { trpc } from "@/utils/trpc";
 import { Dialog, Tab, Transition } from "@headlessui/react";
-import { Physician, User } from "@prisma/client";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { XSquare } from "react-feather";
-import EditUser from "../users/EditUser";
-import { setAccountMode } from "../users/usersSlice";
 import { setEditMode, userState } from "./userSlice";
 
 const PasswordForm = dynamic(() => import("./PasswordForm"), { ssr: false });

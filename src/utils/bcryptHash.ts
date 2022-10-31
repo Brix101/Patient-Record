@@ -1,4 +1,3 @@
-import { env } from "@/env/server.mjs";
 import { compare, genSalt, hashSync } from "bcrypt";
 
 export const hashPassword = async ({

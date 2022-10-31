@@ -32,7 +32,6 @@ const ViewRoom: NextPage = () => {
     ],
     { enabled: true }
   );
-  ("");
 
   const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
     ["medicine.delete-medicine"],

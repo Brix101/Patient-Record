@@ -9,7 +9,7 @@ import { Patient } from "@prisma/client";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Clipboard, Edit, Filter, PlusSquare, Trash2 } from "react-feather";
+import { Clipboard, Edit, PlusSquare, Trash2 } from "react-feather";
 import { setPatientsMode } from "./patientsSlice";
 
 const ViewPatient: NextPage = () => {
