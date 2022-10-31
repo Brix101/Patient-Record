@@ -1,26 +1,24 @@
 import { useAppDispatch, useAppSelector } from "@/app/hook";
 import OutlinedButton from "@/components/buttons/OutlinedButton";
-import PrimaryButton from "@/components/buttons/PrimaryButton";
-import GenericInput from "@/components/inputs/GenericInput";
-import { ChangePasswordInput } from "@/schema/user.schema";
 import { trpc } from "@/utils/trpc";
 import { Dialog, Tab, Transition } from "@headlessui/react";
-import { Physician, Role, User } from "@prisma/client";
+import { Physician, User } from "@prisma/client";
 import { NextPage } from "next";
-import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import React, { Fragment, useEffect } from "react";
 import { XSquare } from "react-feather";
-import { useForm } from "react-hook-form";
 import EditUser from "../users/EditUser";
 import { setAccountMode } from "../users/usersSlice";
 import { setEditMode, userState } from "./userSlice";
+
+const PasswordForm = dynamic(() => import("./PasswordForm"), { ssr: false });
+const PersonalForm = dynamic(() => import("./PersonalForm"), { ssr: false });
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const UpdateUser: NextPage = () => {
-  const { data } = useSession();
   const dispatch = useAppDispatch();
   const { edit } = useAppSelector(userState);
 
@@ -28,44 +26,9 @@ const UpdateUser: NextPage = () => {
     dispatch(setEditMode({ edit: false }));
   };
 
-  const userData = trpc.useQuery(["users.me"]);
-  useEffect(() => {
-    if (userData) {
-      dispatch(
-        setAccountMode({
-          account: true,
-          user: userData?.data as
-            | (User & { Physician: Physician | null })
-            | undefined,
-        })
-      );
-    }
-  }, [dispatch, userData]);
-
-  const {
-    handleSubmit,
-    register,
-    reset,
-    formState: { isDirty },
-  } = useForm<ChangePasswordInput>();
-  const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
-    ["users.change-password"],
-    {
-      onSuccess: () => {
-        reset();
-      },
-    }
-  );
-  function onSubmit(values: ChangePasswordInput) {
-    mutate({ ...values });
-  }
   return (
     <>
-      <Transition
-        appear
-        show={edit && data?.user?.role !== Role.ADMIN}
-        as={Fragment}
-      >
+      <Transition appear show={edit} as={Fragment}>
         <Dialog as="div" className="relative" onClose={handleCloseModal}>
           <Transition.Child
             as={Fragment}
@@ -96,9 +59,11 @@ const UpdateUser: NextPage = () => {
                     className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center"
                   >
                     Account Settings
-                    <OutlinedButton onClick={handleCloseModal}>
-                      <XSquare size={24} />
-                    </OutlinedButton>
+                    <div>
+                      <OutlinedButton onClick={handleCloseModal}>
+                        <XSquare size={24} />
+                      </OutlinedButton>
+                    </div>
                   </Dialog.Title>
                   <Tab.Group>
                     <div className="flex items-center flex-col">
@@ -132,80 +97,16 @@ const UpdateUser: NextPage = () => {
                           </Tab>
                         </Tab.List>
                       </div>
-                      <Tab.Panels className={"container"}>
-                        <Tab.Panel>
-                          <EditUser />
+                      <Tab.Panels
+                        className={
+                          "container h-[65vh] relative overflow-hidden"
+                        }
+                      >
+                        <Tab.Panel className={"h-full w-full overflow-y-auto"}>
+                          <PersonalForm />
                         </Tab.Panel>
-                        <Tab.Panel>
-                          <div
-                            className={`"relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-full"`}
-                          >
-                            {error && (
-                              <div
-                                className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
-                                role="alert"
-                              >
-                                <span className="font-medium">
-                                  Error alert!
-                                </span>{" "}
-                                {error && error.message}
-                              </div>
-                            )}
-                            {isSuccess && (
-                              <div
-                                className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                                role="alert"
-                              >
-                                <span className="font-medium">
-                                  Success alert!
-                                </span>{" "}
-                                Password Updated
-                              </div>
-                            )}
-                            <form
-                              onSubmit={handleSubmit(onSubmit)}
-                              className="h-[368px] flex flex-col justify-between"
-                            >
-                              <div className="md:grid md:grid-cols-2 md:gap-6">
-                                <div className="col-span-1 space-y-3">
-                                  <GenericInput
-                                    label="Old Password"
-                                    type="password"
-                                    placeHolder="Old Password"
-                                    required
-                                    register={register("oldPassword")}
-                                  />
-                                  <GenericInput
-                                    label="New Password"
-                                    type="password"
-                                    placeHolder="New Password"
-                                    required
-                                    register={register("newPassword")}
-                                  />
-                                  <GenericInput
-                                    label="Confirm Password"
-                                    type="password"
-                                    placeHolder="Confirm Password"
-                                    required
-                                    register={register("confirmPassword")}
-                                  />
-                                </div>
-                                <div className="col-span-1 space-y-3"></div>
-                              </div>
-                              <div className="w-full">
-                                <div className="py-3 text-right">
-                                  <PrimaryButton
-                                    className="w-1/3"
-                                    type="submit"
-                                    isLoading={isLoading}
-                                    disabled={!isDirty}
-                                  >
-                                    Update
-                                  </PrimaryButton>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
+                        <Tab.Panel className={"h-full w-full overflow-y-auto"}>
+                          <PasswordForm />
                         </Tab.Panel>
                       </Tab.Panels>
                     </div>

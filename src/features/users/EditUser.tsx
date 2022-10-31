@@ -5,7 +5,6 @@ import GenericInput from "@/components/inputs/GenericInput";
 import PhysicianInput from "@/components/inputs/PhysicianInput";
 import { UpdateUserInput } from "@/schema/user.schema";
 import { trpc } from "@/utils/trpc";
-import { userState } from "@features/user/userSlice";
 import { setUsersMode, usersState } from "@features/users/usersSlice";
 import { Role } from "@prisma/client";
 import { NextPage } from "next";
