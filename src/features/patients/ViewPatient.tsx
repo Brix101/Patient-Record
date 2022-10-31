@@ -9,7 +9,7 @@ import { Patient } from "@prisma/client";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { PlusSquare, Trash2 } from "react-feather";
+import { Clipboard, Edit, Filter, PlusSquare, Trash2 } from "react-feather";
 import { setPatientsMode } from "./patientsSlice";
 
 const ViewPatient: NextPage = () => {
@@ -19,7 +19,7 @@ const ViewPatient: NextPage = () => {
   const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
   const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
-  const { data, isLoading, isRefetching } = trpc.useQuery(
+  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "patient.all-patients",
       {
@@ -29,9 +29,20 @@ const ViewPatient: NextPage = () => {
     { enabled: true }
   );
 
+  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
+    ["patient.delete-patient"],
+    {
+      onMutate: (variables) => {
+        setPatientsData((prev) => prev?.filter((items) => items !== variables));
+      },
+      onSuccess: () => {
+        refetch();
+      },
+    }
+  );
+
   useEffect(() => {
     if (data) {
-      console.log("++++");
       setPatientsData(data);
     }
   }, [data]);
@@ -45,7 +56,7 @@ const ViewPatient: NextPage = () => {
 
   const deleteDialog = ({ patient }: { patient: Patient }) => {
     if (window.confirm("Are you sure to Delete this Patient Data?")) {
-      setPatientsData((prev) => prev?.filter((items) => items !== patient));
+      mutate({ ...patient });
     }
   };
 
@@ -72,7 +83,9 @@ const ViewPatient: NextPage = () => {
         </div>
       </div>
       <div className="w-full h-[200vh] p-2 shadow-xl">
-        <LinearLoading isLoading={isLoading || isRefetching} />
+        <LinearLoading
+          isLoading={isLoading || isRefetching || isDeleteLoading}
+        />
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 select-none">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -122,6 +135,12 @@ const ViewPatient: NextPage = () => {
                   <td className="py-4 px-6">{patient.mobile}</td>
                   <td className="py-4 px-6">{patient.bloodType}</td>
                   <td className="py-4 px-6 flex gap-5">
+                    <span className="font-medium text-green-600 dark:text-green-500 hover:underline cursor-pointer">
+                      <Clipboard size={20} />
+                    </span>
+                    <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                      <Edit size={20} />
+                    </span>
                     {sessionData?.user?.role === "ADMIN" ? (
                       <span
                         className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"

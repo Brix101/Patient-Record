@@ -111,7 +111,7 @@ export const roomRouter = createProtectedRouter()
 
       throw new trpc.TRPCError({
         code: "UNAUTHORIZED",
-        message: "Invalid Room",
+        message: "Invalid Room Data",
       });
     },
   });

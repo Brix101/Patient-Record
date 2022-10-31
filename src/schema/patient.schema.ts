@@ -21,6 +21,12 @@ export const searchPatientSchema = z.object({
   name: z.string().optional(),
 });
 
+export const deletePatientSchema = z.object({
+  id: z.number(),
+});
+
 export type AddPatientInput = z.TypeOf<typeof addPatientSchema>;
 
 export type SearchPatientInput = z.TypeOf<typeof searchPatientSchema>;
+
+export type DeletePatientInput = z.TypeOf<typeof deletePatientSchema>;

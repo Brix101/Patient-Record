@@ -1,4 +1,9 @@
-import { addPatientSchema, searchPatientSchema } from "@/schema/patient.schema";
+import {
+  addPatientSchema,
+  deletePatientSchema,
+  searchPatientSchema,
+} from "@/schema/patient.schema";
+import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
@@ -64,5 +69,25 @@ export const patientRouter = createProtectedRouter()
           message: "Something went wrong",
         });
       }
+    },
+  })
+  .mutation("delete-patient", {
+    input: deletePatientSchema,
+    resolve: async ({ ctx, input }) => {
+      const { role } = ctx.session.user;
+
+      if (role === Role.ADMIN) {
+        const deletedPatient = await ctx.prisma.patient.delete({
+          where: {
+            id: input.id,
+          },
+        });
+        return { detail: "Patient Data Deleted", deletedPatient };
+      }
+
+      throw new trpc.TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid Patient Data",
+      });
     },
   });
