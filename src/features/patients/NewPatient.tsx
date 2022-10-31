@@ -85,8 +85,11 @@ const NewPatient: NextPage = () => {
           <span className="font-medium">Success alert!</span> Patient Added
         </div>
       )}
-      <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
-        <form className="max-w-9xl py-5" onSubmit={handleSubmit(onSubmit)}>
+      <div className="relative w-full h-auto p-2 flex justify-center overflow-y-auto ">
+        <form
+          className="max-w-9xl py-5 mb-20"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col">
             <div className="col-span-1 space-y-3">
               <div className="grid grid-cols-3 gap-3">

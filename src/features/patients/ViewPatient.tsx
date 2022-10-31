@@ -104,9 +104,9 @@ const ViewPatient: NextPage = () => {
             <th scope="col" className="py-3 px-2">
               Blood type
             </th>
-            <th scope="col" className="py-3 px-6">
+            {/* <th scope="col" className="py-3 px-6">
               Actions
-            </th>
+            </th> */}
           </tr>
         </thead>
         <tbody>
@@ -115,7 +115,12 @@ const ViewPatient: NextPage = () => {
               <tr key={i} className={`${TableStyle(i)}`}>
                 <th
                   scope="row"
-                  className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                  className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline"
+                  onClick={() =>
+                    dispatch(
+                      setPatientsMode({ mode: "Edit", patient: patient })
+                    )
+                  }
                 >
                   {patient?.lastName}, {patient?.firstName}{" "}
                   {patient?.middleName}
@@ -128,10 +133,12 @@ const ViewPatient: NextPage = () => {
                     year: "numeric",
                   })}
                 </td>
-                <td className="py-4 px-6">{patient.address}</td>
+                <td className="py-4 px-6 text-ellipsis max-w-xs overflow-hidden">
+                  {patient.address}
+                </td>
                 <td className="py-4 px-6">{patient.mobile}</td>
                 <td className="py-4 px-6">{patient.bloodType}</td>
-                <td className="py-4 px-6 flex gap-5">
+                {/* <td className="py-4 px-6 flex gap-5">
                   <span className="font-medium text-green-600 dark:text-green-500 hover:underline cursor-pointer">
                     <Clipboard size={20} />
                   </span>
@@ -153,7 +160,7 @@ const ViewPatient: NextPage = () => {
                       <Trash2 size={20} />
                     </span>
                   ) : null}
-                </td>
+                </td> */}
               </tr>
             );
           })}

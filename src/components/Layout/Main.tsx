@@ -77,11 +77,9 @@ function Main({ children }: { children?: React.ReactNode }) {
               <ProfileButton />
             </div>
           </header>
-          <div className="flex h-full ">
-            <div className="flex-1">
-              <div className="mx-10 my-2 flex justify-center h-[85vh] min-h-0 overflow-y-scroll">
-                {children}
-              </div>
+          <div className="flex-1">
+            <div className="mx-10 my-2 flex justify-center h-[85vh] min-h-0 overflow-y-scroll">
+              {children}
             </div>
           </div>
           <UpdateUser />

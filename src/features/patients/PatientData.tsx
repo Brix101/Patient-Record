@@ -7,15 +7,16 @@ import { UpdatePatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import { CivilStatus } from "@prisma/client";
 import type { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
-import { List } from "react-feather";
+import { Edit, List, Trash2 } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { patientsState, setPatientsMode } from "./patientsSlice";
 
-const UpdatePatient: NextPage = () => {
+const PatientData: NextPage = () => {
   const dispatch = useAppDispatch();
+  const [editMode, setEditMode] = useState(false);
   const { patient } = useAppSelector(patientsState);
 
   const { handleSubmit, register, reset, control, clearErrors } =
@@ -30,6 +31,15 @@ const UpdatePatient: NextPage = () => {
     }
   );
 
+  const { mutate: deleteMutation } = trpc.useMutation(
+    ["patient.delete-patient"],
+    {
+      onSuccess: () => {
+        dispatch(setPatientsMode({ mode: "View" }));
+      },
+    }
+  );
+
   useEffect(() => {
     if (patient) {
       reset({
@@ -37,17 +47,17 @@ const UpdatePatient: NextPage = () => {
         firstName: patient.firstName as string,
         middleName: patient.middleName as string,
         lastName: patient.lastName as string,
-        gender: patient.gender,
+        gender: patient.gender as string,
         birthday: patient.birthday as Date,
-        civilStatus: patient.civilStatus,
+        civilStatus: patient.civilStatus as CivilStatus,
         mobile: patient.mobile as string,
         religion: patient.religion as string,
         nationality: patient.nationality as string,
         address: patient.address as string,
         weight: patient.weight as string,
         height: patient.height as string,
-        bloodPressure: patient.bloodPressure,
-        bloodType: patient.bloodType,
+        bloodPressure: patient.bloodPressure as string,
+        bloodType: patient.bloodType as string,
       });
     }
   }, [patient, reset]);
@@ -81,20 +91,43 @@ const UpdatePatient: NextPage = () => {
     mutate({ ...values });
   }
 
+  const deleteDialog = () => {
+    if (window.confirm("Are you sure to Delete this Patient Data?")) {
+      deleteMutation({ id: patient?.id as number });
+    }
+  };
+
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">
-            Update Patient Information
+            Patient Information
           </h1>
         </div>
-        <SecondaryButton
-          className="w-11"
-          onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
-        >
-          <List size={24} />
-        </SecondaryButton>
+        <div className="flex flex-row gap-5">
+          <SecondaryButton
+            className="w-11"
+            tooltip="View Patients"
+            onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
+          >
+            <List size={24} />
+          </SecondaryButton>
+          <PrimaryButton
+            className="w-11"
+            tooltip="Update Patient"
+            onClick={() => setEditMode(true)}
+          >
+            <Edit size={24} />
+          </PrimaryButton>
+          <OutlinedButton
+            className="w-11"
+            tooltip="Delete Patient"
+            onClick={deleteDialog}
+          >
+            <Trash2 className="group-hover:text-red-600" size={24} />
+          </OutlinedButton>
+        </div>
       </div>
       {error && (
         <div
@@ -114,6 +147,9 @@ const UpdatePatient: NextPage = () => {
         </div>
       )}
       <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
+        {editMode ? null : (
+          <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
+        )}
         <form
           className="max-w-9xl py-5 mb-20"
           onSubmit={handleSubmit(onSubmit)}
@@ -274,27 +310,29 @@ const UpdatePatient: NextPage = () => {
               </div>
             </div>
           </div>
-          <div className="w-full my-5 flex justify-end">
-            <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
-              <PrimaryButton
-                className="w-full"
-                type="submit"
-                isLoading={isLoading}
-              >
-                Update
-              </PrimaryButton>
-              <OutlinedButton
-                type="button"
-                onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
-              >
-                Cancel
-              </OutlinedButton>
+          {editMode ? (
+            <div className="w-full my-5 flex justify-end">
+              <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
+                <PrimaryButton
+                  className="w-full"
+                  type="submit"
+                  isLoading={isLoading}
+                >
+                  Update
+                </PrimaryButton>
+                <OutlinedButton
+                  type="button"
+                  onClick={() => setEditMode(false)}
+                >
+                  Cancel
+                </OutlinedButton>
+              </div>
             </div>
-          </div>
+          ) : null}
         </form>
       </div>
     </div>
   );
 };
 
-export default UpdatePatient;
+export default PatientData;
