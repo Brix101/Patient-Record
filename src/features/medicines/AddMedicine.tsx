@@ -29,6 +29,7 @@ const AddMedicine: NextPage = () => {
       onSuccess: () => {
         reset();
         clearErrors();
+        dispatch(setMedicinesMode({ mode: "View" }));
       },
     }
   );

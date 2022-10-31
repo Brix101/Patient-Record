@@ -30,6 +30,7 @@ const AddRoom: NextPage = () => {
       onSuccess: () => {
         reset();
         clearErrors();
+        dispatch(setRoomsMode({ mode: "View" }));
       },
     }
   );

@@ -32,6 +32,7 @@ const AddUser: NextPage = () => {
       onSuccess: () => {
         reset();
         setPhysician(false);
+        dispatch(setUsersMode({ mode: "View" }));
       },
     }
   );
