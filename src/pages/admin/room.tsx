@@ -12,7 +12,7 @@ const EditRoom = dynamic(() => import("@features/rooms/EditRoom"), {
   ssr: false,
 });
 const ViewRoom = dynamic(() => import("@features/rooms/ViewRoom"), {
-  ssr: false,
+  ssr: true,
 });
 
 const RoomPage: NextPage = () => {

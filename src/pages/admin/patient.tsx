@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 
 const ViewPatient = dynamic(() => import("@features/patients/ViewPatient"), {
-  ssr: false,
+  ssr: true,
 });
 
 const NewPatient = dynamic(() => import("@features/patients/NewPatient"), {

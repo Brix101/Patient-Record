@@ -12,7 +12,7 @@ const EditMedicine = dynamic(() => import("@features/medicines/EditMedicine"), {
   ssr: false,
 });
 const ViewMedicine = dynamic(() => import("@features/medicines/ViewMedicine"), {
-  ssr: false,
+  ssr: true,
 });
 
 const RoomPage: NextPage = () => {

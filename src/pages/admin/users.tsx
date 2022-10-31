@@ -9,7 +9,7 @@ const AddUser = dynamic(() => import("@features/users/AddUser"), {
   ssr: false,
 });
 const ViewUsers = dynamic(() => import("@features/users/ViewUsers"), {
-  ssr: false,
+  ssr: true,
 });
 const EditUser = dynamic(() => import("@features/users/EditUser"), {
   ssr: false,
