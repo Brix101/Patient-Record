@@ -13,7 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { setPatientsMode } from "./patientsSlice";
 
-const NewPatient: NextPage = () => {
+const UpdatePatient: NextPage = () => {
   const dispatch = useAppDispatch();
   const { handleSubmit, register, reset, control } = useForm<AddPatientInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
@@ -59,7 +59,7 @@ const NewPatient: NextPage = () => {
       <div className="h-14 w-full flex justify-between items-center px-5">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">
-            New Patient Information
+            Update Patient Information
           </h1>
         </div>
         <SecondaryButton
@@ -251,7 +251,7 @@ const NewPatient: NextPage = () => {
                 type="submit"
                 isLoading={isLoading}
               >
-                Add Patient
+                Update Patient
               </PrimaryButton>
               <OutlinedButton
                 type="button"
@@ -267,4 +267,4 @@ const NewPatient: NextPage = () => {
   );
 };
 
-export default NewPatient;
+export default UpdatePatient;

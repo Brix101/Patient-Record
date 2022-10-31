@@ -1,4 +1,5 @@
 import { useAppDispatch } from "@/app/hook";
+import OutlinedButton from "@/components/buttons/OutlinedButton";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
@@ -71,8 +72,11 @@ const AddMedicine: NextPage = () => {
           <span className="font-medium">Success alert!</span> Medicine Added
         </div>
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="md:grid md:grid-cols-2 md:gap-6">
+      <form
+        className="flex-1 flex flex-col items-center mt-5 mb-20"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="flex flex-col w-full max-w-md">
           <div className="col-span-1 space-y-3">
             <GenericInput
               label="Name"
@@ -123,15 +127,24 @@ const AddMedicine: NextPage = () => {
             />
           </div>
         </div>
-        <div className="py-3 text-right">
-          <PrimaryButton
-            className="w-1/3"
-            isLoading={isLoading}
-            disabled={!isDirty}
-            type="submit"
-          >
-            Add
-          </PrimaryButton>
+        <div className="w-full max-w-md my-5 flex justify-end">
+          <div className="py-3 text-right flex gap-2 justify-end">
+            <PrimaryButton
+              className="w-full min-w-[150px]"
+              isLoading={isLoading}
+              disabled={!isDirty}
+              type="submit"
+            >
+              Add
+            </PrimaryButton>
+
+            <OutlinedButton
+              type="button"
+              onClick={() => dispatch(setMedicinesMode({ mode: "View" }))}
+            >
+              Cancel
+            </OutlinedButton>
+          </div>
         </div>
       </form>
     </div>

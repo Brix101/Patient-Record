@@ -1,4 +1,5 @@
 import { useAppDispatch } from "@/app/hook";
+import OutlinedButton from "@/components/buttons/OutlinedButton";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@components/inputs/GenericInput";
@@ -44,7 +45,6 @@ const AddUser: NextPage = () => {
     }
   );
   const genderOptions = [
-    { label: "Prefer not to respond", value: "NO_RESPOND" },
     { label: "male", value: "MALE" },
     { label: "female", value: "FEMALE" },
   ];
@@ -89,8 +89,11 @@ const AddUser: NextPage = () => {
             <span className="font-medium">Success alert!</span> User Added
           </div>
         )}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="md:grid md:grid-cols-2 md:gap-6">
+        <form
+          className="flex-1 flex flex-col items-center mt-5 mb-20"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="flex flex-col w-full max-w-md">
             <div className="col-span-1 space-y-3">
               <div className="grid grid-cols-2 gap-2 items-end">
                 <GenericInput
@@ -131,7 +134,7 @@ const AddUser: NextPage = () => {
                   </label>
                   <Controller
                     control={control}
-                    defaultValue={"NO_RESPOND"}
+                    defaultValue={"MALE"}
                     name="gender"
                     render={({ field: { onChange, value } }) => (
                       <Select
@@ -172,8 +175,6 @@ const AddUser: NextPage = () => {
                 required
                 register={register("address")}
               />
-            </div>
-            <div className="col-span-1 space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                   User Role
@@ -199,32 +200,42 @@ const AddUser: NextPage = () => {
                   )}
                 />
               </div>
-              <>
-                <PhysicianInput
-                  enable={isPhysician}
-                  placeHolder="License Number"
-                  label="License Number"
-                  register={register("licenseNumber")}
-                />
-                <PhysicianInput
-                  enable={isPhysician}
-                  placeHolder="Expertise"
-                  label="Expertise"
-                  register={register("expertise")}
-                />
-              </>
+              {isPhysician ? (
+                <>
+                  <PhysicianInput
+                    enable={isPhysician}
+                    placeHolder="License Number"
+                    label="License Number"
+                    register={register("licenseNumber")}
+                  />
+                  <PhysicianInput
+                    enable={isPhysician}
+                    placeHolder="Expertise"
+                    label="Expertise"
+                    register={register("expertise")}
+                  />
+                </>
+              ) : null}
             </div>
           </div>
-          <div className="w-full">
-            <div className="py-3 text-right">
+
+          <div className="w-full max-w-md my-5 flex justify-end">
+            <div className="py-3 text-right flex gap-2 justify-end">
               <PrimaryButton
-                className="w-1/3"
+                className="w-full min-w-[150px]"
                 isLoading={isLoading}
-                type="submit"
                 disabled={!isDirty}
+                type="submit"
               >
                 Register
               </PrimaryButton>
+
+              <OutlinedButton
+                type="button"
+                onClick={() => dispatch(setUsersMode({ mode: "View" }))}
+              >
+                Cancel
+              </OutlinedButton>
             </div>
           </div>
         </form>

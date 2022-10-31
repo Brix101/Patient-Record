@@ -57,13 +57,19 @@ const EditMedicine: NextPage = () => {
       <div className=" w-full h-full">
         <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-gray-900">Edit User</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Edit Medicine Information
+            </h1>
           </div>
-          <OutlinedButton
-            onClick={() => dispatch(setMedicinesMode({ mode: "View" }))}
-          >
-            <XSquare size={24} />
-          </OutlinedButton>
+          <div>
+            <div>
+              <OutlinedButton
+                onClick={() => dispatch(setMedicinesMode({ mode: "View" }))}
+              >
+                <XSquare size={24} />
+              </OutlinedButton>
+            </div>
+          </div>
         </div>
         {error && (
           <div
@@ -84,8 +90,11 @@ const EditMedicine: NextPage = () => {
         )}
       </div>
       {medicine && (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="md:grid md:grid-cols-2 md:gap-6">
+        <form
+          className="flex-1 flex flex-col items-center mt-5 mb-20"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="flex flex-col w-full max-w-md">
             <div className="col-span-1 space-y-3">
               <GenericInput
                 label="Name"
@@ -136,15 +145,24 @@ const EditMedicine: NextPage = () => {
               />
             </div>
           </div>
-          <div className="py-3 text-right">
-            <PrimaryButton
-              className="w-1/3"
-              isLoading={isLoading}
-              disabled={!isDirty}
-              type="submit"
-            >
-              Update
-            </PrimaryButton>
+          <div className="w-full max-w-md my-5 flex justify-end">
+            <div className="py-3 text-right flex gap-2 justify-end">
+              <PrimaryButton
+                className="w-full min-w-[150px]"
+                isLoading={isLoading}
+                disabled={!isDirty}
+                type="submit"
+              >
+                Update
+              </PrimaryButton>
+
+              <OutlinedButton
+                type="button"
+                onClick={() => dispatch(setMedicinesMode({ mode: "View" }))}
+              >
+                Cancel
+              </OutlinedButton>
+            </div>
           </div>
         </form>
       )}

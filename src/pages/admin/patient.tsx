@@ -9,9 +9,16 @@ const ViewPatient = dynamic(() => import("@features/patients/ViewPatient"), {
   ssr: false,
 });
 
-const AddPatient = dynamic(() => import("@features/patients/NewPatient"), {
+const NewPatient = dynamic(() => import("@features/patients/NewPatient"), {
   ssr: false,
 });
+
+const UpdatePatient = dynamic(
+  () => import("@/features/patients/UpdatePatient"),
+  {
+    ssr: false,
+  }
+);
 
 const PatientPage: NextPage = () => {
   const { mode } = useAppSelector(patientsState);
@@ -23,7 +30,8 @@ const PatientPage: NextPage = () => {
       </Head>
       <Admin>
         {mode === "View" && <ViewPatient />}
-        {mode === "Add" && <AddPatient />}
+        {mode === "Add" && <NewPatient />}
+        {mode === "Edit" && <UpdatePatient />}
       </Admin>
     </>
   );

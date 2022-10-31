@@ -17,14 +17,14 @@ import Select from "react-select";
 
 const EditUser: NextPage = () => {
   const dispatch = useAppDispatch();
-  const { user, account } = useAppSelector(usersState);
-  const { edit } = useAppSelector(userState);
+  const { user } = useAppSelector(usersState);
   const {
     handleSubmit,
     register,
     reset,
     control,
     formState: { isDirty },
+    getValues,
   } = useForm<UpdateUserInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["users.update-user"],
@@ -63,7 +63,6 @@ const EditUser: NextPage = () => {
     }
   );
   const genderOptions = [
-    { label: "Prefer not to respond", value: "NO_RESPOND" },
     { label: "male", value: "MALE" },
     { label: "female", value: "FEMALE" },
   ];
@@ -84,18 +83,20 @@ const EditUser: NextPage = () => {
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className=" w-full h-full">
-        {account && !edit && (
-          <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Edit User</h1>
-            </div>
+        <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Edit User Information
+            </h1>
+          </div>
+          <div>
             <OutlinedButton
               onClick={() => dispatch(setUsersMode({ mode: "View" }))}
             >
               <XSquare size={24} />
             </OutlinedButton>
           </div>
-        )}
+        </div>
         {error && (
           <div
             className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
@@ -114,8 +115,11 @@ const EditUser: NextPage = () => {
           </div>
         )}
         {user && (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="md:grid md:grid-cols-2 md:gap-6">
+          <form
+            className="flex-1 flex flex-col items-center mt-5 mb-20"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div className="flex flex-col w-full max-w-md">
               <div className="col-span-1 space-y-3">
                 <div className="grid grid-cols-2 gap-2 items-end">
                   <GenericInput
@@ -156,7 +160,7 @@ const EditUser: NextPage = () => {
                     </label>
                     <Controller
                       control={control}
-                      defaultValue={user?.gender ? user?.gender : "NO_RESPOND"}
+                      defaultValue={user?.gender ? user?.gender : "MALE"}
                       name="gender"
                       render={({ field: { onChange, value } }) => (
                         <Select
@@ -195,54 +199,59 @@ const EditUser: NextPage = () => {
                   required
                   register={register("address")}
                 />
-              </div>
-              <div className="col-span-1 space-y-3">
-                {!account && (
-                  <>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        User Role
-                      </label>
-                      <Controller
-                        control={control}
-                        defaultValue={Role[user?.role as keyof typeof Role]}
-                        name="role"
-                        render={({ field: { onChange, value } }) => (
-                          <Select
-                            classNamePrefix="addl-class"
-                            options={userRoles}
-                            value={userRoles.find((c) => c.value === value)}
-                            onChange={(role) => onChange(role?.value)}
-                          />
-                        )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    User Role
+                  </label>
+                  <Controller
+                    control={control}
+                    defaultValue={Role[user?.role as keyof typeof Role]}
+                    name="role"
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        classNamePrefix="addl-class"
+                        options={userRoles}
+                        value={userRoles.find((c) => c.value === value)}
+                        onChange={(role) => onChange(role?.value)}
                       />
-                    </div>
+                    )}
+                  />
+                </div>
+                {getValues("role") === "PHYSICIAN" ? (
+                  <>
                     <PhysicianInput
-                      enable={user?.role === "PHYSICIAN"}
+                      enable={getValues("role") === "PHYSICIAN"}
                       placeHolder="License Number"
                       label="License Number"
                       register={register("licenseNumber")}
                     />
                     <PhysicianInput
-                      enable={user?.role === "PHYSICIAN"}
+                      enable={getValues("role") === "PHYSICIAN"}
                       placeHolder="Expertise"
                       label="Expertise"
                       register={register("expertise")}
                     />
                   </>
-                )}
+                ) : null}
               </div>
             </div>
-            <div className="w-full">
-              <div className="py-3 text-right">
+            <div className="w-full max-w-md my-5 flex justify-end">
+              <div className="py-3 text-right flex gap-2 justify-end">
                 <PrimaryButton
-                  className="w-1/3"
+                  className="w-full min-w-[150px]"
                   isLoading={isLoading}
                   type="submit"
                   disabled={!isDirty}
                 >
                   Update
                 </PrimaryButton>
+
+                <OutlinedButton
+                  type="button"
+                  onClick={() => dispatch(setUsersMode({ mode: "View" }))}
+                >
+                  Cancel
+                </OutlinedButton>
               </div>
             </div>
           </form>

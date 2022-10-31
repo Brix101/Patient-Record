@@ -14,7 +14,7 @@ function OutlinedButton({
   return (
     <button
       type={type}
-      className={`h-11 items-center rounded-lg border border-gray-600 bg-slate-50 p-2 text-sm font-medium text-black shadow-sm hover:bg-slate-100  ${className}`}
+      className={`w-full inline-flex justify-center p-2 h-11 items-center text-xl text-center font-medium text-gray-900 rounded-lg border-2 border-gray-900 shadow-sm hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2  ${className}`}
       onClick={onClick}
     >
       {children}

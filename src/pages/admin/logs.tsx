@@ -62,7 +62,7 @@ const UsersPage: NextPage = () => {
                   selected={
                     searchInput.fromDate ? searchInput.fromDate : defaultDate
                   }
-                  dateFormat="MMM-dd-yyyy"
+                  dateFormat="MMMM-dd-yyyy"
                   selectsStart
                   startDate={searchInput.fromDate}
                   endDate={searchInput.toDate}
@@ -85,7 +85,7 @@ const UsersPage: NextPage = () => {
                   selected={
                     searchInput.toDate ? searchInput.toDate : new Date()
                   }
-                  dateFormat="MMM-dd-yyyy"
+                  dateFormat="MMMM-dd-yyyy"
                   selectsEnd
                   startDate={searchInput.fromDate}
                   endDate={searchInput.toDate}
@@ -129,30 +129,27 @@ const UsersPage: NextPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data &&
-                data.map((log, i) => {
-                  return (
-                    <tr key={i} className={`${TableStyle(i)}`}>
-                      <th
-                        scope="row"
-                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
-                      >
-                        {log.user.lastName && log.user.lastName},{" "}
-                        {log.user.firstName && log.user.firstName}
-                      </th>
-                      <td className="py-4 px-6">
-                        {log.user.role && log.user.role}
-                      </td>
-                      <td className="py-4 px-6">{log.type}</td>
-                      <td className="py-4 px-6">
-                        {log.createAt.toDateString()}
-                      </td>
-                      <td className="py-4 px-6">
-                        {log.createAt.toLocaleTimeString("en-US")}
-                      </td>
-                    </tr>
-                  );
-                })}
+              {data?.map((log, i) => {
+                return (
+                  <tr key={i} className={`${TableStyle(i)}`}>
+                    <th
+                      scope="row"
+                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                    >
+                      {log.user.lastName && log.user.lastName},{" "}
+                      {log.user.firstName && log.user.firstName}
+                    </th>
+                    <td className="py-4 px-6">
+                      {log.user.role && log.user.role}
+                    </td>
+                    <td className="py-4 px-6">{log.type}</td>
+                    <td className="py-4 px-6">{log.createAt.toDateString()}</td>
+                    <td className="py-4 px-6">
+                      {log.createAt.toLocaleTimeString("en-US")}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

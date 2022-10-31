@@ -1,4 +1,5 @@
 import { useAppDispatch } from "@/app/hook";
+import OutlinedButton from "@/components/buttons/OutlinedButton";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
@@ -82,8 +83,11 @@ const AddRoom: NextPage = () => {
           <span className="font-medium">Success alert!</span> Room Added
         </div>
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="md:grid md:grid-cols-2 md:gap-6">
+      <form
+        className="flex-1 flex flex-col items-center mt-5 mb-20"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="flex flex-col w-full max-w-md">
           <div className="col-span-1 space-y-3">
             <GenericInput
               label="Floor"
@@ -126,9 +130,6 @@ const AddRoom: NextPage = () => {
                 </p>
               )}
             />
-          </div>
-
-          <div className="col-span-1 space-y-3">
             <div>
               <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                 Room Category
@@ -167,16 +168,23 @@ const AddRoom: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className="w-full">
-          <div className="py-3 text-right">
+        <div className="w-full max-w-md my-5 flex justify-end">
+          <div className="py-3 text-right flex gap-2 justify-end">
             <PrimaryButton
-              className="w-1/3"
+              className="w-full min-w-[150px]"
               isLoading={isLoading}
               disabled={!isDirty}
               type="submit"
             >
               Add
             </PrimaryButton>
+
+            <OutlinedButton
+              type="button"
+              onClick={() => dispatch(setRoomsMode({ mode: "View" }))}
+            >
+              Cancel
+            </OutlinedButton>
           </div>
         </div>
       </form>

@@ -20,7 +20,7 @@ function PrimaryButton({
   return (
     <button
       type={type}
-      className={`inline-flex justify-center p-2 h-14 items-center text-2xl text-center font-medium text-white ${className}
+      className={`inline-flex justify-center p-2 h-11 items-center text-xl text-center font-medium text-white ${className}
   ${
     isLoading || isSuccess || disabled
       ? " bg-green-400 dark:bg-green-500 cursor-default rounded-lg "
