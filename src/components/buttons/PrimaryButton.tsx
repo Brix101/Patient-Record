@@ -8,6 +8,7 @@ function PrimaryButton({
   children,
   type,
   onClick,
+  tooltip,
 }: {
   isLoading?: boolean;
   isSuccess?: boolean;
@@ -16,11 +17,12 @@ function PrimaryButton({
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  tooltip?: string;
 }) {
   return (
     <button
       type={type}
-      className={`inline-flex justify-center p-2 h-11 items-center text-xl text-center font-medium text-white ${className}
+      className={`group relative  inline-flex justify-center p-2 h-11 items-center text-xl text-center font-medium text-white ${className}
   ${
     isLoading || isSuccess || disabled
       ? " bg-green-400 dark:bg-green-500 cursor-default rounded-lg "
@@ -47,7 +49,14 @@ function PrimaryButton({
           />
         </svg>
       ) : (
-        <>{children}</>
+        <>
+          {tooltip ? (
+            <span className="pointer-events-none text-[10px] absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-black px-2 text-white opacity-0 transition before:absolute before:left-1/2 before:top-full before:-translate-x-1/2 before:border-4 before:border-transparent before:border-t-black before:content-[''] group-hover:opacity-100">
+              {tooltip}
+            </span>
+          ) : null}
+          {children}
+        </>
       )}
     </button>
   );
