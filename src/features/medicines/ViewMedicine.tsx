@@ -32,10 +32,16 @@ const ViewRoom: NextPage = () => {
     ],
     { enabled: true }
   );
+  ("");
 
   const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
     ["medicine.delete-medicine"],
     {
+      onMutate: (variables) => {
+        setMedicinesData((prev) =>
+          prev?.filter((items) => items !== variables)
+        );
+      },
       onSuccess: () => {
         refetch();
       },
@@ -57,8 +63,7 @@ const ViewRoom: NextPage = () => {
 
   const deleteDialog = ({ medicine }: { medicine: Medicine }) => {
     if (window.confirm("Are you sure to Delete this Medicine Data?")) {
-      mutate({ id: medicine.id });
-      setMedicinesData((prev) => prev?.filter((items) => items !== medicine));
+      mutate({ ...medicine });
     }
   };
 

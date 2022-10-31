@@ -33,6 +33,9 @@ const ViewRoom: NextPage = () => {
   const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
     ["room.delete-room"],
     {
+      onMutate: (variables) => {
+        setRoomsData((prev) => prev?.filter((items) => items !== variables));
+      },
       onSuccess: () => {
         refetch();
       },
@@ -54,8 +57,7 @@ const ViewRoom: NextPage = () => {
 
   const deleteDialog = ({ room }: { room: Room }) => {
     if (window.confirm("Are you sure to Delete this Room Data?")) {
-      mutate({ id: room.id });
-      setRoomsData((prev) => prev?.filter((items) => items !== room));
+      mutate({ ...room });
     }
   };
   return (

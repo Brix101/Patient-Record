@@ -24,7 +24,7 @@ const ViewUsers: NextPage = () => {
   });
 
   const debouncedValue = useDebounce<SearchUserInput>(searchInput, 500);
-  const { data, isLoading, isRefetching, isFetching, refetch } = trpc.useQuery(
+  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
     [
       "users.all-users",
       {
@@ -37,6 +37,9 @@ const ViewUsers: NextPage = () => {
   const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
     ["users.delete-user"],
     {
+      onMutate: (variables) => {
+        setUsersData((prev) => prev?.filter((items) => items !== variables));
+      },
       onSuccess: () => {
         refetch();
       },
@@ -73,8 +76,7 @@ const ViewUsers: NextPage = () => {
     };
   }) => {
     if (window.confirm("Are you sure to Delete this User")) {
-      mutate({ id: user.id });
-      setUsersData((prev) => prev?.filter((items) => items !== user));
+      mutate({ ...user });
     }
   };
 
@@ -117,9 +119,7 @@ const ViewUsers: NextPage = () => {
           </SecondaryButton>
         </div>
       </div>
-      <LinearLoading
-        isLoading={isLoading || isRefetching || isFetching || isDeleteLoading}
-      />
+      <LinearLoading isLoading={isLoading || isRefetching || isDeleteLoading} />
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
