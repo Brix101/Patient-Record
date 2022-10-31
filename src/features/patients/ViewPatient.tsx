@@ -61,7 +61,7 @@ const ViewPatient: NextPage = () => {
   };
 
   return (
-    <div className="relative w-full shadow-md mx-5 p-5 overflow-hidden min-h-screen">
+    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">Patients</h1>
@@ -117,8 +117,8 @@ const ViewPatient: NextPage = () => {
                   scope="row"
                   className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
                 >
-                  {patient.lastName && patient.lastName},{" "}
-                  {patient.firstName && patient.firstName}
+                  {patient?.lastName}, {patient?.firstName}{" "}
+                  {patient?.middleName}
                 </th>
                 <td className="py-4 px-6">{patient.gender}</td>
                 <td className="py-4 px-6">

@@ -1,29 +1,56 @@
-import { useAppDispatch } from "@/app/hook";
+import { useAppDispatch, useAppSelector } from "@/app/hook";
 import OutlinedButton from "@/components/buttons/OutlinedButton";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
-import { AddPatientInput } from "@/schema/patient.schema";
+import { UpdatePatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import { CivilStatus } from "@prisma/client";
 import type { NextPage } from "next";
+import { useEffect } from "react";
 import ReactDatePicker from "react-datepicker";
 import { List } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
-import { setPatientsMode } from "./patientsSlice";
+import { patientsState, setPatientsMode } from "./patientsSlice";
 
 const UpdatePatient: NextPage = () => {
   const dispatch = useAppDispatch();
-  const { handleSubmit, register, reset, control } = useForm<AddPatientInput>();
+  const { patient } = useAppSelector(patientsState);
+
+  const { handleSubmit, register, reset, control, clearErrors } =
+    useForm<UpdatePatientInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
-    "patient.add-patient",
+    "patient.update-patient",
     {
       onSuccess: () => {
-        reset();
+        clearErrors();
+        console.log("success");
       },
     }
   );
+
+  useEffect(() => {
+    if (patient) {
+      reset({
+        id: patient.id,
+        firstName: patient.firstName as string,
+        middleName: patient.middleName as string,
+        lastName: patient.lastName as string,
+        gender: patient.gender,
+        birthday: patient.birthday as Date,
+        civilStatus: patient.civilStatus,
+        mobile: patient.mobile as string,
+        religion: patient.religion as string,
+        nationality: patient.nationality as string,
+        address: patient.address as string,
+        weight: patient.weight as string,
+        height: patient.height as string,
+        bloodPressure: patient.bloodPressure,
+        bloodType: patient.bloodType,
+      });
+    }
+  }, [patient, reset]);
 
   const genderOptions = [
     { label: "male", value: "MALE" },
@@ -50,13 +77,13 @@ const UpdatePatient: NextPage = () => {
     };
   });
 
-  function onSubmit(values: AddPatientInput) {
+  function onSubmit(values: UpdatePatientInput) {
     mutate({ ...values });
   }
 
   return (
-    <main className="h-auto w-full px-2">
-      <div className="h-14 w-full flex justify-between items-center px-5">
+    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
+      <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">
             Update Patient Information
@@ -87,7 +114,10 @@ const UpdatePatient: NextPage = () => {
         </div>
       )}
       <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
-        <form className="max-w-9xl py-5" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="max-w-9xl py-5 mb-20"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col">
             <div className="col-span-1 space-y-3">
               <div className="grid grid-cols-3 gap-3">
@@ -251,7 +281,7 @@ const UpdatePatient: NextPage = () => {
                 type="submit"
                 isLoading={isLoading}
               >
-                Update Patient
+                Update
               </PrimaryButton>
               <OutlinedButton
                 type="button"
@@ -263,7 +293,7 @@ const UpdatePatient: NextPage = () => {
           </div>
         </form>
       </div>
-    </main>
+    </div>
   );
 };
 

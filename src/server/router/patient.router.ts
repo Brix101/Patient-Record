@@ -2,6 +2,7 @@ import {
   addPatientSchema,
   deletePatientSchema,
   searchPatientSchema,
+  updatePatientSchema,
 } from "@/schema/patient.schema";
 import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
@@ -55,6 +56,36 @@ export const patientRouter = createProtectedRouter()
           },
         });
         return users;
+      } catch (e) {
+        if (e instanceof PrismaClientKnownRequestError) {
+          if (e.code === "P2002") {
+            throw new trpc.TRPCError({
+              code: "CONFLICT",
+              message: "User already exists",
+            });
+          }
+        }
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    },
+  })
+  .mutation("update-patient", {
+    input: updatePatientSchema,
+    async resolve({ ctx, input }) {
+      const { id } = input;
+      try {
+        const patient = await ctx.prisma.patient.update({
+          where: {
+            id: id,
+          },
+          data: {
+            ...input,
+          },
+        });
+        return patient;
       } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === "P2002") {

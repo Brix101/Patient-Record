@@ -55,12 +55,10 @@ const NewPatient: NextPage = () => {
   }
 
   return (
-    <main className="h-auto w-full px-2">
-      <div className="h-14 w-full flex justify-between items-center px-5">
+    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
+      <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-gray-900">
-            New Patient Information
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Patients</h1>
         </div>
         <SecondaryButton
           className="w-11"
@@ -69,6 +67,7 @@ const NewPatient: NextPage = () => {
           <List size={24} />
         </SecondaryButton>
       </div>
+
       {error && (
         <div
           className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
@@ -263,7 +262,7 @@ const NewPatient: NextPage = () => {
           </div>
         </form>
       </div>
-    </main>
+    </div>
   );
 };
 
