@@ -30,6 +30,7 @@ const EditUser: NextPage = () => {
     {
       onSuccess: () => {
         console.log("success");
+        dispatch(setUsersMode({ mode: "View" }));
       },
     }
   );

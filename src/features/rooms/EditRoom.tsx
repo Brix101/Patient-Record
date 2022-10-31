@@ -30,6 +30,7 @@ const EditRoom: NextPage = () => {
       onSuccess: () => {
         clearErrors();
         console.log("success");
+        dispatch(setRoomsMode({ mode: "View" }));
       },
     }
   );

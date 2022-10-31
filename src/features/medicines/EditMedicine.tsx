@@ -29,6 +29,7 @@ const EditMedicine: NextPage = () => {
       onSuccess: () => {
         clearErrors();
         console.log("success");
+        dispatch(setMedicinesMode({ mode: "View" }));
       },
     }
   );
