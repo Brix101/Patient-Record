@@ -54,6 +54,9 @@ export const roomRouter = createProtectedRouter()
               { floor: { contains: searchInput ? searchInput : "" } },
               { roomNo: { contains: searchInput ? searchInput : "" } },
             ],
+            NOT: {
+              active: false,
+            },
           },
           orderBy: {
             floor: "asc",
@@ -101,9 +104,12 @@ export const roomRouter = createProtectedRouter()
       const { role } = ctx.session.user;
 
       if (role === Role.ADMIN) {
-        const deletedRoom = await ctx.prisma.room.delete({
+        const deletedRoom = await ctx.prisma.room.update({
           where: {
             id: input.id,
+          },
+          data: {
+            active: false,
           },
         });
         return { detail: "Room Deleted", deletedRoom };

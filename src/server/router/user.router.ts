@@ -79,37 +79,28 @@ export const usersRouter = createProtectedRouter()
       const { name, role } = input;
 
       if (ctx.session) {
-        const email = ctx.session.user?.email;
+        const isValid = ctx.session.user?.role === "ADMIN";
 
-        if (email) {
-          const user = await ctx.prisma.user.findUnique({
+        if (isValid && input) {
+          const users = await ctx.prisma.user.findMany({
             where: {
-              email,
+              OR: [
+                { firstName: { contains: name ? name : "" } },
+                { lastName: { contains: name ? name : "" } },
+              ],
+              role: Role[role as keyof typeof Role],
+              NOT: {
+                active: false,
+              },
+            },
+            orderBy: {
+              lastName: "asc",
+            },
+            include: {
+              Physician: true,
             },
           });
-
-          if (user?.role === Role.ADMIN && input) {
-            const users = await ctx.prisma.user.findMany({
-              where: {
-                OR: [
-                  { firstName: { contains: name ? name : "" } },
-                  { lastName: { contains: name ? name : "" } },
-                ],
-                role: Role[role as keyof typeof Role],
-              },
-              orderBy: {
-                lastName: "asc",
-              },
-              include: {
-                Physician: true,
-              },
-            });
-            return users;
-          }
-          throw new trpc.TRPCError({
-            code: "UNAUTHORIZED",
-            message: "Only Administrator Can view this data",
-          });
+          return users;
         }
         throw new trpc.TRPCError({
           code: "UNAUTHORIZED",
@@ -205,9 +196,12 @@ export const usersRouter = createProtectedRouter()
       const { role } = ctx.session.user;
 
       if (role === Role.ADMIN) {
-        const deletedUser = await ctx.prisma.user.delete({
+        const deletedUser = await ctx.prisma.user.update({
           where: {
             id: input.id,
+          },
+          data: {
+            active: false,
           },
         });
         return { detail: "User Deleted", deletedUser };

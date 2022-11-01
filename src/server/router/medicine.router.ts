@@ -50,6 +50,9 @@ export const mediceneRouter = createProtectedRouter()
         const medicines = await ctx.prisma.medicine.findMany({
           where: {
             name: { contains: name ? name : "" },
+            NOT: {
+              active: false,
+            },
           },
           orderBy: {
             name: "asc",
@@ -95,9 +98,12 @@ export const mediceneRouter = createProtectedRouter()
       const { role } = ctx.session.user;
 
       if (role === Role.ADMIN) {
-        const deletedMedicine = await ctx.prisma.medicine.delete({
+        const deletedMedicine = await ctx.prisma.medicine.update({
           where: {
             id: input.id,
+          },
+          data: {
+            active: false,
           },
         });
         return { detail: "Medicine Deleted", deletedMedicine };

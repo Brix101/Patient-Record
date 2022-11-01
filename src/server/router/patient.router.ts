@@ -50,6 +50,9 @@ export const patientRouter = createProtectedRouter()
               { firstName: { contains: name ? name : "" } },
               { lastName: { contains: name ? name : "" } },
             ],
+            NOT: {
+              active: false,
+            },
           },
           orderBy: {
             lastName: "asc",
