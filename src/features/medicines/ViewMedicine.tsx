@@ -2,6 +2,7 @@ import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
+import SuspenseComponent from "@/components/SuspenseComponent";
 import useDebounce from "@/hooks/useDebounce";
 import { SearchMedicineInput } from "@/schema/medicine.schema";
 import { Medicine, Role } from "@prisma/client";
@@ -15,6 +16,7 @@ import { setMedicinesMode } from "./medicinesSlice";
 const ViewRoom: NextPage = () => {
   const { data: userData } = useSession();
   const dispatch = useAppDispatch();
+  const [isActive, setIsActive] = useState<number | undefined>();
   const [medicinesData, setMedicinesData] = useState<Medicine[] | undefined>(
     []
   );
@@ -37,12 +39,14 @@ const ViewRoom: NextPage = () => {
     ["medicine.delete-medicine"],
     {
       onMutate: (variables) => {
+        setIsActive(variables.id);
         setMedicinesData((prev) =>
           prev?.filter((items) => items !== variables)
         );
       },
       onSuccess: () => {
         refetch();
+        setIsActive(undefined);
       },
     }
   );
@@ -123,24 +127,26 @@ const ViewRoom: NextPage = () => {
                 <td className="py-4 px-6">{medicine.unit}</td>
                 <td className="py-4 px-6">{medicine.price?.toString()}</td>
                 <td className="py-4 px-6 flex gap-5">
-                  <span
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                    onClick={() =>
-                      dispatch(
-                        setMedicinesMode({ mode: "Edit", medicine: medicine })
-                      )
-                    }
-                  >
-                    <Edit size={20} />
-                  </span>
-                  {userData && userData.user?.role === Role.ADMIN && (
+                  <SuspenseComponent isLoading={isActive === medicine.id}>
                     <span
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                      onClick={() => deleteDialog({ medicine })}
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                      onClick={() =>
+                        dispatch(
+                          setMedicinesMode({ mode: "Edit", medicine: medicine })
+                        )
+                      }
                     >
-                      <Trash2 size={20} />
+                      <Edit size={20} />
                     </span>
-                  )}
+                    {userData && userData.user?.role === Role.ADMIN && (
+                      <span
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                        onClick={() => deleteDialog({ medicine })}
+                      >
+                        <Trash2 size={20} />
+                      </span>
+                    )}
+                  </SuspenseComponent>
                 </td>
               </tr>
             );

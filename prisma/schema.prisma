@@ -118,7 +118,8 @@ model Medicine {
 
 enum MedicalStatus {
     Admit
-    Discharge
+    Discharged
+    Tranfered
 }
 
 enum CivilStatus {

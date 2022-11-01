@@ -12,7 +12,7 @@ import { NextPage } from "next";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { List } from "react-feather";
+import { ArrowLeft } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 
@@ -70,7 +70,7 @@ const AddUser: NextPage = () => {
             className="w-11"
             onClick={() => dispatch(setUsersMode({ mode: "View" }))}
           >
-            <List size={24} />
+            <ArrowLeft size={24} />
           </SecondaryButton>
         </div>
         {error && (

@@ -2,6 +2,7 @@ import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
 import LinearLoading from "@/components/LinearLoading";
+import SuspenseComponent from "@/components/SuspenseComponent";
 import useDebounce from "@/hooks/useDebounce";
 import { SearchRoomInput } from "@/schema/room.schema";
 import { Room } from "@prisma/client";
@@ -13,6 +14,7 @@ import { setRoomsMode } from "./roomsSlice";
 
 const ViewRoom: NextPage = () => {
   const dispatch = useAppDispatch();
+  const [isActive, setIsActive] = useState<number | undefined>();
   const [roomsData, setRoomsData] = useState<Room[] | undefined>([]);
   const [searchInput, setSearchInput] = useState<SearchRoomInput>({
     searchInput: undefined,
@@ -34,10 +36,12 @@ const ViewRoom: NextPage = () => {
     ["room.delete-room"],
     {
       onMutate: (variables) => {
+        setIsActive(variables.id);
         setRoomsData((prev) => prev?.filter((items) => items !== variables));
       },
       onSuccess: () => {
         refetch();
+        setIsActive(undefined);
       },
     }
   );
@@ -143,21 +147,23 @@ const ViewRoom: NextPage = () => {
                   </span>
                 </td>
                 <td className="py-4 px-6 flex gap-5">
-                  <span
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                    onClick={() =>
-                      dispatch(setRoomsMode({ mode: "Edit", room: room }))
-                    }
-                  >
-                    <Edit size={20} />
-                  </span>
+                  <SuspenseComponent isLoading={isActive === room.id}>
+                    <span
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                      onClick={() =>
+                        dispatch(setRoomsMode({ mode: "Edit", room: room }))
+                      }
+                    >
+                      <Edit size={20} />
+                    </span>
 
-                  <span
-                    className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                    onClick={() => deleteDialog({ room })}
-                  >
-                    <Trash2 size={20} />
-                  </span>
+                    <span
+                      className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                      onClick={() => deleteDialog({ room })}
+                    >
+                      <Trash2 size={20} />
+                    </span>
+                  </SuspenseComponent>
                 </td>
               </tr>
             );

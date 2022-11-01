@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@/app/hook";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchInput from "@/components/inputs/SearchInput";
+import SuspenseComponent from "@/components/SuspenseComponent";
 import useDebounce from "@/hooks/useDebounce";
 import { SearchUserInput } from "@/schema/user.schema";
 import LinearLoading from "@components/LinearLoading";
@@ -15,6 +16,7 @@ import Select from "react-select";
 
 const ViewUsers: NextPage = () => {
   const dispatch = useAppDispatch();
+  const [isActive, setIsActive] = useState<number | undefined>();
   const [usersData, setUsersData] = useState<
     (User & { Physician: Physician | null })[] | undefined
   >([]);
@@ -38,10 +40,12 @@ const ViewUsers: NextPage = () => {
     ["users.delete-user"],
     {
       onMutate: (variables) => {
+        setIsActive(variables.id);
         setUsersData((prev) => prev?.filter((items) => items !== variables));
       },
       onSuccess: () => {
         refetch();
+        setIsActive(undefined);
       },
     }
   );
@@ -154,22 +158,24 @@ const ViewUsers: NextPage = () => {
                 <td className="py-4 px-6">{user.email}</td>
                 <td className="py-4 px-6">{user.mobile}</td>
                 <td className="py-4 px-6 capitalize">{user.role}</td>
-                <td className="py-4 px-6 flex gap-5">
-                  <span
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                    onClick={() =>
-                      dispatch(setUsersMode({ mode: "Edit", user: user }))
-                    }
-                  >
-                    <Edit size={20} />
-                  </span>
+                <td className="py-4 px-6 flex gap-5 items-center">
+                  <SuspenseComponent isLoading={isActive === user.id}>
+                    <span
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                      onClick={() =>
+                        dispatch(setUsersMode({ mode: "Edit", user: user }))
+                      }
+                    >
+                      <Edit size={20} />
+                    </span>
 
-                  <span
-                    className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                    onClick={() => deleteDialog({ user })}
-                  >
-                    <Trash2 size={20} />
-                  </span>
+                    <span
+                      className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                      onClick={() => deleteDialog({ user })}
+                    >
+                      <Trash2 size={20} />
+                    </span>
+                  </SuspenseComponent>
                 </td>
               </tr>
             );

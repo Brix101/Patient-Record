@@ -8,7 +8,7 @@ import { trpc } from "@/utils/trpc";
 import { CivilStatus } from "@prisma/client";
 import type { NextPage } from "next";
 import ReactDatePicker from "react-datepicker";
-import { List } from "react-feather";
+import { ArrowLeft } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { setPatientsMode } from "./patientsSlice";
@@ -64,7 +64,7 @@ const NewPatient: NextPage = () => {
           className="w-11"
           onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
         >
-          <List size={24} />
+          <ArrowLeft size={24} />
         </SecondaryButton>
       </div>
 

@@ -138,29 +138,6 @@ const ViewPatient: NextPage = () => {
                 </td>
                 <td className="py-4 px-6">{patient.mobile}</td>
                 <td className="py-4 px-6">{patient.bloodType}</td>
-                {/* <td className="py-4 px-6 flex gap-5">
-                  <span className="font-medium text-green-600 dark:text-green-500 hover:underline cursor-pointer">
-                    <Clipboard size={20} />
-                  </span>
-                  <span
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                    onClick={() =>
-                      dispatch(
-                        setPatientsMode({ mode: "Edit", patient: patient })
-                      )
-                    }
-                  >
-                    <Edit size={20} />
-                  </span>
-                  {sessionData?.user?.role === "ADMIN" ? (
-                    <span
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                      onClick={() => deleteDialog({ patient })}
-                    >
-                      <Trash2 size={20} />
-                    </span>
-                  ) : null}
-                </td> */}
               </tr>
             );
           })}

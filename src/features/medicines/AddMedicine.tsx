@@ -8,7 +8,7 @@ import { Unit } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
 import React from "react";
-import { List } from "react-feather";
+import { ArrowLeft } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { setMedicinesMode } from "./medicinesSlice";
@@ -52,7 +52,7 @@ const AddMedicine: NextPage = () => {
           className="w-11"
           onClick={() => dispatch(setMedicinesMode({ mode: "View" }))}
         >
-          <List size={24} />
+          <ArrowLeft size={24} />
         </SecondaryButton>
       </div>
 

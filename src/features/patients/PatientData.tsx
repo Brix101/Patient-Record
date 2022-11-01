@@ -3,6 +3,7 @@ import OutlinedButton from "@/components/buttons/OutlinedButton";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
+import SuspenseComponent from "@/components/SuspenseComponent";
 import { UpdatePatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import { CivilStatus } from "@prisma/client";
@@ -16,7 +17,8 @@ import { patientsState, setPatientsMode } from "./patientsSlice";
 
 const PatientData: NextPage = () => {
   const dispatch = useAppDispatch();
-  const [editMode, setEditMode] = useState(false);
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<boolean>(false);
   const { patient } = useAppSelector(patientsState);
 
   const { handleSubmit, register, reset, control, clearErrors } =
@@ -26,6 +28,7 @@ const PatientData: NextPage = () => {
     {
       onSuccess: () => {
         clearErrors();
+        setEditMode(false);
         console.log("success");
       },
     }
@@ -34,8 +37,12 @@ const PatientData: NextPage = () => {
   const { mutate: deleteMutation } = trpc.useMutation(
     ["patient.delete-patient"],
     {
+      onMutate: () => {
+        setIsActive(true);
+      },
       onSuccess: () => {
         dispatch(setPatientsMode({ mode: "View" }));
+        setIsActive(false);
       },
     }
   );
@@ -106,27 +113,29 @@ const PatientData: NextPage = () => {
           </h1>
         </div>
         <div className="flex flex-row gap-5">
-          <SecondaryButton
-            className="w-11"
-            tooltip="View Patients"
-            onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
-          >
-            <List size={24} />
-          </SecondaryButton>
-          <PrimaryButton
-            className="w-11"
-            tooltip="Update Patient"
-            onClick={() => setEditMode(true)}
-          >
-            <Edit size={24} />
-          </PrimaryButton>
-          <OutlinedButton
-            className="w-11"
-            tooltip="Delete Patient"
-            onClick={deleteDialog}
-          >
-            <Trash2 className="group-hover:text-red-600" size={24} />
-          </OutlinedButton>
+          <SuspenseComponent isLoading={isActive}>
+            <SecondaryButton
+              className="w-11"
+              tooltip="View Patients"
+              onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
+            >
+              <List size={24} />
+            </SecondaryButton>
+            <PrimaryButton
+              className="w-11"
+              tooltip="Update Patient"
+              onClick={() => setEditMode(true)}
+            >
+              <Edit size={24} />
+            </PrimaryButton>
+            <OutlinedButton
+              className="w-11"
+              tooltip="Delete Patient"
+              onClick={deleteDialog}
+            >
+              <Trash2 className="group-hover:text-red-600" size={24} />
+            </OutlinedButton>
+          </SuspenseComponent>
         </div>
       </div>
       {error && (
@@ -143,7 +152,8 @@ const PatientData: NextPage = () => {
           className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
           role="alert"
         >
-          <span className="font-medium">Success alert!</span> Patient Added
+          <span className="font-medium">Success alert!</span> Patient Data
+          Updated
         </div>
       )}
       <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
