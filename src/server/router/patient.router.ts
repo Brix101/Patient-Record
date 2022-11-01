@@ -15,14 +15,14 @@ export const patientRouter = createProtectedRouter()
     input: addPatientSchema,
     resolve: async ({ ctx, input }) => {
       try {
-        const user = await ctx.prisma.patient.create({
+        const patient = await ctx.prisma.patient.create({
           data: {
             ...input,
             addedById: ctx.session.user.id as unknown as number,
           },
         });
 
-        return user;
+        return patient;
       } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === "P2002") {
