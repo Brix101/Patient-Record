@@ -19,8 +19,9 @@ const NewPatient: NextPage = () => {
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     "patient.add-patient",
     {
-      onSuccess: () => {
+      onSuccess: (patient) => {
         reset();
+        dispatch(setPatientsMode({ mode: "Edit", patient: patient }));
       },
     }
   );

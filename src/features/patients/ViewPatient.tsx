@@ -104,9 +104,6 @@ const ViewPatient: NextPage = () => {
             <th scope="col" className="py-3 px-2">
               Blood type
             </th>
-            {/* <th scope="col" className="py-3 px-6">
-              Actions
-            </th> */}
           </tr>
         </thead>
         <tbody>
