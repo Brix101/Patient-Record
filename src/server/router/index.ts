@@ -4,7 +4,9 @@ import { authRouter } from "@server/router/auth.router";
 import { createRouter } from "@server/router/context";
 import { exampleRouter } from "@server/router/example";
 import { logsRouter } from "@server/router/log.router";
+import { medicalRecordRouter } from "@server/router/medicalRecord.router";
 import { mediceneRouter } from "@server/router/medicine.router";
+import { medicineRequestRouter } from "@server/router/medicineRequest.router";
 import { patientRouter } from "@server/router/patient.router";
 import { roomRouter } from "@server/router/room.router";
 import { usersRouter } from "@server/router/user.router";
@@ -15,7 +17,9 @@ export const appRouter = createRouter()
   .merge("appointment.", appointmentRouter)
   .merge("auth.", authRouter)
   .merge("logs.", logsRouter)
+  .merge("medicalRecord", medicalRecordRouter)
   .merge("medicine.", mediceneRouter)
+  .merge("medicalRequest", medicineRequestRouter)
   .merge("patient.", patientRouter)
   .merge("room.", roomRouter)
   .merge("users.", usersRouter)

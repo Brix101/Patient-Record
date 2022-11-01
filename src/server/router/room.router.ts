@@ -32,7 +32,7 @@ export const roomRouter = createProtectedRouter()
           if (e.code === "P2002") {
             throw new trpc.TRPCError({
               code: "CONFLICT",
-              message: "User already exists",
+              message: "Room already exists",
             });
           }
         }
