@@ -60,25 +60,22 @@ model Room {
 }
 
 model Patient {
-    id            Int          @id @default(autoincrement())
-    firstName     String?
-    lastName      String?
-    middleName    String?
-    gender        String?
-    birthday      DateTime?
-    address       String?
-    mobile        String?
-    civilStatus   CivilStatus?
-    nationality   String?
-    religion      String?
-    weight        String?
-    height        String?
-    bloodPressure String?
-    bloodType     String?
-    createAt      DateTime     @default(now())
-    updateAt      DateTime     @updatedAt
-    addedPatient  User?        @relation(fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
-    addedById     Int?
+    id           Int          @id @default(autoincrement())
+    firstName    String?
+    lastName     String?
+    middleName   String?
+    gender       String?
+    birthday     DateTime?
+    address      String?
+    mobile       String?
+    civilStatus  CivilStatus?
+    nationality  String?
+    religion     String?
+    bloodType    String?
+    createAt     DateTime     @default(now())
+    updateAt     DateTime     @updatedAt
+    addedPatient User?        @relation(fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
+    addedById    Int?
 }
 
 model MedicalRecord {

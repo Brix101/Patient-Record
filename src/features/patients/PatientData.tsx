@@ -8,21 +8,29 @@ import { UpdatePatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import { CivilStatus } from "@prisma/client";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
-import { Edit, List, Trash2 } from "react-feather";
+import { ArrowLeft, Edit, Trash2 } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { patientsState, setPatientsMode } from "./patientsSlice";
 
 const PatientData: NextPage = () => {
   const dispatch = useAppDispatch();
+  const { data: sessionData } = useSession();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const { patient } = useAppSelector(patientsState);
 
-  const { handleSubmit, register, reset, control, clearErrors } =
-    useForm<UpdatePatientInput>();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    control,
+    clearErrors,
+    formState: { isDirty },
+  } = useForm<UpdatePatientInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     "patient.update-patient",
     {
@@ -61,9 +69,6 @@ const PatientData: NextPage = () => {
         religion: patient.religion as string,
         nationality: patient.nationality as string,
         address: patient.address as string,
-        weight: patient.weight as string,
-        height: patient.height as string,
-        bloodPressure: patient.bloodPressure as string,
         bloodType: patient.bloodType as string,
       });
     }
@@ -119,7 +124,7 @@ const PatientData: NextPage = () => {
               tooltip="View Patients"
               onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
             >
-              <List size={24} />
+              <ArrowLeft size={24} />
             </SecondaryButton>
             <PrimaryButton
               className="w-11"
@@ -128,13 +133,15 @@ const PatientData: NextPage = () => {
             >
               <Edit size={24} />
             </PrimaryButton>
-            <OutlinedButton
-              className="w-11"
-              tooltip="Delete Patient"
-              onClick={deleteDialog}
-            >
-              <Trash2 className="group-hover:text-red-600" size={24} />
-            </OutlinedButton>
+            {sessionData?.user?.role === "ADMIN" ? (
+              <OutlinedButton
+                className="w-11"
+                tooltip="Delete Patient"
+                onClick={deleteDialog}
+              >
+                <Trash2 className="group-hover:text-red-600" size={24} />
+              </OutlinedButton>
+            ) : null}
           </SuspenseComponent>
         </div>
       </div>
@@ -190,7 +197,7 @@ const PatientData: NextPage = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-2 items-end">
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                     Gender
@@ -211,6 +218,28 @@ const PatientData: NextPage = () => {
                   />
                 </div>
                 <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Blood Type
+                  </label>
+                  <Controller
+                    control={control}
+                    defaultValue={"O+"}
+                    name="bloodType"
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        className="capitalize"
+                        classNamePrefix="addl-class"
+                        options={bloodType}
+                        value={bloodType.find((c) => c.value === value)}
+                        onChange={(gender) => onChange(gender?.value)}
+                        placeholder="Blood Type"
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col">
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                     Birthdate
                   </label>
@@ -276,48 +305,6 @@ const PatientData: NextPage = () => {
                 placeHolder="Address"
                 register={register("address")}
               />
-              <div className="grid grid-cols-2 gap-2 items-end">
-                <GenericInput
-                  label="Weight"
-                  type="text"
-                  placeHolder="Weight"
-                  register={register("weight")}
-                />
-                <GenericInput
-                  label="Height"
-                  type="text"
-                  placeHolder="Height"
-                  register={register("height")}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2 items-end">
-                <GenericInput
-                  label="Blood Pressure"
-                  type="text"
-                  placeHolder="Blood Pressure"
-                  register={register("bloodPressure")}
-                />
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Blood Type
-                  </label>
-                  <Controller
-                    control={control}
-                    defaultValue={"O+"}
-                    name="bloodType"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={bloodType}
-                        value={bloodType.find((c) => c.value === value)}
-                        onChange={(gender) => onChange(gender?.value)}
-                        placeholder="Blood Type"
-                      />
-                    )}
-                  />
-                </div>
-              </div>
             </div>
           </div>
           {editMode ? (
@@ -326,6 +313,7 @@ const PatientData: NextPage = () => {
                 <PrimaryButton
                   className="w-full"
                   type="submit"
+                  disabled={!isDirty}
                   isLoading={isLoading}
                 >
                   Update

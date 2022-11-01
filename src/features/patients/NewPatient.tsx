@@ -115,8 +115,7 @@ const NewPatient: NextPage = () => {
                   required
                 />
               </div>
-
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-2 items-end">
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                     Gender
@@ -137,6 +136,29 @@ const NewPatient: NextPage = () => {
                   />
                 </div>
                 <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Blood Type
+                  </label>
+                  <Controller
+                    control={control}
+                    defaultValue={"O+"}
+                    name="bloodType"
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        className="capitalize"
+                        classNamePrefix="addl-class"
+                        options={bloodType}
+                        value={bloodType.find((c) => c.value === value)}
+                        onChange={(gender) => onChange(gender?.value)}
+                        placeholder="Blood Type"
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col">
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                     Birthdate
                   </label>
@@ -202,48 +224,6 @@ const NewPatient: NextPage = () => {
                 placeHolder="Address"
                 register={register("address")}
               />
-              <div className="grid grid-cols-2 gap-2 items-end">
-                <GenericInput
-                  label="Weight"
-                  type="text"
-                  placeHolder="Weight"
-                  register={register("weight")}
-                />
-                <GenericInput
-                  label="Height"
-                  type="text"
-                  placeHolder="Height"
-                  register={register("height")}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2 items-end">
-                <GenericInput
-                  label="Blood Pressure"
-                  type="text"
-                  placeHolder="Blood Pressure"
-                  register={register("bloodPressure")}
-                />
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Blood Type
-                  </label>
-                  <Controller
-                    control={control}
-                    defaultValue={"O+"}
-                    name="bloodType"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={bloodType}
-                        value={bloodType.find((c) => c.value === value)}
-                        onChange={(gender) => onChange(gender?.value)}
-                        placeholder="Blood Type"
-                      />
-                    )}
-                  />
-                </div>
-              </div>
             </div>
           </div>
           <div className="w-full my-5 flex justify-end">

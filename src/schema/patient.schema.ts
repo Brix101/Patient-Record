@@ -12,9 +12,6 @@ export const addPatientSchema = z.object({
   mobile: z.string().optional(),
   address: z.string().optional(),
   nationality: z.string().optional(),
-  weight: z.string().optional(),
-  height: z.string().optional(),
-  bloodPressure: z.string().optional(),
   bloodType: z.string().optional(),
 });
 
@@ -30,9 +27,6 @@ export const updatePatientSchema = z.object({
   mobile: z.string().optional(),
   address: z.string().optional(),
   nationality: z.string().optional(),
-  weight: z.string().optional(),
-  height: z.string().optional(),
-  bloodPressure: z.string().optional(),
   bloodType: z.string().optional(),
 });
 
