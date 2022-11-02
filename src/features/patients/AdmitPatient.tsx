@@ -14,10 +14,9 @@ import ReactDatePicker from "react-datepicker";
 import { ArrowLeft, Edit, Trash2 } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
-import PatientRecord from "./PatientRecord";
 import { patientsState, setPatientsMode } from "./patientsSlice";
 
-const PatientData: NextPage = () => {
+const AdmitPatient: NextPage = () => {
   const dispatch = useAppDispatch();
   const { data: sessionData } = useSession();
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -111,7 +110,7 @@ const PatientData: NextPage = () => {
   };
 
   return (
-    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen mb-20">
+    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">
@@ -168,7 +167,10 @@ const PatientData: NextPage = () => {
         {editMode ? null : (
           <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
         )}
-        <form className="max-w-9xl py-5 " onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="max-w-9xl py-5 mb-20"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col">
             <div className="col-span-1 space-y-3">
               <div className="grid grid-cols-3 gap-3">
@@ -306,7 +308,7 @@ const PatientData: NextPage = () => {
             </div>
           </div>
           {editMode ? (
-            <div className="w-full my-5 flex justify-end mb-10">
+            <div className="w-full my-5 flex justify-end">
               <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
                 <PrimaryButton
                   className="w-full"
@@ -327,9 +329,8 @@ const PatientData: NextPage = () => {
           ) : null}
         </form>
       </div>
-      <PatientRecord />
     </div>
   );
 };
 
-export default PatientData;
+export default AdmitPatient;
