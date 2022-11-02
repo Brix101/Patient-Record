@@ -11,7 +11,7 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
-import { ArrowLeft, Edit, Trash2 } from "react-feather";
+import { Edit, FileText, Trash2, X } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import PatientRecord from "./PatientRecord";
@@ -120,20 +120,6 @@ const PatientData: NextPage = () => {
         </div>
         <div className="flex flex-row gap-5">
           <SuspenseComponent isLoading={isActive}>
-            <SecondaryButton
-              className="w-11"
-              tooltip="View Patients"
-              onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
-            >
-              <ArrowLeft size={24} />
-            </SecondaryButton>
-            <PrimaryButton
-              className="w-11"
-              tooltip="Update Patient"
-              onClick={() => setEditMode(true)}
-            >
-              <Edit size={24} />
-            </PrimaryButton>
             {sessionData?.user?.role === "ADMIN" ? (
               <OutlinedButton
                 className="w-11"
@@ -143,6 +129,23 @@ const PatientData: NextPage = () => {
                 <Trash2 className="group-hover:text-red-600" size={24} />
               </OutlinedButton>
             ) : null}
+            <PrimaryButton
+              className="w-11"
+              tooltip="Update Patient"
+              onClick={() => setEditMode(true)}
+            >
+              <Edit size={24} />
+            </PrimaryButton>
+            <SecondaryButton className="w-11" tooltip="Admit Patient">
+              <FileText size={24} />
+            </SecondaryButton>
+            <OutlinedButton
+              className="w-11"
+              tooltip="Close Record"
+              onClick={() => dispatch(setPatientsMode({ mode: "View" }))}
+            >
+              <X size={24} />
+            </OutlinedButton>
           </SuspenseComponent>
         </div>
       </div>
