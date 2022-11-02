@@ -3,12 +3,12 @@ import { MedicalRecord } from "@prisma/client";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface MedicalRecordState {
-  mode: "View" | "Edit" | "Add";
+  mode: "Admittion" | "Discharged" | "Billing";
   medicalRecord?: MedicalRecord;
 }
 
 const initialState: MedicalRecordState = {
-  mode: "View",
+  mode: "Admittion",
 };
 
 export const medicalRecordSlice = createSlice({

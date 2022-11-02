@@ -14,7 +14,7 @@ import ReactDatePicker from "react-datepicker";
 import { ArrowLeft, Edit, Trash2 } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
-import { patientsState, setPatientsMode } from "./patientsSlice";
+import { patientsState, setPatientsMode } from "../patients/patientsSlice";
 
 const AdmitPatient: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -113,9 +113,7 @@ const AdmitPatient: NextPage = () => {
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Patient Information
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Admit Patient</h1>
         </div>
         <div className="flex flex-row gap-5">
           <SuspenseComponent isLoading={isActive}>
@@ -164,16 +162,13 @@ const AdmitPatient: NextPage = () => {
         </div>
       )}
       <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
-        {editMode ? null : (
-          <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
-        )}
         <form
           className="max-w-9xl py-5 mb-20"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col">
             <div className="col-span-1 space-y-3">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-3 relative">
                 <GenericInput
                   label="First Name"
                   type="text"
@@ -195,138 +190,10 @@ const AdmitPatient: NextPage = () => {
                   register={register("lastName")}
                   required
                 />
+                <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
               </div>
-
-              <div className="grid grid-cols-2 gap-2 items-end">
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Gender
-                  </label>
-                  <Controller
-                    control={control}
-                    defaultValue={"MALE"}
-                    name="gender"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={genderOptions}
-                        value={genderOptions.find((c) => c.value === value)}
-                        onChange={(gender) => onChange(gender?.value)}
-                      />
-                    )}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Blood Type
-                  </label>
-                  <Controller
-                    control={control}
-                    defaultValue={"O+"}
-                    name="bloodType"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={bloodType}
-                        value={bloodType.find((c) => c.value === value)}
-                        onChange={(gender) => onChange(gender?.value)}
-                        placeholder="Blood Type"
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Birthdate
-                  </label>
-                  <Controller
-                    control={control}
-                    name="birthday"
-                    render={({ field }) => (
-                      <ReactDatePicker
-                        className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-                        placeholderText="Select date (MMMM-dd-yyyy)"
-                        onChange={(date) => field.onChange(date)}
-                        selected={field.value}
-                        dateFormat="MMMM-dd-yyyy"
-                      />
-                    )}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Civil Status
-                  </label>
-                  <Controller
-                    control={control}
-                    name="civilStatus"
-                    defaultValue={"Single"}
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={civilStatus}
-                        value={civilStatus.find((c) => c.value === value)}
-                        onChange={(civilStatus) => onChange(civilStatus?.value)}
-                        placeholder="Civil Status"
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                <GenericInput
-                  label="Mobile Number"
-                  type="text"
-                  placeHolder="Mobile"
-                  register={register("mobile")}
-                />
-                <GenericInput
-                  label="Religion"
-                  type="text"
-                  placeHolder="Religion"
-                  register={register("religion")}
-                />
-                <GenericInput
-                  label="Nationality"
-                  type="text"
-                  placeHolder="Nationality"
-                  register={register("nationality")}
-                />
-              </div>
-              <GenericInput
-                label="Address"
-                type="text"
-                placeHolder="Address"
-                register={register("address")}
-              />
             </div>
           </div>
-          {editMode ? (
-            <div className="w-full my-5 flex justify-end">
-              <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
-                <PrimaryButton
-                  className="w-full"
-                  type="submit"
-                  disabled={!isDirty}
-                  isLoading={isLoading}
-                >
-                  Update
-                </PrimaryButton>
-                <OutlinedButton
-                  type="button"
-                  onClick={() => setEditMode(false)}
-                >
-                  Cancel
-                </OutlinedButton>
-              </div>
-            </div>
-          ) : null}
         </form>
       </div>
     </div>
