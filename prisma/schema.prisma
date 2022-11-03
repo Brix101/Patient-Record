@@ -32,8 +32,6 @@ model User {
   updateAt  DateTime   @updatedAt
   Physician Physician?
 
-  attendingNurse       MedicalRecord? @relation("attendingNurse", fields: [attendingNurseId], references: [id])
-  attendingNurseId     Int?
   attendingPhysician   MedicalRecord? @relation("attendingPhysician", fields: [attendingPhysicianId], references: [id])
   attendingPhysicianId Int?
 
@@ -105,7 +103,6 @@ model MedicalRecord {
   patient  Patient         @relation(fields: [patientId], references: [id])
   medicine MedicineRequest @relation(fields: [medicineRequestId], references: [id], onDelete: Cascade)
 
-  attendingNurse     User[] @relation("attendingNurse")
   attendingPhysician User[] @relation("attendingPhysician")
 
   roomId            Int
