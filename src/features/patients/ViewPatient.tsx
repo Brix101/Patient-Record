@@ -5,21 +5,17 @@ import LinearLoading from "@/components/LinearLoading";
 import useDebounce from "@/hooks/useDebounce";
 import { SearchPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
-import { Patient } from "@prisma/client";
 import type { NextPage } from "next";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { Clipboard, Edit, PlusSquare, Trash2 } from "react-feather";
+import { Suspense, useState } from "react";
+import { PlusSquare } from "react-feather";
 import { setPatientsMode } from "./patientsSlice";
 
 const ViewPatient: NextPage = () => {
   const dispatch = useAppDispatch();
-  const { data: sessionData } = useSession();
-  const [patientsData, setPatientsData] = useState<Patient[] | undefined>([]);
   const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
   const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
-  const { data, isLoading, isRefetching, refetch } = trpc.useQuery(
+  const { data, isLoading, isRefetching } = trpc.useQuery(
     [
       "patient.all-patients",
       {
@@ -29,35 +25,11 @@ const ViewPatient: NextPage = () => {
     { enabled: true }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
-    ["patient.delete-patient"],
-    {
-      onMutate: (variables) => {
-        setPatientsData((prev) => prev?.filter((items) => items !== variables));
-      },
-      onSuccess: () => {
-        refetch();
-      },
-    }
-  );
-
-  useEffect(() => {
-    if (data) {
-      setPatientsData(data);
-    }
-  }, [data]);
-
   const TableStyle = (x: number) => {
     if (x % 2) {
       return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
     }
     return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
-  };
-
-  const deleteDialog = ({ patient }: { patient: Patient }) => {
-    if (window.confirm("Are you sure to Delete this Patient Data?")) {
-      mutate({ ...patient });
-    }
   };
 
   return (
@@ -82,7 +54,7 @@ const ViewPatient: NextPage = () => {
           </SecondaryButton>
         </div>
       </div>
-      <LinearLoading isLoading={isLoading || isRefetching || isDeleteLoading} />
+      <LinearLoading isLoading={isLoading || isRefetching} />
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 select-none">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -106,40 +78,42 @@ const ViewPatient: NextPage = () => {
             </th>
           </tr>
         </thead>
-        <tbody>
-          {patientsData?.map((patient, i) => {
-            return (
-              <tr key={i} className={`${TableStyle(i)}`}>
-                <th
-                  scope="row"
-                  className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline"
-                  onClick={() =>
-                    dispatch(
-                      setPatientsMode({ mode: "Edit", patient: patient })
-                    )
-                  }
-                >
-                  {patient?.lastName}, {patient?.firstName}{" "}
-                  {patient?.middleName}
-                </th>
-                <td className="py-4 px-6">{patient.gender}</td>
-                <td className="py-4 px-6">
-                  {patient.birthday?.toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </td>
-                <td className="py-4 px-6 text-ellipsis max-w-xs overflow-hidden">
-                  {patient.address}
-                </td>
-                <td className="py-4 px-6">{patient.mobile}</td>
-                <td className="py-4 px-6">{patient.bloodType}</td>
-              </tr>
-            );
-          })}
-          {!data && !isLoading ? <>No Rooms Data</> : null}
-        </tbody>
+        <Suspense>
+          <tbody>
+            {data?.map((patient, i) => {
+              return (
+                <tr key={i} className={`${TableStyle(i)}`}>
+                  <th
+                    scope="row"
+                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline"
+                    onClick={() =>
+                      dispatch(
+                        setPatientsMode({ mode: "Edit", patient: patient })
+                      )
+                    }
+                  >
+                    {patient?.lastName}, {patient?.firstName}{" "}
+                    {patient?.middleName}
+                  </th>
+                  <td className="py-4 px-6">{patient.gender}</td>
+                  <td className="py-4 px-6">
+                    {patient.birthday?.toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </td>
+                  <td className="py-4 px-6 text-ellipsis max-w-xs overflow-hidden">
+                    {patient.address}
+                  </td>
+                  <td className="py-4 px-6">{patient.mobile}</td>
+                  <td className="py-4 px-6">{patient.bloodType}</td>
+                </tr>
+              );
+            })}
+            {!data && !isLoading ? <>No Rooms Data</> : null}
+          </tbody>
+        </Suspense>
       </table>
     </div>
   );

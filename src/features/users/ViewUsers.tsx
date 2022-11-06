@@ -9,7 +9,7 @@ import { setUsersMode } from "@features/users/usersSlice";
 import { Physician, Role, User } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Edit, Trash2, UserPlus } from "react-feather";
 import Select from "react-select";
@@ -144,45 +144,47 @@ const ViewUsers: NextPage = () => {
             </th>
           </tr>
         </thead>
-        <tbody>
-          {usersData?.map((user, i) => {
-            return (
-              <tr key={i} className={`${TableStyle(i)}`}>
-                <th
-                  scope="row"
-                  className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
-                >
-                  {user.lastName && user.lastName},{" "}
-                  {user.firstName && user.firstName}
-                </th>
-                <td className="py-4 px-6">{user.email}</td>
-                <td className="py-4 px-6">{user.mobile}</td>
-                <td className="py-4 px-6 capitalize">{user.role}</td>
-                <td className="py-4 px-6 flex gap-5 items-center">
-                  <SuspenseComponent isLoading={isActive === user.id}>
-                    <span
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                      onClick={() =>
-                        dispatch(setUsersMode({ mode: "Edit", user: user }))
-                      }
-                    >
-                      <Edit size={20} />
-                    </span>
+        <Suspense>
+          <tbody>
+            {usersData?.map((user, i) => {
+              return (
+                <tr key={i} className={`${TableStyle(i)}`}>
+                  <th
+                    scope="row"
+                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                  >
+                    {user.lastName && user.lastName},{" "}
+                    {user.firstName && user.firstName}
+                  </th>
+                  <td className="py-4 px-6">{user.email}</td>
+                  <td className="py-4 px-6">{user.mobile}</td>
+                  <td className="py-4 px-6 capitalize">{user.role}</td>
+                  <td className="py-4 px-6 flex gap-5 items-center">
+                    <SuspenseComponent isLoading={isActive === user.id}>
+                      <span
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                        onClick={() =>
+                          dispatch(setUsersMode({ mode: "Edit", user: user }))
+                        }
+                      >
+                        <Edit size={20} />
+                      </span>
 
-                    <span
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                      onClick={() => deleteDialog({ user })}
-                    >
-                      <Trash2 size={20} />
-                    </span>
-                  </SuspenseComponent>
-                </td>
-              </tr>
-            );
-          })}
+                      <span
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                        onClick={() => deleteDialog({ user })}
+                      >
+                        <Trash2 size={20} />
+                      </span>
+                    </SuspenseComponent>
+                  </td>
+                </tr>
+              );
+            })}
 
-          {!data && !isLoading && <>No Users Data</>}
-        </tbody>
+            {!data && !isLoading && <>No Users Data</>}
+          </tbody>
+        </Suspense>
       </table>
     </div>
   );

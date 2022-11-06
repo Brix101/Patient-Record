@@ -8,7 +8,7 @@ import { SearchRoomInput } from "@/schema/room.schema";
 import { Room } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Edit, PlusSquare, Trash2 } from "react-feather";
 import { setRoomsMode } from "./roomsSlice";
 
@@ -113,23 +113,24 @@ const ViewRoom: NextPage = () => {
             </th>
           </tr>
         </thead>
-        <tbody>
-          {roomsData?.map((room, i) => {
-            return (
-              <tr key={i} className={`${TableStyle(i)}`}>
-                <th
-                  scope="row"
-                  className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
-                >
-                  {room.roomNo}
-                </th>
-                <td className="py-4 px-6">{room.floor}</td>
-                <td className="py-4 px-6">{room.station}</td>
-                <td className="py-4 px-6 capitalize">{room.category}</td>
-                <td className="py-4 px-6">{room.price?.toString()}</td>
-                <td className="py-4 px-6">
-                  <span
-                    className={`font-bold p-2 rounded-full w-full
+        <Suspense>
+          <tbody>
+            {roomsData?.map((room, i) => {
+              return (
+                <tr key={i} className={`${TableStyle(i)}`}>
+                  <th
+                    scope="row"
+                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                  >
+                    {room.roomNo}
+                  </th>
+                  <td className="py-4 px-6">{room.floor}</td>
+                  <td className="py-4 px-6">{room.station}</td>
+                  <td className="py-4 px-6 capitalize">{room.category}</td>
+                  <td className="py-4 px-6">{room.price?.toString()}</td>
+                  <td className="py-4 px-6">
+                    <span
+                      className={`font-bold p-2 rounded-full w-full
                     ${
                       room.status === "VACANT" && "text-green-900 bg-green-50  "
                     }
@@ -142,34 +143,35 @@ const ViewRoom: NextPage = () => {
                       "text-red-900 bg-red-50"
                     }
                     `}
-                  >
-                    {room.status}
-                  </span>
-                </td>
-                <td className="py-4 px-6 flex gap-5">
-                  <SuspenseComponent isLoading={isActive === room.id}>
-                    <span
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                      onClick={() =>
-                        dispatch(setRoomsMode({ mode: "Edit", room: room }))
-                      }
                     >
-                      <Edit size={20} />
+                      {room.status}
                     </span>
+                  </td>
+                  <td className="py-4 px-6 flex gap-5">
+                    <SuspenseComponent isLoading={isActive === room.id}>
+                      <span
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                        onClick={() =>
+                          dispatch(setRoomsMode({ mode: "Edit", room: room }))
+                        }
+                      >
+                        <Edit size={20} />
+                      </span>
 
-                    <span
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                      onClick={() => deleteDialog({ room })}
-                    >
-                      <Trash2 size={20} />
-                    </span>
-                  </SuspenseComponent>
-                </td>
-              </tr>
-            );
-          })}
-          {!data && !isLoading ? <>No Rooms Data</> : null}
-        </tbody>
+                      <span
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                        onClick={() => deleteDialog({ room })}
+                      >
+                        <Trash2 size={20} />
+                      </span>
+                    </SuspenseComponent>
+                  </td>
+                </tr>
+              );
+            })}
+            {!data && !isLoading ? <>No Rooms Data</> : null}
+          </tbody>
+        </Suspense>
       </table>
     </div>
   );
