@@ -2,90 +2,65 @@ import { useAppDispatch, useAppSelector } from "@/app/hook";
 import OutlinedButton from "@/components/buttons/OutlinedButton";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
-import { UpdatePatientInput } from "@/schema/patient.schema";
+import { AdmitPatientInput } from "@/schema/medicalRecord.schema";
 import { trpc } from "@/utils/trpc";
-import { CivilStatus } from "@prisma/client";
+import { RoomCat } from "@prisma/client";
 import type { NextPage } from "next";
-import { useEffect } from "react";
-import ReactDatePicker from "react-datepicker";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
-import { patientsState, togglePatientEditMode } from "./patientsSlice";
+import { patientsState, togglePatientAdmit } from "./patientsSlice";
 
-const PatientForm: NextPage = () => {
+const AdmitForm: NextPage = () => {
   const dispatch = useAppDispatch();
-  const { patient, isEditPatient } = useAppSelector(patientsState);
+  const [selectedCat, setSelectedCat] = useState<RoomCat>("WARD");
+  const { patient } = useAppSelector(patientsState);
 
   const {
     handleSubmit,
     register,
-    reset,
     control,
     clearErrors,
     formState: { isDirty },
-  } = useForm<UpdatePatientInput>();
-  const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
-    "patient.update-patient",
-    {
-      onSuccess: () => {
-        clearErrors();
-        dispatch(togglePatientEditMode());
-        console.log("success");
-      },
-    }
-  );
+    resetField,
+  } = useForm<AdmitPatientInput>();
 
-  useEffect(() => {
-    if (patient) {
-      reset({
-        id: patient.id,
-        firstName: patient.firstName as string,
-        middleName: patient.middleName as string,
-        lastName: patient.lastName as string,
-        gender: patient.gender as string,
-        birthday: patient.birthday as Date,
-        civilStatus: patient.civilStatus as CivilStatus,
-        mobile: patient.mobile as string,
-        religion: patient.religion as string,
-        nationality: patient.nationality as string,
-        address: patient.address as string,
-        bloodType: patient.bloodType as string,
-      });
-    }
-  }, [patient, reset]);
+  const { data: roomData } = trpc.useQuery([
+    "room.get-rooms",
+    { searchInput: "", category: selectedCat },
+  ]);
 
-  const genderOptions = [
-    { label: "male", value: "MALE" },
-    { label: "female", value: "FEMALE" },
-  ];
+  const { data: physiciansData } = trpc.useQuery([
+    "physician.all-physicians",
+    { name: "" },
+  ]);
 
-  const bloodType = [
-    { label: "A+", value: "A+" },
-    { label: "A-", value: "A-" },
-    { label: "B+", value: "B+" },
-    { label: "B-", value: "B-" },
-    { label: "O+", value: "O+" },
-    { label: "O-", value: "O-" },
-    { label: "AB+", value: "AB+" },
-    { label: "AB-", value: "AB-" },
-  ];
-
-  const civilStatus = (
-    Object.keys(CivilStatus) as (keyof typeof CivilStatus)[]
-  ).map((enumKey) => {
+  const physicians = physiciansData?.map(({ id, user }) => {
     return {
-      label: CivilStatus[enumKey].toLowerCase(),
-      value: CivilStatus[enumKey],
+      label: user.lastName + " " + user.firstName,
+      value: id,
     };
   });
 
-  function onSubmit(values: UpdatePatientInput) {
-    mutate({ ...values });
-  }
+  const roomCategory = (Object.keys(RoomCat) as (keyof typeof RoomCat)[]).map(
+    (enumKey) => {
+      return {
+        label: RoomCat[enumKey].toLowerCase(),
+        value: RoomCat[enumKey],
+      };
+    }
+  );
+
+  const rooms = roomData?.map((room) => {
+    return {
+      label: room.floor + "/" + room.roomNo,
+      value: room,
+    };
+  });
 
   return (
     <>
-      {error && (
+      {/* {error && (
         <div
           className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
           role="alert"
@@ -102,34 +77,38 @@ const PatientForm: NextPage = () => {
           <span className="font-medium">Success alert!</span> Patient Data
           Updated
         </div>
-      )}
+      )} */}
       <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
-        {isEditPatient ? null : (
-          <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
-        )}
-        <form className="max-w-9xl py-5 " onSubmit={handleSubmit(onSubmit)}>
+        <form className="max-w-9xl">
+          <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
+            {patient?.lastName +
+              ", " +
+              patient?.firstName +
+              " " +
+              patient?.middleName}
+          </h1>
           <div className="flex flex-col">
             <div className="col-span-1 space-y-3">
               <div className="grid grid-cols-3 gap-3">
                 <GenericInput
-                  label="First Name"
+                  label="Height"
                   type="text"
-                  placeHolder="First Name"
-                  register={register("firstName")}
+                  placeHolder="Height"
+                  register={register("height")}
                   required
                 />
                 <GenericInput
-                  label="Middle Name"
+                  label="Weight"
                   type="text"
-                  placeHolder="Middle Name"
-                  register={register("middleName")}
+                  placeHolder="Weight"
+                  register={register("weight")}
                   required
                 />
                 <GenericInput
-                  label="Last Name"
+                  label="Blood Pressure"
                   type="text"
-                  placeHolder="Last Name"
-                  register={register("lastName")}
+                  placeHolder="Blood Pressure"
+                  register={register("bloodPressure")}
                   required
                 />
               </div>
@@ -137,137 +116,112 @@ const PatientForm: NextPage = () => {
               <div className="grid grid-cols-2 gap-2 items-end">
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Gender
+                    Room Type
                   </label>
-                  <Controller
-                    control={control}
-                    defaultValue={"MALE"}
-                    name="gender"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={genderOptions}
-                        value={genderOptions.find((c) => c.value === value)}
-                        onChange={(gender) => onChange(gender?.value)}
-                      />
+                  <Select
+                    className="capitalize"
+                    classNamePrefix="addl-class"
+                    placeholder="Room Catergory..."
+                    options={roomCategory}
+                    value={roomCategory?.find(
+                      (cat) => cat.value === selectedCat
                     )}
+                    onChange={(e) => {
+                      setSelectedCat(e?.value as RoomCat);
+                    }}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Blood Type
+                    Room
                   </label>
                   <Controller
                     control={control}
-                    defaultValue={"O+"}
-                    name="bloodType"
+                    name="roomId"
                     render={({ field: { onChange, value } }) => (
                       <Select
                         className="capitalize"
                         classNamePrefix="addl-class"
-                        options={bloodType}
-                        value={bloodType.find((c) => c.value === value)}
-                        onChange={(gender) => onChange(gender?.value)}
-                        placeholder="Blood Type"
+                        options={rooms}
+                        value={rooms?.find(
+                          (c) =>
+                            c.value.id === value &&
+                            c.value.category === selectedCat
+                        )}
+                        onChange={(room) => {
+                          if (room) {
+                            setSelectedCat(room?.value.category as RoomCat);
+                          } else {
+                            setSelectedCat("WARD");
+                          }
+                          onChange(room?.value.id);
+                        }}
+                        placeholder="Room"
+                        isClearable
                       />
                     )}
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-between">
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Birthdate
+                    Physician
                   </label>
                   <Controller
                     control={control}
-                    name="birthday"
-                    render={({ field }) => (
-                      <ReactDatePicker
-                        className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
-                        placeholderText="Select date (MMMM-dd-yyyy)"
-                        onChange={(date) => field.onChange(date)}
-                        selected={field.value}
-                        dateFormat="MMMM-dd-yyyy"
-                      />
-                    )}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Civil Status
-                  </label>
-                  <Controller
-                    control={control}
-                    name="civilStatus"
-                    defaultValue={"Single"}
+                    name="physicianId"
                     render={({ field: { onChange, value } }) => (
                       <Select
                         className="capitalize"
                         classNamePrefix="addl-class"
-                        options={civilStatus}
-                        value={civilStatus.find((c) => c.value === value)}
-                        onChange={(civilStatus) => onChange(civilStatus?.value)}
-                        placeholder="Civil Status"
+                        options={physicians}
+                        value={physicians?.find((c) => c.value === value)}
+                        onChange={(physicians) => onChange(physicians?.value)}
+                        placeholder="Physician"
+                        isSearchable
                       />
                     )}
                   />
                 </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
                 <GenericInput
-                  label="Mobile Number"
+                  label="Guardian"
                   type="text"
                   placeHolder="Mobile"
-                  register={register("mobile")}
-                />
-                <GenericInput
-                  label="Religion"
-                  type="text"
-                  placeHolder="Religion"
-                  register={register("religion")}
-                />
-                <GenericInput
-                  label="Nationality"
-                  type="text"
-                  placeHolder="Nationality"
-                  register={register("nationality")}
+                  register={register("guardian")}
                 />
               </div>
+
               <GenericInput
-                label="Address"
+                label="Chief Complaint"
                 type="text"
                 placeHolder="Address"
-                register={register("address")}
+                register={register("chiefComplaint")}
               />
             </div>
           </div>
-          {isEditPatient ? (
-            <div className="w-full my-5 flex justify-end mb-10">
-              <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
-                <PrimaryButton
-                  className="w-full"
-                  type="submit"
-                  disabled={!isDirty}
-                  isLoading={isLoading}
-                >
-                  Update
-                </PrimaryButton>
-                <OutlinedButton
-                  type="button"
-                  onClick={() => dispatch(togglePatientEditMode())}
-                >
-                  Cancel
-                </OutlinedButton>
-              </div>
+          <div className="w-full my-5 flex justify-end">
+            <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
+              <PrimaryButton
+                className="w-full"
+                type="submit"
+                disabled={!isDirty}
+                // isLoading={isLoading}
+              >
+                Admit Patient
+              </PrimaryButton>
+              <OutlinedButton
+                type="button"
+                onClick={() => dispatch(togglePatientAdmit())}
+              >
+                Cancel
+              </OutlinedButton>
             </div>
-          ) : null}
+          </div>
         </form>
       </div>
     </>
   );
 };
 
-export default PatientForm;
+export default AdmitForm;

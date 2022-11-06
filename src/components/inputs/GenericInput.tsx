@@ -20,7 +20,7 @@ function GenericInput({
       <div className="relative mt-1 rounded-md shadow-sm ">
         <input
           type={type}
-          className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
+          className="block w-full h-10 capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm"
           placeholder={placeHolder}
           required={required}
           {...register}

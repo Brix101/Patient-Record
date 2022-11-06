@@ -83,6 +83,10 @@ const PatientForm: NextPage = () => {
     mutate({ ...values });
   }
 
+  const handleCancelUpdate = () => {
+    dispatch(togglePatientEditMode());
+  };
+
   return (
     <>
       {error && (
@@ -107,7 +111,7 @@ const PatientForm: NextPage = () => {
         {isEditPatient ? null : (
           <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
         )}
-        <form className="max-w-9xl py-5 " onSubmit={handleSubmit(onSubmit)}>
+        <form className="max-w-9xl" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col">
             <div className="col-span-1 space-y-3">
               <div className="grid grid-cols-3 gap-3">
@@ -245,7 +249,7 @@ const PatientForm: NextPage = () => {
             </div>
           </div>
           {isEditPatient ? (
-            <div className="w-full my-5 flex justify-end mb-10">
+            <div className="w-full mt-5 flex justify-end ">
               <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
                 <PrimaryButton
                   className="w-full"
@@ -255,10 +259,7 @@ const PatientForm: NextPage = () => {
                 >
                   Update
                 </PrimaryButton>
-                <OutlinedButton
-                  type="button"
-                  onClick={() => dispatch(togglePatientEditMode())}
-                >
+                <OutlinedButton type="button" onClick={handleCancelUpdate}>
                   Cancel
                 </OutlinedButton>
               </div>
