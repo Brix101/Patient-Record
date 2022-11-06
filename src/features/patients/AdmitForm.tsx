@@ -116,54 +116,53 @@ const AdmitForm: NextPage = () => {
                 control={control}
                 name="roomId"
                 render={({ field: { onChange, value } }) => (
-                  <>
-                    <div className="grid grid-cols-2 gap-2 items-end">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Room Type
-                        </label>
-                        <Select
-                          className="capitalize"
-                          classNamePrefix="addl-class"
-                          placeholder="Room Catergory..."
-                          options={roomCategory}
-                          value={roomCategory?.find(
-                            (cat) => cat.value === selectedCat
-                          )}
-                          onChange={(e) => {
-                            resetField("roomId");
-                            setSelectedCat(e?.value as RoomCat);
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Room
-                        </label>
-                        <Select
-                          className="capitalize"
-                          classNamePrefix="addl-class"
-                          options={rooms}
-                          value={rooms?.find(
-                            (c) =>
-                              c.value.id === value &&
-                              c.value.category === selectedCat
-                          )}
-                          onChange={(room) => {
-                            if (room) {
-                              onChange(room?.value.id);
-                              setSelectedCat(room?.value.category as RoomCat);
-                            } else {
-                              setSelectedCat("WARD");
-                              onChange(undefined);
-                            }
-                          }}
-                          placeholder="Room"
-                          isClearable
-                        />
-                      </div>
+                  <div className="grid grid-cols-2 gap-2 items-end">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Room Type
+                      </label>
+                      <Select
+                        className="capitalize"
+                        classNamePrefix="addl-class"
+                        placeholder="Room Catergory..."
+                        options={roomCategory}
+                        value={roomCategory?.find(
+                          (cat) => cat.value === selectedCat
+                        )}
+                        onChange={(e) => {
+                          resetField("roomId");
+                          onChange(undefined);
+                          setSelectedCat(e?.value as RoomCat);
+                        }}
+                      />
                     </div>
-                  </>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Room
+                      </label>
+                      <Select
+                        className="capitalize"
+                        classNamePrefix="addl-class"
+                        options={rooms}
+                        value={rooms?.find(
+                          (c) =>
+                            c.value.id === value &&
+                            c.value.category === selectedCat
+                        )}
+                        onChange={(room) => {
+                          if (room) {
+                            onChange(room?.value.id);
+                            setSelectedCat(room?.value.category as RoomCat);
+                          } else {
+                            setSelectedCat("WARD");
+                            onChange(undefined);
+                          }
+                        }}
+                        placeholder="Room"
+                        isClearable
+                      />
+                    </div>
+                  </div>
                 )}
               />
               <div className="grid grid-cols-2 gap-3">
