@@ -20,7 +20,6 @@ const AdmitForm: NextPage = () => {
     handleSubmit,
     register,
     control,
-    clearErrors,
     formState: { isDirty },
     resetField,
   } = useForm<AdmitPatientInput>();
@@ -53,7 +52,7 @@ const AdmitForm: NextPage = () => {
 
   const rooms = roomData?.map((room) => {
     return {
-      label: room.floor + "/" + room.roomNo,
+      label: "floor: " + room.floor + " / room no: " + room.roomNo,
       value: room,
     };
   });
@@ -113,56 +112,60 @@ const AdmitForm: NextPage = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2 items-end">
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Room Type
-                  </label>
-                  <Select
-                    className="capitalize"
-                    classNamePrefix="addl-class"
-                    placeholder="Room Catergory..."
-                    options={roomCategory}
-                    value={roomCategory?.find(
-                      (cat) => cat.value === selectedCat
-                    )}
-                    onChange={(e) => {
-                      setSelectedCat(e?.value as RoomCat);
-                    }}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Room
-                  </label>
-                  <Controller
-                    control={control}
-                    name="roomId"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={rooms}
-                        value={rooms?.find(
-                          (c) =>
-                            c.value.id === value &&
-                            c.value.category === selectedCat
-                        )}
-                        onChange={(room) => {
-                          if (room) {
-                            setSelectedCat(room?.value.category as RoomCat);
-                          } else {
-                            setSelectedCat("WARD");
-                          }
-                          onChange(room?.value.id);
-                        }}
-                        placeholder="Room"
-                        isClearable
-                      />
-                    )}
-                  />
-                </div>
-              </div>
+              <Controller
+                control={control}
+                name="roomId"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <div className="grid grid-cols-2 gap-2 items-end">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Room Type
+                        </label>
+                        <Select
+                          className="capitalize"
+                          classNamePrefix="addl-class"
+                          placeholder="Room Catergory..."
+                          options={roomCategory}
+                          value={roomCategory?.find(
+                            (cat) => cat.value === selectedCat
+                          )}
+                          onChange={(e) => {
+                            resetField("roomId");
+                            setSelectedCat(e?.value as RoomCat);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Room
+                        </label>
+                        <Select
+                          className="capitalize"
+                          classNamePrefix="addl-class"
+                          options={rooms}
+                          value={rooms?.find(
+                            (c) =>
+                              c.value.id === value &&
+                              c.value.category === selectedCat
+                          )}
+                          onChange={(room) => {
+                            if (room) {
+                              onChange(room?.value.id);
+                              setSelectedCat(room?.value.category as RoomCat);
+                            } else {
+                              setSelectedCat("WARD");
+                              onChange(undefined);
+                            }
+                          }}
+                          placeholder="Room"
+                          isClearable
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+              />
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col justify-between">
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
