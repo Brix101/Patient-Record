@@ -13,10 +13,6 @@ const NewPatient = dynamic(() => import("@features/patients/NewPatient"), {
   ssr: false,
 });
 
-const PatientData = dynamic(() => import("@/features/patients/PatientData"), {
-  ssr: false,
-});
-
 const NursePage: NextPage = () => {
   const { mode } = useAppSelector(patientsState);
   return (
@@ -29,7 +25,6 @@ const NursePage: NextPage = () => {
         <div className="flex-1">
           {mode === "View" && <ViewPatient />}
           {mode === "Add" && <NewPatient />}
-          {mode === "Edit" && <PatientData />}
         </div>
       </Main>
     </>

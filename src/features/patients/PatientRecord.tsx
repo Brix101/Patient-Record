@@ -25,12 +25,6 @@ const PatientRecord: NextPage = () => {
               Diagnosis
             </th>
             <th scope="col" className="py-3 px-6">
-              weight
-            </th>
-            <th scope="col" className="py-3 px-6">
-              height
-            </th>
-            <th scope="col" className="py-3 px-6">
               status
             </th>
           </tr>

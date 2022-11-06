@@ -9,7 +9,7 @@ import { Medicine, Role } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Edit, PlusSquare, Trash2 } from "react-feather";
 import { setMedicinesMode } from "./medicinesSlice";
 
@@ -113,46 +113,51 @@ const ViewRoom: NextPage = () => {
             </th>
           </tr>
         </thead>
-        <tbody>
-          {medicinesData?.map((medicine, i) => {
-            return (
-              <tr key={i} className={`${TableStyle(i)}`}>
-                <th
-                  scope="row"
-                  className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
-                >
-                  {medicine.name}
-                </th>
-                <td className="py-4 px-6">{medicine.quantity}</td>
-                <td className="py-4 px-6">{medicine.unit}</td>
-                <td className="py-4 px-6">{medicine.price?.toString()}</td>
-                <td className="py-4 px-6 flex gap-5">
-                  <SuspenseComponent isLoading={isActive === medicine.id}>
-                    <span
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                      onClick={() =>
-                        dispatch(
-                          setMedicinesMode({ mode: "Edit", medicine: medicine })
-                        )
-                      }
-                    >
-                      <Edit size={20} />
-                    </span>
-                    {userData && userData.user?.role === Role.ADMIN && (
+        <Suspense>
+          <tbody>
+            {medicinesData?.map((medicine, i) => {
+              return (
+                <tr key={i} className={`${TableStyle(i)}`}>
+                  <th
+                    scope="row"
+                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                  >
+                    {medicine.name}
+                  </th>
+                  <td className="py-4 px-6">{medicine.quantity}</td>
+                  <td className="py-4 px-6">{medicine.unit}</td>
+                  <td className="py-4 px-6">{medicine.price?.toString()}</td>
+                  <td className="py-4 px-6 flex gap-5">
+                    <SuspenseComponent isLoading={isActive === medicine.id}>
                       <span
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                        onClick={() => deleteDialog({ medicine })}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                        onClick={() =>
+                          dispatch(
+                            setMedicinesMode({
+                              mode: "Edit",
+                              medicine: medicine,
+                            })
+                          )
+                        }
                       >
-                        <Trash2 size={20} />
+                        <Edit size={20} />
                       </span>
-                    )}
-                  </SuspenseComponent>
-                </td>
-              </tr>
-            );
-          })}
-          {!data && !isLoading ? <>No Medicines Data</> : null}
-        </tbody>
+                      {userData && userData.user?.role === Role.ADMIN && (
+                        <span
+                          className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                          onClick={() => deleteDialog({ medicine })}
+                        >
+                          <Trash2 size={20} />
+                        </span>
+                      )}
+                    </SuspenseComponent>
+                  </td>
+                </tr>
+              );
+            })}
+            {!data && !isLoading ? <>No Medicines Data</> : null}
+          </tbody>
+        </Suspense>
       </table>
     </div>
   );

@@ -6,6 +6,7 @@ import useDebounce from "@/hooks/useDebounce";
 import { SearchPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
+import Link from "next/link";
 import { Suspense, useState } from "react";
 import { PlusSquare } from "react-feather";
 import { setPatientsMode } from "./patientsSlice";
@@ -83,18 +84,15 @@ const ViewPatient: NextPage = () => {
             {data?.map((patient, i) => {
               return (
                 <tr key={i} className={`${TableStyle(i)}`}>
-                  <th
-                    scope="row"
-                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline"
-                    onClick={() =>
-                      dispatch(
-                        setPatientsMode({ mode: "Edit", patient: patient })
-                      )
-                    }
-                  >
-                    {patient?.lastName}, {patient?.firstName}{" "}
-                    {patient?.middleName}
-                  </th>
+                  <Link href={`nurse/patient/${patient.id}`}>
+                    <th
+                      scope="row"
+                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline"
+                    >
+                      {patient?.lastName}, {patient?.firstName}{" "}
+                      {patient?.middleName}
+                    </th>
+                  </Link>
                   <td className="py-4 px-6">{patient.gender}</td>
                   <td className="py-4 px-6">
                     {patient.birthday?.toLocaleDateString("en-US", {

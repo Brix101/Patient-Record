@@ -1,6 +1,7 @@
 import {
   addPatientSchema,
   deletePatientSchema,
+  getPatientSchema,
   searchPatientSchema,
   updatePatientSchema,
 } from "@/schema/patient.schema";
@@ -44,7 +45,7 @@ export const patientRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { name } = input;
       try {
-        const users = await ctx.prisma.patient.findMany({
+        const patients = await ctx.prisma.patient.findMany({
           where: {
             OR: [
               { firstName: { contains: name ? name : "" } },
@@ -58,7 +59,32 @@ export const patientRouter = createProtectedRouter()
             lastName: "asc",
           },
         });
-        return users;
+        return patients;
+      } catch (e) {
+        if (e instanceof PrismaClientKnownRequestError) {
+          if (e.code === "P2002") {
+            throw new trpc.TRPCError({
+              code: "CONFLICT",
+              message: "User already exists",
+            });
+          }
+        }
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    },
+  })
+  .query("get-patient", {
+    input: getPatientSchema,
+    async resolve({ ctx, input }) {
+      const { id } = input;
+      try {
+        const patient = await ctx.prisma.patient.findUnique({
+          where: { id },
+        });
+        return patient;
       } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === "P2002") {
