@@ -46,7 +46,7 @@ export const roomRouter = createProtectedRouter()
   .query("get-rooms", {
     input: searchRoomSchema,
     async resolve({ ctx, input }) {
-      const { searchInput } = input;
+      const { searchInput, category } = input;
       if (ctx.session) {
         const rooms = await ctx.prisma.room.findMany({
           where: {
@@ -57,6 +57,7 @@ export const roomRouter = createProtectedRouter()
             NOT: {
               active: false,
             },
+            category,
           },
           orderBy: {
             floor: "asc",

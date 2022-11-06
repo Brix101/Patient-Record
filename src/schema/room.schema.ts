@@ -26,6 +26,7 @@ export const deleteRoomSchema = z.object({
 
 export const searchRoomSchema = z.object({
   searchInput: z.string().optional(),
+  category: z.nativeEnum(RoomCat).optional(),
 });
 
 export type CreateRoomInput = z.TypeOf<typeof createRoomSchema>;
