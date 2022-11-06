@@ -32,9 +32,6 @@ model User {
   updateAt  DateTime   @updatedAt
   Physician Physician?
 
-  attendingPhysician   MedicalRecord? @relation("attendingPhysician", fields: [attendingPhysicianId], references: [id])
-  attendingPhysicianId Int?
-
   addedPatient    Patient[]
   UserLogs        UserLogs[]
   MedicineRequest MedicineRequest[]
@@ -46,6 +43,8 @@ model Physician {
   licenseNumber String?
   userId        Int     @unique
   user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  MedicalRecord MedicalRecord[]
 }
 
 model Room {
@@ -75,6 +74,7 @@ model Patient {
   religion    String?
   bloodType   String?
   active      Boolean      @default(true)
+  isAdmitted  Boolean      @default(false)
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -99,15 +99,15 @@ model MedicalRecord {
   updateAt       DateTime      @updatedAt
   active         Boolean       @default(true)
 
-  room     Room            @relation(fields: [roomId], references: [id])
-  patient  Patient         @relation(fields: [patientId], references: [id])
-  medicine MedicineRequest @relation(fields: [medicineRequestId], references: [id], onDelete: Cascade)
-
-  attendingPhysician User[] @relation("attendingPhysician")
+  room      Room            @relation(fields: [roomId], references: [id])
+  patient   Patient         @relation(fields: [patientId], references: [id])
+  medicine  MedicineRequest @relation(fields: [medicineRequestId], references: [id], onDelete: Cascade)
+  physician Physician       @relation(fields: [physicianId], references: [id])
 
   roomId            Int
   patientId         Int
   medicineRequestId Int
+  physicianId       Int
 }
 
 model MedicineRequest {
