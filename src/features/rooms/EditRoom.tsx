@@ -25,7 +25,7 @@ const EditRoom: NextPage = () => {
     formState: { errors: validationError, isDirty },
   } = useForm<UpdateRoomInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
-    ["room.update-user"],
+    ["room.update-room"],
     {
       onSuccess: () => {
         clearErrors();

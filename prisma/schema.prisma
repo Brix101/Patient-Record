@@ -33,8 +33,8 @@ model User {
   Physician Physician?
 
   addedPatient    Patient[]
-  UserLogs        UserLogs[]
-  MedicineRequest MedicineRequest[]
+  userLogs        UserLogs[]
+  medicineRequest MedicineRequest[]
 }
 
 model Physician {
@@ -44,7 +44,7 @@ model Physician {
   userId        Int     @unique
   user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  MedicalRecord MedicalRecord[]
+  medicalRecord MedicalRecord[]
 }
 
 model Room {
@@ -57,7 +57,7 @@ model Room {
   price    Decimal?   @db.Decimal(10, 2)
   active   Boolean    @default(true)
 
-  MedicalRecord MedicalRecord[]
+  medicalRecord MedicalRecord[]
 }
 
 model Patient {
@@ -82,32 +82,31 @@ model Patient {
   addedPatient User? @relation(fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
   addedById    Int?
 
-  MedicalRecord MedicalRecord[]
+  medicalRecord MedicalRecord[]
 }
 
 model MedicalRecord {
-  id             Int           @id @default(autoincrement())
-  weight         String?
-  height         String?
-  bloodPressure  String?
-  chiefComplaint String?
-  guardian       String?
-  status         MedicalStatus @default(Admitted)
-  admittedAt     DateTime      @default(now())
-  discharedAt    DateTime?
-  createAt       DateTime      @default(now())
-  updateAt       DateTime      @updatedAt
-  active         Boolean       @default(true)
+  id              Int               @id @default(autoincrement())
+  weight          String?
+  height          String?
+  bloodPressure   String?
+  chiefComplaint  String?
+  guardian        String?
+  status          MedicalStatus     @default(Admitted)
+  admittedAt      DateTime          @default(now())
+  discharedAt     DateTime?
+  createAt        DateTime          @default(now())
+  updateAt        DateTime          @updatedAt
+  active          Boolean           @default(true)
+  medicineRequest MedicineRequest[]
 
-  room      Room            @relation(fields: [roomId], references: [id])
-  patient   Patient         @relation(fields: [patientId], references: [id])
-  medicine  MedicineRequest @relation(fields: [medicineRequestId], references: [id], onDelete: Cascade)
-  physician Physician       @relation(fields: [physicianId], references: [id])
+  room      Room      @relation(fields: [roomId], references: [id])
+  patient   Patient   @relation(fields: [patientId], references: [id])
+  physician Physician @relation(fields: [physicianId], references: [id])
 
-  roomId            Int
-  patientId         Int
-  medicineRequestId Int
-  physicianId       Int
+  roomId      Int
+  patientId   Int
+  physicianId Int
 }
 
 model MedicineRequest {
@@ -116,12 +115,13 @@ model MedicineRequest {
   requestStatus MedicineReqStatus @default(Pending)
   active        Boolean           @default(true)
 
-  medicine    Medicine @relation(fields: [medicineId], references: [id])
-  requestedBy User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  medicine      Medicine?      @relation(fields: [medicineId], references: [id])
+  requestedBy   User           @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  MedicalRecord MedicalRecord? @relation(fields: [medicalRecordId], references: [id])
 
-  medicineId    Int
-  userId        Int
-  MedicalRecord MedicalRecord[]
+  medicineId      Int
+  userId          Int
+  medicalRecordId Int
 }
 
 model Medicine {

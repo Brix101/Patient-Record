@@ -6,7 +6,7 @@ import { AdmitPatientInput } from "@/schema/medicalRecord.schema";
 import { trpc } from "@/utils/trpc";
 import { RoomCat } from "@prisma/client";
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { patientsState, togglePatientAdmit } from "./patientsSlice";
@@ -15,17 +15,31 @@ const AdmitForm: NextPage = () => {
   const dispatch = useAppDispatch();
   const [selectedCat, setSelectedCat] = useState<RoomCat>("WARD");
   const { patient } = useAppSelector(patientsState);
-
   const {
     handleSubmit,
     register,
     control,
     formState: { isDirty },
     resetField,
+    setValue,
   } = useForm<AdmitPatientInput>();
 
+  useEffect(() => {
+    if (patient) {
+      setValue("patientId", patient.id);
+    }
+  }, [patient, setValue]);
+  const { mutate, error, isLoading } = trpc.useMutation(
+    ["medicalRecord.admit-patient"],
+    {
+      onSuccess: () => {
+        dispatch(togglePatientAdmit());
+      },
+    }
+  );
+
   const { data: roomData } = trpc.useQuery([
-    "room.get-rooms",
+    "room.get-available-rooms",
     { searchInput: "", category: selectedCat },
   ]);
 
@@ -57,9 +71,13 @@ const AdmitForm: NextPage = () => {
     };
   });
 
+  function onSubmit(values: AdmitPatientInput) {
+    mutate({ ...values });
+  }
+
   return (
     <>
-      {/* {error && (
+      {error && (
         <div
           className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
           role="alert"
@@ -68,17 +86,8 @@ const AdmitForm: NextPage = () => {
           {error && error.message}
         </div>
       )}
-      {isSuccess && (
-        <div
-          className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-          role="alert"
-        >
-          <span className="font-medium">Success alert!</span> Patient Data
-          Updated
-        </div>
-      )} */}
       <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
-        <form className="max-w-9xl">
+        <form className="max-w-9xl" onSubmit={handleSubmit(onSubmit)}>
           <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
             {patient?.lastName +
               ", " +
@@ -208,7 +217,7 @@ const AdmitForm: NextPage = () => {
                 className="w-full"
                 type="submit"
                 disabled={!isDirty}
-                // isLoading={isLoading}
+                isLoading={isLoading}
               >
                 Admit Patient
               </PrimaryButton>

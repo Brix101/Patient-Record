@@ -16,7 +16,7 @@ const ViewPatient: NextPage = () => {
   const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
   const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
-  const { data, isLoading, isRefetching } = trpc.useQuery(
+  const { data, isLoading, isRefetching, error } = trpc.useQuery(
     [
       "patient.all-patients",
       {
@@ -55,6 +55,15 @@ const ViewPatient: NextPage = () => {
           </SecondaryButton>
         </div>
       </div>
+      {error && (
+        <div
+          className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+          role="alert"
+        >
+          <span className="font-medium">Error alert! </span>
+          {error && error.message}
+        </div>
+      )}
       <LinearLoading isLoading={isLoading || isRefetching} />
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 select-none">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -109,7 +118,7 @@ const ViewPatient: NextPage = () => {
                 </tr>
               );
             })}
-            {!data && !isLoading ? <>No Rooms Data</> : null}
+            {!data && !error ? <>No Patient Data</> : null}
           </tbody>
         </Suspense>
       </table>

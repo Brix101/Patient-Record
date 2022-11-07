@@ -71,7 +71,36 @@ export const roomRouter = createProtectedRouter()
       });
     },
   })
-  .mutation("update-user", {
+  .query("get-available-rooms", {
+    input: searchRoomSchema,
+    async resolve({ ctx, input }) {
+      const { searchInput, category } = input;
+      if (ctx.session) {
+        const rooms = await ctx.prisma.room.findMany({
+          where: {
+            OR: [
+              { floor: { contains: searchInput ? searchInput : "" } },
+              { roomNo: { contains: searchInput ? searchInput : "" } },
+            ],
+            NOT: {
+              active: false,
+            },
+            category,
+            status: "VACANT",
+          },
+          orderBy: {
+            floor: "asc",
+          },
+        });
+        return rooms;
+      }
+      throw new trpc.TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Please Login",
+      });
+    },
+  })
+  .mutation("update-room", {
     input: updateRoomSchema,
     resolve: async ({ input, ctx }) => {
       const { category, floor, id, price, roomNo, station, status } = input;
