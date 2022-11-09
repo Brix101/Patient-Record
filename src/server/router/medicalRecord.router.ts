@@ -1,11 +1,13 @@
-import { admitPatientSchema } from "@/schema/medicalRecord.schema";
+import {
+  admitPatientSchema,
+  getMedicalRecordSchema,
+} from "@/schema/medicalRecord.schema";
 import { RoomStatus } from "@prisma/client";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 
-export const medicalRecordRouter = createProtectedRouter().mutation(
-  "admit-patient",
-  {
+export const medicalRecordRouter = createProtectedRouter()
+  .mutation("admit-patient", {
     input: admitPatientSchema,
     resolve: async ({ ctx, input }) => {
       const {
@@ -67,5 +69,37 @@ export const medicalRecordRouter = createProtectedRouter().mutation(
         });
       }
     },
-  }
-);
+  })
+  .query("get-allRecords", {
+    input: getMedicalRecordSchema,
+    resolve: async ({ ctx, input }) => {
+      const { patientId } = input;
+      try {
+        const patientRecord = await ctx.prisma.medicalRecord.findMany({
+          where: {
+            patient: {
+              id: patientId,
+            },
+          },
+          include: {
+            medicineRequest: true,
+            patient: true,
+            physician: {
+              include: {
+                user: true,
+              },
+            },
+            room: true,
+          },
+        });
+
+        return patientRecord;
+      } catch (e) {
+        console.log(e);
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    },
+  });

@@ -1,10 +1,25 @@
 import { useAppSelector } from "@/app/hook";
+import { trpc } from "@/utils/trpc";
 import { NextPage } from "next";
-import React from "react";
+import React, { Suspense } from "react";
 import { patientsState } from "./patientsSlice";
 
 const PatientRecord: NextPage = () => {
   const { patient } = useAppSelector(patientsState);
+  const { data, error } = trpc.useQuery([
+    "medicalRecord.get-allRecords",
+    {
+      patientId: patient?.id as number,
+    },
+  ]);
+
+  const TableStyle = (x: number) => {
+    if (x % 2) {
+      return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
+    }
+    return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
+  };
+
   return (
     <div className="flex-1">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
@@ -29,7 +44,27 @@ const PatientRecord: NextPage = () => {
             </th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <Suspense>
+          <tbody>
+            {data?.map((record, i) => {
+              return (
+                <tr key={i} className={`${TableStyle(i)}`}>
+                  <th
+                    scope="row"
+                    className="py-3 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline"
+                  >
+                    {record?.physician?.user.lastName},{" "}
+                    {record?.physician?.user.firstName}
+                  </th>
+                  <td className="py-3 px-6">{record.chiefComplaint}</td>
+                  <td className="py-3 px-6">{record.chiefComplaint}</td>
+                  <td className="py-3 px-6">{record.status}</td>
+                </tr>
+              );
+            })}
+            {!data && !error ? <>No Patient Data</> : null}
+          </tbody>
+        </Suspense>
       </table>
     </div>
   );
