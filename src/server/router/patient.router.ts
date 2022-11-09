@@ -143,7 +143,7 @@ export const patientRouter = createProtectedRouter()
           },
           data: {
             active: false,
-            MedicalRecord: {
+            medicalRecord: {
               updateMany: {
                 where: {
                   patientId: input.id,
