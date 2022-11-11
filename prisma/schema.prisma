@@ -98,6 +98,7 @@ model MedicalRecord {
   createAt        DateTime          @default(now())
   updateAt        DateTime          @updatedAt
   active          Boolean           @default(true)
+  result          MedicalResult?
   medicineRequest MedicineRequest[]
 
   room      Room      @relation(fields: [roomId], references: [id])
@@ -152,6 +153,13 @@ enum MedicalStatus {
   Admitted
   Discharged
   Tranfered
+}
+
+enum MedicalResult {
+  Recovered
+  Died
+  Improved
+  Unimproved
 }
 
 enum CivilStatus {
