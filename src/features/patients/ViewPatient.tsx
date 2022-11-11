@@ -118,7 +118,7 @@ const ViewPatient: NextPage = () => {
                 </tr>
               );
             })}
-            {!data && !error ? <>No Patient Data</> : null}
+            {!data && !error && !isLoading ? <>No Patient Data</> : null}
           </tbody>
         </Suspense>
       </table>
