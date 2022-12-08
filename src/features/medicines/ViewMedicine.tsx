@@ -85,10 +85,11 @@ const ViewRoom: NextPage = () => {
             />
           </div>
           <SecondaryButton
-            className="w-11"
+            className="w-auto gap-3"
             onClick={() => dispatch(setMedicinesMode({ mode: "Add" }))}
           >
             <PlusSquare size={24} />
+            <span className="text-base">Add</span>
           </SecondaryButton>
         </div>
       </div>
