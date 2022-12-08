@@ -7,7 +7,7 @@ import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { Edit, FileText, Trash2, X } from "react-feather";
+import { DollarSign, Edit, FileText, Trash2, X } from "react-feather";
 import AdmitForm from "./AdmitForm";
 import PatientForm from "./PatientForm";
 import PatientRecord from "./PatientRecord";
@@ -76,22 +76,35 @@ const PatientData: NextPage = () => {
                 </PrimaryButton>
               )}
               {!isAdmitPatient && !isEditPatient && (
-                <SecondaryButton
-                  className="w-11"
-                  tooltip="Admit Patient"
-                  onClick={() => dispatch(togglePatientAdmit())}
-                >
-                  <FileText size={24} />
-                </SecondaryButton>
+                <>
+                  {patient?.isAdmitted ? (
+                    <SecondaryButton
+                      className="w-11"
+                      tooltip="Bill or Discharge Patient"
+                    >
+                      <DollarSign size={24} />
+                    </SecondaryButton>
+                  ) : (
+                    <SecondaryButton
+                      className="w-11"
+                      tooltip="Admit Patient"
+                      onClick={() => dispatch(togglePatientAdmit())}
+                    >
+                      <FileText size={24} />
+                    </SecondaryButton>
+                  )}
+                </>
               )}
             </SuspenseComponent>
           </div>
         </div>
         {isAdmitPatient ? <AdmitForm /> : <PatientForm />}
       </div>
-      <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen mb-20">
-        <PatientRecord />
-      </div>
+      {!isEditPatient ? (
+        <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen mb-20">
+          <PatientRecord />
+        </div>
+      ) : null}
     </>
   );
 };

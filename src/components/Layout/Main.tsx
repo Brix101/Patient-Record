@@ -66,6 +66,11 @@ function Main({ children }: { children?: React.ReactNode }) {
                         </NavigationButton>
                       </li>
                       <li>
+                        <NavigationButton href="/nurse/billing">
+                          Billing
+                        </NavigationButton>
+                      </li>
+                      <li>
                         <NavigationButton href="/nurse/appointment">
                           Appointments
                         </NavigationButton>

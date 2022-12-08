@@ -40,6 +40,9 @@ const PatientRecord: NextPage = () => {
               Diagnosis
             </th>
             <th scope="col" className="py-3 px-6">
+              Gaurdian
+            </th>
+            <th scope="col" className="py-3 px-6">
               status
             </th>
           </tr>
@@ -58,6 +61,7 @@ const PatientRecord: NextPage = () => {
                   </th>
                   <td className="py-3 px-6">{record.chiefComplaint}</td>
                   <td className="py-3 px-6">{record.chiefComplaint}</td>
+                  <td className="py-3 px-6">{record.guardian}</td>
                   <td className="py-3 px-6">{record.status}</td>
                 </tr>
               );

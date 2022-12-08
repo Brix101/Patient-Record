@@ -8,6 +8,7 @@ import {
 import { trpc } from "@/utils/trpc";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 const PatientData = dynamic(() => import("@/features/patients/PatientData"), {
@@ -33,6 +34,10 @@ const Patient: NextPage = () => {
 
   return (
     <Main>
+      <Head>
+        <title>Nurse - Patient Page</title>
+        <link rel="icon" href="/logo.svg" />
+      </Head>
       <SuspenseComponent isLoading={isLoading}>
         <div className="flex-1">
           <PatientData />
