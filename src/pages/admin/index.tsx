@@ -5,8 +5,8 @@ import Head from "next/head";
 import { Suspense } from "react";
 
 const ManagementPage: NextPage = () => {
-  const { data } = trpc.useQuery(["dashboard.analytics"]);
-  console.log(data);
+  const { data, isLoading } = trpc.useQuery(["dashboard.analytics"]);
+
   return (
     <>
       <Head>
@@ -16,26 +16,28 @@ const ManagementPage: NextPage = () => {
       <Admin>
         <Suspense>
           <div className="w-full h-full flex items-center flex-col gap-10">
-            <div className="h-fit  flex justify-center flex-wrap gap-10">
-              <div className="h-28 select-none bg-green-100 border-2 drop-shadow-lg shadow-lg w-52 rounded-xl flex flex-col items-center justify-start px-5 py-2">
-                <p className="capitalize select-none w-full text-base font-bold text-gray-700">
-                  total patients
-                </p>
-                <h1 className="text-5xl font-bold">{data?.patients}</h1>
-              </div>
-              {data?.medicalRecord.map(({ status, _count }, index) => (
-                <div
-                  className="h-28 select-none bg-green-100 border-2 drop-shadow-lg shadow-lg w-52 rounded-xl flex flex-col items-center justify-start px-5 py-2"
-                  key={index}
-                >
+            {!isLoading ? (
+              <div className="h-fit  flex justify-center flex-wrap gap-10">
+                <div className="h-28 select-none bg-green-100 border-2 drop-shadow-lg shadow-lg w-52 rounded-xl flex flex-col items-center justify-start px-5 py-2">
                   <p className="capitalize select-none w-full text-base font-bold text-gray-700">
-                    {status}
+                    total patients
                   </p>
-                  <h1 className="text-5xl font-bold">{_count._all}</h1>
+                  <h1 className="text-5xl font-bold">{data?.patients}</h1>
                 </div>
-              ))}
-            </div>
-            <div className="h-fit max-w-3xl flex justify-center flex-wrap gap-10">
+                {data?.medicalRecord.map(({ status, _count }, index) => (
+                  <div
+                    className="h-28 select-none bg-green-100 border-2 drop-shadow-lg shadow-lg w-52 rounded-xl flex flex-col items-center justify-start px-5 py-2"
+                    key={index}
+                  >
+                    <p className="capitalize select-none w-full text-base font-bold text-gray-700">
+                      {status}
+                    </p>
+                    <h1 className="text-5xl font-bold">{_count._all}</h1>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            {/* <div className="h-fit max-w-3xl flex justify-center flex-wrap gap-10">
               <div className="h-28 select-none bg-green-100 border-2 drop-shadow-lg shadow-lg w-52 rounded-xl flex flex-col items-center justify-start px-5 py-2">
                 <p className="capitalize select-none w-full text-base font-bold text-gray-700">
                   total users
@@ -53,7 +55,7 @@ const ManagementPage: NextPage = () => {
                   <h1 className="text-5xl font-bold">{_count._all}</h1>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </Suspense>
       </Admin>
