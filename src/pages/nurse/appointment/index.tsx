@@ -48,7 +48,7 @@ const resourceMap = [
   { resourceId: 4, resourceTitle: "Meeting room 2" },
 ];
 
-const NursePage: NextPage = () => {
+const Apointment: NextPage = () => {
   return (
     <>
       <Head>
@@ -85,4 +85,4 @@ const NursePage: NextPage = () => {
   );
 };
 
-export default NursePage;
+export default Apointment;
