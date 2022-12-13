@@ -6,6 +6,8 @@ import SuspenseComponent from "@/components/SuspenseComponent";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { DollarSign, Edit, FileText, Trash2, X } from "react-feather";
 import AdmitForm from "./AdmitForm";
@@ -19,6 +21,7 @@ import {
 } from "./patientsSlice";
 
 const PatientData: NextPage = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { data: sessionData } = useSession();
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -81,6 +84,12 @@ const PatientData: NextPage = () => {
                     <SecondaryButton
                       className="w-11"
                       tooltip="Bill or Discharge Patient"
+                      onClick={() =>
+                        router.push({
+                          pathname: "billing/[patient]",
+                          query: { patient: patient.id },
+                        })
+                      }
                     >
                       <DollarSign size={24} />
                     </SecondaryButton>

@@ -10,7 +10,8 @@ function NavigationButton({
   children?: React.ReactNode;
 }) {
   const { pathname } = useRouter();
-  const active = pathname.includes(href);
+
+  const active = pathname === href;
 
   return (
     <Link href={href}>
