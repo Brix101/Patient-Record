@@ -4,7 +4,7 @@ import {
   searchRoomSchema,
   updateRoomSchema,
 } from "@/schema/room.schema";
-import { Prisma, Role } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
@@ -131,9 +131,7 @@ export const roomRouter = createProtectedRouter()
   .mutation("delete-room", {
     input: deleteRoomSchema,
     resolve: async ({ ctx, input }) => {
-      const { role } = ctx.session.user;
-
-      if (role === Role.ADMIN) {
+      try {
         const deletedRoom = await ctx.prisma.room.update({
           where: {
             id: input.id,
@@ -143,11 +141,11 @@ export const roomRouter = createProtectedRouter()
           },
         });
         return { detail: "Room Deleted", deletedRoom };
+      } catch (e) {
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
       }
-
-      throw new trpc.TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Invalid Room Data",
-      });
     },
   });

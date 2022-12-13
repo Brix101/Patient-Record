@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/app/hook";
-import Admin from "@/components/Layout/Admin";
+import Main from "@/components/Layout/Main";
 import { roomsState } from "@/features/rooms/roomsSlice";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -23,11 +23,11 @@ const RoomPage: NextPage = () => {
         <title>Management - Rooms</title>
         <link rel="icon" href="/logo.svg" />
       </Head>
-      <Admin>
+      <Main>
         {mode === "View" && <ViewRoom />}
         {mode === "Add" && <AddRoom />}
         {mode === "Edit" && <EditRoom />}
-      </Admin>
+      </Main>
     </>
   );
 };
