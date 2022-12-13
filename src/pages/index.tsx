@@ -87,8 +87,6 @@ const Home: NextPage = () => {
       <main className="h-auto flex flex-col scroll-auto">
         <div className="relative w-full h-screen bg-gray-300 flex justify-center items-center">
           <Image
-            width="100%"
-            height="100%"
             className="mr-5"
             src="/medidas.jpg"
             alt="logo"
