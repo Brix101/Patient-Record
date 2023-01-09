@@ -114,9 +114,11 @@ model MedicalRecord {
 }
 
 model Appointment {
-  id        Int       @id @default(autoincrement())
-  schedule  DateTime?
-  cancelled Boolean   @default(false)
+  id            Int       @id @default(autoincrement())
+  schedule      DateTime?
+  cancelled     Boolean   @default(false)
+  scheduleStart DateTime?
+  scheduleEdt   DateTime?
 
   physician   Physician @relation(fields: [physicianId], references: [id])
   physicianId Int
