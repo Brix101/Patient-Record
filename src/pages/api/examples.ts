@@ -12,6 +12,8 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
     },
     update: {},
     create: {
+      firstName: "john",
+      lastName: "doe",
       role: Role.ADMIN,
       email: env.EMAIL_SECRET,
       password: await hashPassword({ password: env.TOKEN_SECRET }),

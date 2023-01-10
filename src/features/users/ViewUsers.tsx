@@ -9,7 +9,7 @@ import { setUsersMode } from "@features/users/usersSlice";
 import { Physician, Role, User } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
-import React, { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Edit, Trash2, UserPlus } from "react-feather";
 import Select from "react-select";
@@ -33,7 +33,12 @@ const ViewUsers: NextPage = () => {
         ...debouncedValue,
       },
     ],
-    { enabled: true }
+    {
+      enabled: true,
+      onSuccess: (res) => {
+        setUsersData(res);
+      },
+    }
   );
 
   const { mutate, isLoading: isDeleteLoading } = trpc.useMutation(
@@ -49,12 +54,6 @@ const ViewUsers: NextPage = () => {
       },
     }
   );
-
-  useEffect(() => {
-    if (data) {
-      setUsersData(data);
-    }
-  }, [data]);
 
   const TableStyle = (x: number) => {
     if (x % 2) {

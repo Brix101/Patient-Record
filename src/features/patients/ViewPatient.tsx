@@ -7,12 +7,15 @@ import { SearchPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Suspense, useState } from "react";
 import { PlusSquare } from "react-feather";
 import { setPatientsMode } from "./patientsSlice";
 
 const ViewPatient: NextPage = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
   const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
@@ -33,6 +36,8 @@ const ViewPatient: NextPage = () => {
     return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
   };
 
+  const isNurse = router.pathname.includes("nurse");
+
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
@@ -47,13 +52,15 @@ const ViewPatient: NextPage = () => {
               onChange={(e) => setName({ name: e.target.value })}
             />
           </div>
-          <SecondaryButton
-            className="w-auto gap-3"
-            onClick={() => dispatch(setPatientsMode({ mode: "Add" }))}
-          >
-            <PlusSquare size={24} />
-            <span className="text-base">Add</span>
-          </SecondaryButton>
+          {isNurse ? (
+            <SecondaryButton
+              className="w-auto gap-3"
+              onClick={() => dispatch(setPatientsMode({ mode: "Add" }))}
+            >
+              <PlusSquare size={24} />
+              <span className="text-base">Add</span>
+            </SecondaryButton>
+          ) : null}
         </div>
       </div>
       {error && (
@@ -94,10 +101,12 @@ const ViewPatient: NextPage = () => {
             {data?.map((patient, i) => {
               return (
                 <tr key={i} className={`${TableStyle(i)}`}>
-                  <Link href={`nurse/patient/${patient.id}`}>
+                  <Link href={isNurse ? `nurse/patient/${patient.id}` : "#"}>
                     <th
                       scope="row"
-                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline"
+                      className={`py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize ${
+                        isNurse ? "cursor-pointer hover:underline" : ""
+                      }`}
                     >
                       {patient?.lastName}, {patient?.firstName}{" "}
                       {patient?.middleName}

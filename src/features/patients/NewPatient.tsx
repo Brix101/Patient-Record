@@ -7,6 +7,7 @@ import { AddPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
 import { CivilStatus } from "@prisma/client";
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import ReactDatePicker from "react-datepicker";
 import { ArrowLeft } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
@@ -15,13 +16,15 @@ import { setPatientsMode } from "./patientsSlice";
 
 const NewPatient: NextPage = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { handleSubmit, register, reset, control } = useForm<AddPatientInput>();
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     "patient.add-patient",
     {
       onSuccess: (patient) => {
         reset();
-        dispatch(setPatientsMode({ mode: "Edit", patient: patient }));
+        router.push(`nurse/patient/${patient.id}`);
+        dispatch(setPatientsMode({ mode: "View" }));
       },
     }
   );

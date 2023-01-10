@@ -70,6 +70,11 @@ function Main({ children }: { children?: React.ReactNode }) {
                           Appointments
                         </NavigationButton>
                       </li>
+                      <li>
+                        <NavigationButton href="/nurse/room">
+                          Rooms
+                        </NavigationButton>
+                      </li>
                     </>
                   )}
                 </ul>
