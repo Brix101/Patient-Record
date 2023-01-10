@@ -24,7 +24,13 @@ export default function ProfileButton() {
       <Menu.Button className="flex items-center">
         <span className="inline-block h-10 w-10 overflow-hidden rounded-full bg-gray-100 border border-gray-500">
           {data?.user && (
-            <Image width={48} height={48} src={userImage} alt={useAlt} />
+            <>
+              {userImage ? (
+                <Image width={48} height={48} src={userImage} alt={useAlt} />
+              ) : (
+                <Image width={48} height={48} src="/user.svg" alt="user" />
+              )}
+            </>
           )}
         </span>
       </Menu.Button>

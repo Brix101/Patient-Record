@@ -7,14 +7,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense } from "react";
-import {
-  Clipboard,
-  Columns,
-  Package,
-  Server,
-  Sliders,
-  Users,
-} from "react-feather";
+import { Clipboard, Package, Server, Sliders, Users } from "react-feather";
 
 function Admin({ children }: { children?: React.ReactNode }) {
   return (
@@ -52,10 +45,6 @@ function Admin({ children }: { children?: React.ReactNode }) {
                   <SideBarButton href={"/admin"}>
                     <Sliders size={20} />
                     <a>Dashboard</a>
-                  </SideBarButton>
-                  <SideBarButton href={"/admin/room"}>
-                    <Columns size={20} />
-                    <a>Room</a>
                   </SideBarButton>
                   <SideBarButton href={"/admin/patient"}>
                     <Clipboard size={20} />
