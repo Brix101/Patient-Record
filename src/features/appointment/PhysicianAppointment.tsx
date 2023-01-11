@@ -22,13 +22,12 @@ const Apointment: NextPage = () => {
   const { data } = trpc.useQuery(["appointment.get-appointments"], {
     select(data) {
       return data?.map((appointment) => {
-        console.log(appointment);
         return {
           ...appointment,
           title:
             "Session on " +
-            `floor: ${appointment.MedicalRecord?.room.floor} ,
-           room: ${appointment.MedicalRecord?.room.roomNo} `,
+            `floor: ${appointment.MedicalRecord?.room?.floor} ,
+           room: ${appointment.MedicalRecord?.room?.roomNo} `,
         };
       });
     },
