@@ -42,7 +42,10 @@ const Apointment: NextPage = () => {
           views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
           defaultDate={new Date()}
           eventPropGetter={(event) => {
-            const backgroundColor = event.cancelled ? "red" : "";
+            const backgroundColor2 = event.status === "Finished" ? "green" : "";
+
+            const backgroundColor =
+              event.status === "Cancelled" ? "red" : backgroundColor2;
             return { style: { backgroundColor } };
           }}
           onSelectEvent={(data) => {

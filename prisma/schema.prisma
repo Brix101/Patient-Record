@@ -114,10 +114,10 @@ model MedicalRecord {
 }
 
 model Appointment {
-  id            Int       @id @default(autoincrement())
-  cancelled     Boolean   @default(false)
-  start DateTime?
-  end   DateTime?
+  id     Int               @id @default(autoincrement())
+  status AppointmentStatus @default(Active)
+  start  DateTime?
+  end    DateTime?
 
   physician   Physician @relation(fields: [physicianId], references: [id])
   physicianId Int
@@ -158,6 +158,12 @@ model UserLogs {
   createAt DateTime @default(now())
   user     User     @relation(fields: [userId], references: [id])
   userId   Int
+}
+
+enum AppointmentStatus {
+  Active
+  Cancelled
+  Finished
 }
 
 enum MedicineReqStatus {

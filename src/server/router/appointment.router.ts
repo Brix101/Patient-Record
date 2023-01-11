@@ -12,10 +12,6 @@ export const appointmentRouter = createProtectedRouter()
       if (ctx.session) {
         const email = ctx.session.user?.email;
         const role = ctx.session.user?.role;
-        console.log(
-          "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-        );
-        console.log(role === "PHYSICIAN" ? email : "");
         const appointments = await ctx.prisma.appointment.findMany({
           where: {
             physician: {
@@ -85,14 +81,14 @@ export const appointmentRouter = createProtectedRouter()
   .mutation("update-appointment", {
     input: updateAppointmentSchema,
     async resolve({ ctx, input }) {
-      const { id, cancelled, end, start, physicianId } = input;
+      const { id, status, end, start, physicianId } = input;
       try {
         const appointment = await ctx.prisma.appointment.update({
           where: {
             id: id,
           },
           data: {
-            cancelled,
+            status,
             end,
             start,
             physician: {

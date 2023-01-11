@@ -1,3 +1,4 @@
+import { AppointmentStatus } from "@prisma/client";
 import z from "zod";
 
 export const createAppointmentSchema = z.object({
@@ -10,7 +11,7 @@ export const createAppointmentSchema = z.object({
 export const updateAppointmentSchema = z.object({
   id: z.number(),
   physicianId: z.number(),
-  cancelled: z.boolean(),
+  status: z.nativeEnum(AppointmentStatus),
   start: z.date().nullish(),
   end: z.date().nullish(),
 });
