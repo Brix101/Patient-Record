@@ -1,4 +1,5 @@
 import Main from "@/components/Layout/Main";
+import { trpc } from "@utils/trpc";
 import moment from "moment";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -49,6 +50,10 @@ const resourceMap = [
 ];
 
 const Apointment: NextPage = () => {
+  const { data } = trpc.useQuery(["physician.get-physician"]);
+  if (data) {
+    console.log(data);
+  }
   return (
     <>
       <Head>

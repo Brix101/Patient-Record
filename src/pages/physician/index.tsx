@@ -5,7 +5,10 @@ import Head from "next/head";
 
 const Home: NextPage = () => {
   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
-
+  const { data } = trpc.useQuery(["physician.get-physician"]);
+  if (data) {
+    console.log(data);
+  }
   return (
     <>
       <Head>
