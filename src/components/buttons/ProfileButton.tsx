@@ -14,9 +14,7 @@ export default function ProfileButton() {
   const useAlt = data?.user?.name as string;
 
   const { mutate } = trpc.useMutation(["logs.time-out"], {
-    onMutate: () => {
-      signOut();
-    },
+    onMutate: () => signOut(),
   });
 
   return (

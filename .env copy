@@ -4,7 +4,7 @@
 
 # Prisma
 
-DATABASE_URL=''
+DATABASE_URL='mysql://root:mauFJcuf5dhRMQrjj@localhost:3306/db'
 
 # Next Auth
 

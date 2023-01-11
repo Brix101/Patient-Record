@@ -17,7 +17,7 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
       role: Role.ADMIN,
       email: env.EMAIL_SECRET,
       password: await hashPassword({ password: env.TOKEN_SECRET }),
-      image: "user.svg",
+      image: "/user.svg",
     },
   });
 
