@@ -10,10 +10,8 @@ import { CivilStatus } from "@prisma/client";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import ReactDatePicker from "react-datepicker";
 import { ArrowLeft, Edit, Trash2 } from "react-feather";
-import { Controller, useForm } from "react-hook-form";
-import Select from "react-select";
+import { useForm } from "react-hook-form";
 import { patientsState, setPatientsMode } from "../patients/patientsSlice";
 
 const AdmitPatient: NextPage = () => {
@@ -37,7 +35,6 @@ const AdmitPatient: NextPage = () => {
       onSuccess: () => {
         clearErrors();
         setEditMode(false);
-        console.log("success");
       },
     }
   );

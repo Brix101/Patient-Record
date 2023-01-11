@@ -1,5 +1,6 @@
 import {
   admitPatientSchema,
+  getAllMedicalRecordSchema,
   getMedicalRecordSchema,
 } from "@/schema/medicalRecord.schema";
 import { RoomStatus } from "@prisma/client";
@@ -71,11 +72,11 @@ export const medicalRecordRouter = createProtectedRouter()
     },
   })
   .query("get-allRecords", {
-    input: getMedicalRecordSchema,
+    input: getAllMedicalRecordSchema,
     resolve: async ({ ctx, input }) => {
       const { patientId } = input;
       try {
-        const patientRecord = await ctx.prisma.medicalRecord.findMany({
+        const patientRecords = await ctx.prisma.medicalRecord.findMany({
           where: {
             patient: {
               id: patientId,
@@ -84,6 +85,38 @@ export const medicalRecordRouter = createProtectedRouter()
           include: {
             medicineRequest: true,
             patient: true,
+            physician: {
+              include: {
+                user: true,
+              },
+            },
+            room: true,
+          },
+        });
+
+        return patientRecords;
+      } catch (e) {
+        console.log(e);
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    },
+  })
+  .query("get-record", {
+    input: getMedicalRecordSchema,
+    resolve: async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const patientRecord = await ctx.prisma.medicalRecord.findUnique({
+          where: {
+            id: id,
+          },
+          include: {
+            medicineRequest: true,
+            patient: true,
+            appointments: true,
             physician: {
               include: {
                 user: true,

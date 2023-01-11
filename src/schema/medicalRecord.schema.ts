@@ -11,10 +11,18 @@ export const admitPatientSchema = z.object({
   chiefComplaint: z.string(),
 });
 
-export const getMedicalRecordSchema = z.object({
+export const getAllMedicalRecordSchema = z.object({
   patientId: z.number().optional(),
 });
 
+export const getMedicalRecordSchema = z.object({
+  id: z.number().optional(),
+});
+
 export type AdmitPatientInput = z.TypeOf<typeof admitPatientSchema>;
+
+export type GetAllMedicalRecordInput = z.TypeOf<
+  typeof getAllMedicalRecordSchema
+>;
 
 export type GetMedicalRecordInput = z.TypeOf<typeof getMedicalRecordSchema>;

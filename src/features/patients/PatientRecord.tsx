@@ -2,19 +2,25 @@ import { useAppSelector } from "@/app/hook";
 import { trpc } from "@/utils/trpc";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Eye } from "react-feather";
 import { patientsState } from "./patientsSlice";
 
 const PatientRecord: NextPage = () => {
   const router = useRouter();
-  const { patient } = useAppSelector(patientsState);
-  const { data, error } = trpc.useQuery([
+  const { patient, isEditPatient } = useAppSelector(patientsState);
+  const { data, error, refetch } = trpc.useQuery([
     "medicalRecord.get-allRecords",
     {
       patientId: patient?.id as number,
     },
   ]);
+
+  useEffect(() => {
+    if (!isEditPatient) {
+      refetch();
+    }
+  }, [isEditPatient]);
 
   const TableStyle = (x: number) => {
     if (x % 2) {
