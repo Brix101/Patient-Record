@@ -11,11 +11,18 @@ export const appointmentRouter = createProtectedRouter()
     async resolve({ ctx }) {
       if (ctx.session) {
         const email = ctx.session.user?.email;
+        const role = ctx.session.user?.role;
+        console.log(
+          "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+        );
+        console.log(role === "PHYSICIAN" ? email : "");
         const appointments = await ctx.prisma.appointment.findMany({
           where: {
             physician: {
               user: {
-                email: email as string,
+                email: {
+                  contains: role === "PHYSICIAN" ? email : "",
+                } as unknown as string,
               },
             },
           },

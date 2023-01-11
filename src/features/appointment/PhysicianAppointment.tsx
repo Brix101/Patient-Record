@@ -29,6 +29,8 @@ const Apointment: NextPage = () => {
     },
   });
 
+  console.log(data);
+
   return (
     <div className="w-full h-full">
       {data ? (
