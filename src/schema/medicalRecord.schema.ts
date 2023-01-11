@@ -2,13 +2,13 @@ import z from "zod";
 
 export const admitPatientSchema = z.object({
   patientId: z.number(),
-  height: z.string(),
-  weight: z.string(),
-  bloodPressure: z.string(),
+  height: z.string().nullish(),
+  weight: z.string().nullish(),
+  bloodPressure: z.string().nullish(),
   roomId: z.number(),
   physicianId: z.number(),
-  guardian: z.string(),
-  chiefComplaint: z.string(),
+  guardian: z.string().nullish(),
+  chiefComplaint: z.string().nullish(),
 });
 
 export const getAllMedicalRecordSchema = z.object({

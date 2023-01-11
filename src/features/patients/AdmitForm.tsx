@@ -103,21 +103,18 @@ const AdmitForm: NextPage = () => {
                   type="text"
                   placeHolder="Height"
                   register={register("height")}
-                  required
                 />
                 <GenericInput
                   label="Weight"
                   type="text"
                   placeHolder="Weight"
                   register={register("weight")}
-                  required
                 />
                 <GenericInput
                   label="Blood Pressure"
                   type="text"
                   placeHolder="Blood Pressure"
                   register={register("bloodPressure")}
-                  required
                 />
               </div>
 
