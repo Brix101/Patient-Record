@@ -1,16 +1,18 @@
 import z from "zod";
 
 export const createAppointmentSchema = z.object({
+  medicalRecordId: z.number(),
   physicianId: z.number(),
-  scheduleStart: z.date().optional(),
-  scheduleEdt: z.date().optional(),
+  start: z.date().nullish(),
+  end: z.date().nullish(),
 });
 
 export const updateAppointmentSchema = z.object({
   id: z.number(),
   physicianId: z.number(),
-  scheduleStart: z.date().optional(),
-  scheduleEdt: z.date().optional(),
+  cancelled: z.boolean(),
+  start: z.date().nullish(),
+  end: z.date().nullish(),
 });
 
 export const deleteAppointmentSchema = z.object({
@@ -18,7 +20,7 @@ export const deleteAppointmentSchema = z.object({
 });
 
 export const searchAppointmentSchema = z.object({
-  name: z.string().optional(),
+  physicianId: z.number().nullish(),
 });
 
 export type CreateAppointmentInput = z.TypeOf<typeof createAppointmentSchema>;

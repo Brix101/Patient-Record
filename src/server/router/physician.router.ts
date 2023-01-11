@@ -44,7 +44,16 @@ export const physiciansRouter = createProtectedRouter()
             include: {
               Physician: {
                 include: {
-                  Appointment: true,
+                  Appointment: {
+                    include: {
+                      MedicalRecord: {
+                        include: {
+                          room: true,
+                          patient: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },

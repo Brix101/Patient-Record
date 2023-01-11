@@ -3,7 +3,7 @@ import OutlinedButton from "@/components/buttons/OutlinedButton";
 import { Dialog, Tab, Transition } from "@headlessui/react";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { XSquare } from "react-feather";
 import { setEditMode, userState } from "./userSlice";
 
@@ -25,7 +25,7 @@ const UpdateUser: NextPage = () => {
   return (
     <>
       <Transition appear show={edit} as={Fragment}>
-        <Dialog as="div" className="relative" onClose={handleCloseModal}>
+        <Dialog as="div" className="relative z-50" onClose={handleCloseModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

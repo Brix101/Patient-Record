@@ -1,14 +1,13 @@
 import Main from "@/components/Layout/Main";
-import { trpc } from "@utils/trpc";
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 
+const PhysicianAppointment = dynamic(
+  () => import("@features/appointment/PhysicianAppointment")
+);
+
 const Home: NextPage = () => {
-  const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
-  const { data } = trpc.useQuery(["physician.get-physician"]);
-  if (data) {
-    console.log(data);
-  }
   return (
     <>
       <Head>
@@ -16,9 +15,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <Main>
-        <div className="pt-6 text-2xl text-blue-500 flex justify-center items-center w-full">
-          {hello.data ? <p>{hello.data.greeting} Doctor</p> : <p>Loading..</p>}
-        </div>
+        <PhysicianAppointment />
       </Main>
     </>
   );
