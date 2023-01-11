@@ -21,15 +21,12 @@ export const medicalRecordRouter = createProtectedRouter()
         roomId,
         weight,
       } = input;
-
-      const isAdmitted = true;
       try {
         const record = await ctx.prisma.patient.update({
           where: {
             id: patientId,
           },
           data: {
-            isAdmitted,
             medicalRecord: {
               create: {
                 bloodPressure,
@@ -37,29 +34,34 @@ export const medicalRecordRouter = createProtectedRouter()
                 guardian,
                 height,
                 weight,
-                physician: {
-                  connect: {
-                    id: physicianId,
-                  },
-                },
-                room: {
-                  connect: {
-                    id: roomId,
-                  },
-                },
+                physician: physicianId
+                  ? {
+                      connect: {
+                        id: physicianId,
+                      },
+                    }
+                  : undefined,
+                room: roomId
+                  ? {
+                      connect: {
+                        id: roomId,
+                      },
+                    }
+                  : undefined,
               },
             },
           },
         });
-
-        await ctx.prisma.room.update({
-          where: {
-            id: roomId,
-          },
-          data: {
-            status: RoomStatus["OCCUPIED" as keyof typeof RoomStatus],
-          },
-        });
+        if (roomId) {
+          await ctx.prisma.room.update({
+            where: {
+              id: roomId as number,
+            },
+            data: {
+              status: RoomStatus["OCCUPIED" as keyof typeof RoomStatus],
+            },
+          });
+        }
 
         return record;
       } catch (e) {
@@ -92,6 +94,9 @@ export const medicalRecordRouter = createProtectedRouter()
             },
             room: true,
           },
+          orderBy: {
+            createAt: "desc",
+          },
         });
 
         return patientRecords;
@@ -116,7 +121,15 @@ export const medicalRecordRouter = createProtectedRouter()
           include: {
             medicineRequest: true,
             patient: true,
-            appointments: true,
+            appointments: {
+              include: {
+                physician: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
             physician: {
               include: {
                 user: true,

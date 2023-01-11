@@ -17,10 +17,9 @@ const PatientRecord: NextPage = () => {
   ]);
 
   useEffect(() => {
-    if (!isEditPatient) {
-      refetch();
-    }
-  }, [isEditPatient]);
+    refetch();
+    console.log("reload");
+  }, [isEditPatient, refetch]);
 
   const TableStyle = (x: number) => {
     if (x % 2) {

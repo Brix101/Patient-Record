@@ -1,18 +1,20 @@
 import { UpdateAppointmentInput } from "@/schema/appointment.schema";
-import { Dialog } from "@mui/material";
-import { Appointment } from "@prisma/client";
+import { Dialog, DialogContent } from "@mui/material";
+import { Appointment, AppointmentStatus } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import moment from "moment";
 import type { NextPage } from "next";
 import { useState } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
 
 const localizer = momentLocalizer(moment);
 
 const Apointment: NextPage = () => {
-  const { handleSubmit, register, reset } = useForm<UpdateAppointmentInput>();
+  const { handleSubmit, control, register, reset } =
+    useForm<UpdateAppointmentInput>();
 
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>();
@@ -20,6 +22,7 @@ const Apointment: NextPage = () => {
   const { data } = trpc.useQuery(["appointment.get-appointments"], {
     select(data) {
       return data?.map((appointment) => {
+        console.log(appointment);
         return {
           ...appointment,
           title:
@@ -29,6 +32,15 @@ const Apointment: NextPage = () => {
         };
       });
     },
+  });
+
+  const appointmentStatus = (
+    Object.keys(AppointmentStatus) as (keyof typeof AppointmentStatus)[]
+  ).map((enumKey) => {
+    return {
+      label: AppointmentStatus[enumKey].toLowerCase(),
+      value: AppointmentStatus[enumKey],
+    };
   });
 
   return (
@@ -80,21 +92,44 @@ const Apointment: NextPage = () => {
           },
         }}
       >
-        <div className="h-auto bg-white max-w-lg">
-          {/* Todo change to form for auto update and edit */}
-          <input
-            className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
-            {...register("start")}
-          />
-          <input
-            className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
-            {...register("end")}
-          />
-          <input
-            className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
-            {...register("status")}
-          />
-        </div>
+        <DialogContent>
+          {selectedAppointment ? (
+            <div className="h-[50vh] w-full bg-white max-w-lg pt-5 p-20 overflow-hidden">
+              {/* Todo change to form for auto update and edit */}
+              <input
+                className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                {...register("start")}
+              />
+              <input
+                className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                {...register("end")}
+              />
+              <input
+                className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                {...register("status")}
+              />
+              <div>
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Status
+                </label>
+                <Controller
+                  control={control}
+                  defaultValue={selectedAppointment.status}
+                  name="status"
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      className="capitalize"
+                      classNamePrefix="addl-class"
+                      options={appointmentStatus}
+                      value={appointmentStatus.find((c) => c.value === value)}
+                      onChange={(gender) => onChange(gender?.value)}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          ) : null}
+        </DialogContent>
       </Dialog>
     </div>
   );

@@ -15,7 +15,7 @@ const Patient: NextPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { patient } = router.query;
-  const { data, isLoading } = trpc.useQuery(
+  const { isLoading } = trpc.useQuery(
     [
       "patient.get-patient",
       {

@@ -216,7 +216,7 @@ const AdmitForm: NextPage = () => {
                 disabled={!isDirty}
                 isLoading={isLoading}
               >
-                Admit Patient
+                Add Record
               </PrimaryButton>
               <OutlinedButton
                 type="button"

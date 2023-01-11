@@ -6,10 +6,9 @@ import SuspenseComponent from "@/components/SuspenseComponent";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { DollarSign, Edit, FileText, Trash2, X } from "react-feather";
+import { DollarSign, Edit, FileText, Trash2 } from "react-feather";
 import AdmitForm from "./AdmitForm";
 import PatientForm from "./PatientForm";
 import PatientRecord from "./PatientRecord";
@@ -78,32 +77,13 @@ const PatientData: NextPage = () => {
                   <Edit size={24} />
                 </PrimaryButton>
               )}
-              {!isAdmitPatient && !isEditPatient && (
-                <>
-                  {patient?.isAdmitted ? (
-                    <SecondaryButton
-                      className="w-11"
-                      tooltip="Bill or Discharge Patient"
-                      onClick={() =>
-                        router.push({
-                          pathname: "billing/[patient]",
-                          query: { patient: patient.id },
-                        })
-                      }
-                    >
-                      <DollarSign size={24} />
-                    </SecondaryButton>
-                  ) : (
-                    <SecondaryButton
-                      className="w-11"
-                      tooltip="Admit Patient"
-                      onClick={() => dispatch(togglePatientAdmit())}
-                    >
-                      <FileText size={24} />
-                    </SecondaryButton>
-                  )}
-                </>
-              )}
+              <SecondaryButton
+                className="w-11"
+                tooltip="Add Patient Record"
+                onClick={() => dispatch(togglePatientAdmit())}
+              >
+                <FileText size={24} />
+              </SecondaryButton>
             </SuspenseComponent>
           </div>
         </div>

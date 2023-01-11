@@ -5,8 +5,8 @@ export const admitPatientSchema = z.object({
   height: z.string().nullish(),
   weight: z.string().nullish(),
   bloodPressure: z.string().nullish(),
-  roomId: z.number(),
-  physicianId: z.number(),
+  roomId: z.number().nullish(),
+  physicianId: z.number().nullish(),
   guardian: z.string().nullish(),
   chiefComplaint: z.string().nullish(),
 });

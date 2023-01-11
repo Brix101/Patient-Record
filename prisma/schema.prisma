@@ -93,7 +93,7 @@ model MedicalRecord {
   bloodPressure   String?
   chiefComplaint  String?
   guardian        String?
-  status          MedicalStatus     @default(Admitted)
+  status          MedicalStatus?
   admittedAt      DateTime          @default(now())
   discharedAt     DateTime?
   createAt        DateTime          @default(now())
@@ -103,14 +103,14 @@ model MedicalRecord {
   medicineRequest MedicineRequest[]
   appointments    Appointment[]
 
-  room   Room @relation(fields: [roomId], references: [id])
-  roomId Int
+  room   Room? @relation(fields: [roomId], references: [id])
+  roomId Int?
 
-  patient   Patient @relation(fields: [patientId], references: [id])
+  patient   Patient? @relation(fields: [patientId], references: [id])
   patientId Int
 
-  physician   Physician @relation(fields: [physicianId], references: [id])
-  physicianId Int
+  physician   Physician? @relation(fields: [physicianId], references: [id])
+  physicianId Int?
 }
 
 model Appointment {
