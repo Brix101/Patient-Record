@@ -50,10 +50,10 @@ function Admin({ children }: { children?: React.ReactNode }) {
                     <Clipboard size={20} />
                     <a>Patient</a>
                   </SideBarButton>
-                  <SideBarButton href={"/admin/medicine"}>
+                  {/* <SideBarButton href={"/admin/medicine"}>
                     <Package size={20} />
                     <a>Medicines</a>
-                  </SideBarButton>
+                  </SideBarButton> */}
                   <SideBarButton href={"/admin/users"}>
                     <Users size={20} />
                     <a>Users</a>
