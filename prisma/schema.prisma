@@ -8,7 +8,7 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 
-  referentialIntegrity = "foreignKeys"
+  referentialIntegrity = "prisma"
 }
 
 model Example {
