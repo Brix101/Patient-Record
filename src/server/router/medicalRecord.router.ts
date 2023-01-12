@@ -89,7 +89,7 @@ export const medicalRecordRouter = createProtectedRouter()
             },
           },
           include: {
-            medicineRequest: true,
+            medicine: true,
             patient: true,
             physician: {
               include: {
@@ -124,7 +124,7 @@ export const medicalRecordRouter = createProtectedRouter()
             id: id,
           },
           include: {
-            medicineRequest: true,
+            medicine: true,
             patient: true,
             appointments: {
               include: {

@@ -5,36 +5,37 @@ import {
   updateMedicineSchema,
 } from "@/schema/medicine.schema";
 import { Prisma, Role } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 
 export const mediceneRouter = createProtectedRouter()
-  .mutation("create-medicine", {
+  .mutation("add-medicine", {
     input: createMedicineSchema,
     resolve: async ({ input, ctx }) => {
-      const { name, price, quantity, unit } = input;
+      const { name, price, quantity, medicalRecordId } = input;
       try {
-        const medicine = await ctx.prisma.medicine.create({
+        const medicalRecord = await ctx.prisma.medicalRecord.update({
+          where: {
+            id: medicalRecordId,
+          },
           data: {
-            name,
-            price: new Prisma.Decimal(price),
-            quantity,
-            unit,
+            medicine: {
+              create: {
+                name,
+                price,
+                quantity,
+                total: new Prisma.Decimal(price * quantity),
+              },
+            },
+          },
+          include: {
+            medicine: true,
           },
         });
 
-        return medicine;
+        return medicalRecord;
       } catch (e) {
         console.log(e);
-        if (e instanceof PrismaClientKnownRequestError) {
-          if (e.code === "P2002") {
-            throw new trpc.TRPCError({
-              code: "CONFLICT",
-              message: "Medicine already exists",
-            });
-          }
-        }
         throw new trpc.TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Something went wrong",
@@ -48,12 +49,6 @@ export const mediceneRouter = createProtectedRouter()
       const { name } = input;
       if (ctx.session) {
         const medicines = await ctx.prisma.medicine.findMany({
-          where: {
-            name: { contains: name ? name : "" },
-            NOT: {
-              active: false,
-            },
-          },
           orderBy: {
             name: "asc",
           },
@@ -69,7 +64,7 @@ export const mediceneRouter = createProtectedRouter()
   .mutation("update-medicine", {
     input: updateMedicineSchema,
     resolve: async ({ input, ctx }) => {
-      const { id, name, price, quantity, unit } = input;
+      const { id, name, price, quantity } = input;
 
       try {
         const medicine = await ctx.prisma.medicine.update({
@@ -80,7 +75,7 @@ export const mediceneRouter = createProtectedRouter()
             name,
             price: new Prisma.Decimal(price),
             quantity,
-            unit,
+            total: new Prisma.Decimal(price * quantity),
           },
         });
         return medicine;
@@ -98,15 +93,12 @@ export const mediceneRouter = createProtectedRouter()
       const { role } = ctx.session.user;
 
       if (role === Role.ADMIN) {
-        const deletedMedicine = await ctx.prisma.medicine.update({
+        const deletedMedicine = await ctx.prisma.medicine.delete({
           where: {
             id: input.id,
           },
-          data: {
-            active: false,
-          },
         });
-        return { detail: "Medicine Deleted", deletedMedicine };
+        return deletedMedicine;
       }
 
       throw new trpc.TRPCError({

@@ -1,18 +1,16 @@
-import { Unit } from "@prisma/client";
 import z from "zod";
 
 export const createMedicineSchema = z.object({
   name: z.string(),
   quantity: z.number(),
-  unit: z.nativeEnum(Unit),
   price: z.number(),
+  medicalRecordId: z.number(),
 });
 
 export const updateMedicineSchema = z.object({
   id: z.number(),
   name: z.string(),
   quantity: z.number(),
-  unit: z.nativeEnum(Unit),
   price: z.number(),
 });
 

@@ -32,9 +32,8 @@ model User {
   updateAt  DateTime   @updatedAt
   Physician Physician?
 
-  addedPatient    Patient[]
-  userLogs        UserLogs[]
-  medicineRequest MedicineRequest[]
+  addedPatient Patient[]
+  userLogs     UserLogs[]
 }
 
 model Physician {
@@ -89,22 +88,22 @@ model Patient {
 }
 
 model MedicalRecord {
-  id              Int               @id @default(autoincrement())
-  weight          String?
-  height          String?
-  bloodPressure   String?
-  chiefComplaint  String?
-  guardian        String?
-  status          MedicalStatus?
-  admittedAt      DateTime          @default(now())
-  discharedAt     DateTime?
-  createAt        DateTime          @default(now())
-  updateAt        DateTime          @updatedAt
-  active          Boolean           @default(true)
-  result          MedicalResult?
-  receipt         Receipt?
-  medicineRequest MedicineRequest[]
-  appointments    Appointment[]
+  id             Int            @id @default(autoincrement())
+  weight         String?
+  height         String?
+  bloodPressure  String?
+  chiefComplaint String?
+  guardian       String?
+  status         MedicalStatus?
+  admittedAt     DateTime       @default(now())
+  discharedAt    DateTime?
+  createAt       DateTime       @default(now())
+  updateAt       DateTime       @updatedAt
+  active         Boolean        @default(true)
+  result         MedicalResult?
+  receipt        Receipt?
+  medicine       Medicine[]
+  appointments   Appointment[]
 
   room   Room? @relation(fields: [roomId], references: [id])
   roomId Int?
@@ -112,8 +111,9 @@ model MedicalRecord {
   patient   Patient? @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId Int
 
-  physician   Physician? @relation(fields: [physicianId], references: [id])
-  physicianId Int?
+  physician       Physician?        @relation(fields: [physicianId], references: [id])
+  physicianId     Int?
+  MedicineRequest MedicineRequest[]
 
   @@index([roomId])
   @@index([patientId])
@@ -150,19 +150,13 @@ model Appointment {
 model MedicineRequest {
   id            Int               @id @default(autoincrement())
   quantity      Int?
-  requestStatus MedicineReqStatus @default(Pending)
+  requestStatus MedicineReqStatus @default(Delivered)
   active        Boolean           @default(true)
 
-  medicine      Medicine?      @relation(fields: [medicineId], references: [id])
-  requestedBy   User           @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
   MedicalRecord MedicalRecord? @relation(fields: [medicalRecordId], references: [id])
 
-  medicineId      Int
-  userId          Int
   medicalRecordId Int
 
-  @@index([medicineId])
-  @@index([userId])
   @@index([medicalRecordId])
 }
 
@@ -170,11 +164,11 @@ model Medicine {
   id       Int      @id @default(autoincrement())
   name     String?
   quantity Int?
-  unit     Unit
   price    Decimal? @db.Decimal(10, 2)
-  active   Boolean  @default(true)
+  total    Decimal? @db.Decimal(10, 2)
 
-  MedicineRequest MedicineRequest[]
+  MedicalRecord   MedicalRecord? @relation(fields: [medicalRecordId], references: [id])
+  medicalRecordId Int?
 }
 
 model UserLogs {
