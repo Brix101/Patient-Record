@@ -287,10 +287,12 @@ function PatientAppointments({
                       {appointment.physician.user.lastName}
                     </td>
                     <td className="py-4 px-6">
-                      {moment(appointment?.start).format("MMM d, YYYY hh:mm A")}
+                      {moment(appointment?.start).format(
+                        "MMM DD, YYYY hh:mm A"
+                      )}
                     </td>
                     <td className="py-4 px-6">
-                      {moment(appointment?.end).format("MMM d, YYYY hh:mm A")}
+                      {moment(appointment?.end).format("MMM DD, YYYY hh:mm A")}
                     </td>
                     <td className="py-4 px-6">{appointment.status}</td>
                     <td className="py-4 px-6 flex gap-5">
@@ -350,7 +352,7 @@ function PatientAppointments({
                       render={({ field: { onChange, value } }) => (
                         <Select
                           className="capitalize"
-                          classNamePrefix="addl-class"
+                          classNamePrefix="aDDl-class"
                           options={physicians}
                           value={physicians?.find((c) => c.value === value)}
                           onChange={(physicians) => onChange(physicians?.value)}

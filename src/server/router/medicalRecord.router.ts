@@ -1,8 +1,10 @@
+import { updateAppointmentSchema } from "@/schema/appointment.schema";
 import {
   admitPatientSchema,
   deleteMedicalRecordSchema,
   getAllMedicalRecordSchema,
   getMedicalRecordSchema,
+  updateMedicalRecordSchema,
 } from "@/schema/medicalRecord.schema";
 import { RoomStatus } from "@prisma/client";
 import { createProtectedRouter } from "@server/router/context";
@@ -176,6 +178,57 @@ export const medicalRecordRouter = createProtectedRouter()
             },
           });
         }
+
+        return patientRecord;
+      } catch (e) {
+        console.log(e);
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    },
+  })
+  .mutation("delete-record", {
+    input: updateMedicalRecordSchema,
+    resolve: async ({ ctx, input }) => {
+      const {
+        id,
+        bloodPressure,
+        chiefComplaint,
+        guardian,
+        height,
+        physicianId,
+        roomId,
+        weight,
+      } = input;
+      try {
+        const patientRecord = await ctx.prisma.medicalRecord.update({
+          where: {
+            id: id,
+          },
+          data: {
+            bloodPressure,
+            chiefComplaint,
+            guardian,
+            height,
+            weight,
+            physician: physicianId
+              ? {
+                  connect: {
+                    id: physicianId,
+                  },
+                }
+              : undefined,
+            room: roomId
+              ? {
+                  connect: {
+                    id: roomId,
+                  },
+                }
+              : undefined,
+          },
+        });
 
         return patientRecord;
       } catch (e) {
