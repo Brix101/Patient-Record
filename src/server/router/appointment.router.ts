@@ -109,10 +109,9 @@ export const appointmentRouter = createProtectedRouter()
             },
           },
           include: {
-            MedicalRecord: {
+            physician: {
               include: {
-                room: true,
-                patient: true,
+                user: true,
               },
             },
           },

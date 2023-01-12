@@ -3,7 +3,6 @@ import { trpc } from "@/utils/trpc";
 import {
   MedicalRecord,
   Medicine,
-  MedicineRequest,
   Patient,
   Physician,
   Receipt,

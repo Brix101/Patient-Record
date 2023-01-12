@@ -24,10 +24,7 @@ const Apointment: NextPage = () => {
       return data?.map((appointment) => {
         return {
           ...appointment,
-          title:
-            "Session on " +
-            `floor: ${appointment.MedicalRecord?.room?.floor} ,
-           room: ${appointment.MedicalRecord?.room?.roomNo} `,
+          title: "Appointment " + appointment.id,
         };
       });
     },

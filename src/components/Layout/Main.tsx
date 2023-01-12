@@ -42,7 +42,29 @@ function Main({ children }: { children?: React.ReactNode }) {
               <div
                 className="hidden w-full md:block md:w-auto"
                 id="navbar-default"
-              ></div>
+              >
+                <ul className="flex flex-row gap-5">
+                  {data && data.user?.role === Role.NURSE && (
+                    <>
+                      <li>
+                        <NavigationButton href="/nurse">
+                          Patients
+                        </NavigationButton>
+                      </li>
+                      <li>
+                        <NavigationButton href="/nurse/appointment">
+                          Appointments
+                        </NavigationButton>
+                      </li>
+                      <li>
+                        <NavigationButton href="/nurse/room">
+                          Rooms
+                        </NavigationButton>
+                      </li>
+                    </>
+                  )}
+                </ul>
+              </div>
               <ProfileButton />
             </div>
           </header>

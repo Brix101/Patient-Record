@@ -3,7 +3,10 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
 import Main from "@/components/Layout/Main";
-import { CreateAppointmentInput } from "@/schema/appointment.schema";
+import {
+  CreateAppointmentInput,
+  UpdateAppointmentInput,
+} from "@/schema/appointment.schema";
 import {
   CreateMedicineInput,
   UpdateMedicineInput,
@@ -13,7 +16,13 @@ import { Dialog, TextField } from "@mui/material";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Appointment, Medicine, Physician, User } from "@prisma/client";
+import {
+  Appointment,
+  AppointmentStatus,
+  Medicine,
+  Physician,
+  User,
+} from "@prisma/client";
 import moment, { Moment } from "moment";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -110,6 +119,13 @@ function PatientAppointments({
     formState: { isDirty: isCreateDirty },
   } = useForm<CreateAppointmentInput>();
 
+  const {
+    handleSubmit: handleUpdateSubmit,
+    reset: resetUpdate,
+    control: controlUpdate,
+    formState: { isDirty: isUpdateDirty },
+  } = useForm<UpdateAppointmentInput>();
+
   const [PatientAppointments, setPatientAppointment] = useState<
     | (Appointment & {
         physician: Physician & {
@@ -131,6 +147,15 @@ function PatientAppointments({
     };
   });
 
+  const appointmentStatus = (
+    Object.keys(AppointmentStatus) as (keyof typeof AppointmentStatus)[]
+  ).map((enumKey) => {
+    return {
+      label: AppointmentStatus[enumKey].toLowerCase(),
+      value: AppointmentStatus[enumKey],
+    };
+  });
+
   const { mutate: createMutate, isLoading: isCreateLoading } = trpc.useMutation(
     "appointment.create-appointment",
     {
@@ -142,12 +167,30 @@ function PatientAppointments({
     }
   );
 
+  const { mutate: updateMutate, isLoading: isUpdateLoading } = trpc.useMutation(
+    "appointment.update-appointment",
+    {
+      onSuccess: (data) => {
+        setPatientAppointment((prev) =>
+          prev?.map((item) => {
+            if (item.id === data.id) {
+              return data;
+            }
+            return item;
+          })
+        );
+        resetUpdate();
+        setUpdate(false);
+      },
+    }
+  );
+
   const { mutate: deleteMutate } = trpc.useMutation(
     "appointment.delete-appointment",
     {
       onMutate: (variables) => {
         setPatientAppointment((prev) =>
-          prev?.filter((items) => items.id !== variables.id)
+          prev?.filter((item) => item.id !== variables.id)
         );
       },
     }
@@ -160,14 +203,20 @@ function PatientAppointments({
   }, [appointments]);
 
   function onCreateSubmit(values: CreateAppointmentInput) {
-    const start = values.start as unknown as Moment;
-    const end = values.end as unknown as Moment;
+    const start = values.start as unknown as Moment | undefined;
+    const end = values.end as unknown as Moment | undefined;
 
     createMutate({
       ...values,
-      start: start.toDate(),
-      end: end.toDate(),
+      start: start ? start?.toDate() : new Date(),
+      end: end ? end?.toDate() : new Date(),
       medicalRecordId: parseInt(record as unknown as string),
+    });
+  }
+
+  function onUpdateSubmit(values: UpdateAppointmentInput) {
+    updateMutate({
+      ...values,
     });
   }
 
@@ -204,6 +253,9 @@ function PatientAppointments({
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="py-3 px-6">
+                Appointment Id
+              </th>
+              <th scope="col" className="py-3 px-6">
                 Physician
               </th>
               <th scope="col" className="py-3 px-6">
@@ -229,8 +281,12 @@ function PatientAppointments({
                       scope="row"
                       className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
                     >
-                      {appointment.physician.user.firstName}
+                      Appointment {appointment.id}
                     </th>
+                    <td className="py-4 px-6">
+                      {appointment.physician.user.firstName}{" "}
+                      {appointment.physician.user.lastName}
+                    </td>
                     <td className="py-4 px-6">
                       {moment(appointment?.start).format("MMM d, YYYY hh:mm A")}
                     </td>
@@ -241,15 +297,16 @@ function PatientAppointments({
                     <td className="py-4 px-6 flex gap-5">
                       <span
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                        // onClick={() => {
-                        //   updateReset({
-                        //     id: medicine.id,
-                        //     name: medicine.name as string,
-                        //     price: medicine.price as unknown as number,
-                        //     quantity: medicine.quantity as number,
-                        //   });
-                        //   setUpdate(true);
-                        // }}
+                        onClick={() => {
+                          resetUpdate({
+                            id: appointment.id,
+                            end: appointment.end as Date,
+                            physicianId: appointment.physicianId,
+                            start: appointment.start as Date,
+                            status: appointment.status,
+                          });
+                          setUpdate(true);
+                        }}
                       >
                         <Edit size={20} />
                       </span>
@@ -365,6 +422,128 @@ function PatientAppointments({
                 </PrimaryButton>
 
                 <OutlinedButton type="button" onClick={() => setCreate(false)}>
+                  Cancel
+                </OutlinedButton>
+              </div>
+            </div>
+          </form>
+        </div>
+      </Dialog>
+      <Dialog open={update} onClose={() => setUpdate(false)} maxWidth="md">
+        <div className="w-[900px] h-screen">
+          <div className="w-full h-auto flex justify-end p-10">
+            <div className="w-fit">
+              <OutlinedButton>
+                <XSquare size={24} />
+              </OutlinedButton>
+            </div>
+          </div>
+          <form
+            className="flex-1 flex flex-col items-center mt-5 mb-20"
+            onSubmit={handleUpdateSubmit(onUpdateSubmit)}
+          >
+            <div className="flex flex-col w-full max-w-md">
+              <div className="col-span-1 space-y-3">
+                <div className="flex flex-col justify-between">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Physician
+                  </label>
+                  <Controller
+                    control={controlUpdate}
+                    name="physicianId"
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        className="capitalize"
+                        classNamePrefix="addl-class"
+                        options={physicians}
+                        value={physicians?.find((c) => c.value === value)}
+                        onChange={(physicians) => onChange(physicians?.value)}
+                        placeholder="Physician"
+                        isSearchable
+                      />
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col justify-between">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Schedule Start
+                  </label>
+                  <Controller
+                    control={controlUpdate}
+                    name="start"
+                    render={({ field: { onChange, value } }) => (
+                      <DateTimePicker
+                        renderInput={(props) => (
+                          <TextField
+                            size="small"
+                            {...props}
+                            sx={{ width: "100%" }}
+                          />
+                        )}
+                        value={value ? value : new Date()}
+                        onChange={(newValue) => {
+                          onChange(newValue ?? new Date());
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col justify-between">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Schedule End
+                  </label>
+                  <Controller
+                    control={controlUpdate}
+                    name="end"
+                    render={({ field: { onChange, value } }) => (
+                      <DateTimePicker
+                        renderInput={(props) => (
+                          <TextField
+                            size="small"
+                            {...props}
+                            sx={{ width: "100%" }}
+                          />
+                        )}
+                        value={value ? value : new Date()}
+                        onChange={(newValue) => {
+                          onChange(newValue ?? new Date());
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col justify-between">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Status
+                  </label>
+                  <Controller
+                    control={controlUpdate}
+                    name="status"
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        className="capitalize"
+                        classNamePrefix="addl-class"
+                        options={appointmentStatus}
+                        value={appointmentStatus.find((c) => c.value === value)}
+                        onChange={(status) => onChange(status?.value)}
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="w-full max-w-md my-5 flex justify-end">
+              <div className="py-3 text-right flex gap-2 justify-end">
+                <PrimaryButton
+                  className="w-full min-w-[150px]"
+                  isLoading={isUpdateLoading}
+                  disabled={!isUpdateDirty}
+                  type="submit"
+                >
+                  Update
+                </PrimaryButton>
+
+                <OutlinedButton type="button" onClick={() => setUpdate(false)}>
                   Cancel
                 </OutlinedButton>
               </div>
