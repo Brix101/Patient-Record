@@ -6,13 +6,13 @@ export interface PatientsState {
   mode: "View" | "Edit" | "Add";
   patient?: Patient;
   isEditPatient?: boolean;
-  isAdmitPatient?: boolean;
+  isAddPatientRecord?: boolean;
 }
 
 const initialState: PatientsState = {
   mode: "View",
   isEditPatient: false,
-  isAdmitPatient: false,
+  isAddPatientRecord: false,
 };
 
 export const patientsSlice = createSlice({
@@ -31,7 +31,7 @@ export const patientsSlice = createSlice({
       state.isEditPatient = !state.isEditPatient;
     },
     togglePatientAdmit: (state) => {
-      state.isAdmitPatient = !state.isAdmitPatient;
+      state.isAddPatientRecord = !state.isAddPatientRecord;
     },
     setPatientData: (state, action: PayloadAction<Patient>) => {
       state.patient = action.payload;

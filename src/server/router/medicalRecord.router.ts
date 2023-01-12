@@ -161,6 +161,17 @@ export const medicalRecordRouter = createProtectedRouter()
           },
         });
 
+        if (patientRecord) {
+          await ctx.prisma.room.update({
+            where: {
+              id: patientRecord.roomId as number,
+            },
+            data: {
+              status: RoomStatus["VACANT" as keyof typeof RoomStatus],
+            },
+          });
+        }
+
         return patientRecord;
       } catch (e) {
         console.log(e);

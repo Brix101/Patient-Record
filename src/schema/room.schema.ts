@@ -12,11 +12,11 @@ export const createRoomSchema = z.object({
 
 export const updateRoomSchema = z.object({
   id: z.number(),
-  roomNo: z.string(),
+  roomNo: z.string().nullish(),
   category: z.nativeEnum(RoomCat),
-  station: z.string(),
+  station: z.string().nullish(),
   status: z.nativeEnum(RoomStatus),
-  floor: z.string(),
+  floor: z.string().nullish(),
   price: z.number(),
 });
 

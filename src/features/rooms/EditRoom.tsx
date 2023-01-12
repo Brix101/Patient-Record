@@ -7,7 +7,7 @@ import { trpc } from "@/utils/trpc";
 import { ErrorMessage } from "@hookform/error-message";
 import { RoomCat, RoomStatus } from "@prisma/client";
 import { NextPage } from "next";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { XSquare } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
@@ -29,7 +29,6 @@ const EditRoom: NextPage = () => {
     {
       onSuccess: () => {
         clearErrors();
-        console.log("success");
         dispatch(setRoomsMode({ mode: "View" }));
       },
     }
@@ -37,13 +36,14 @@ const EditRoom: NextPage = () => {
 
   useEffect(() => {
     if (room) {
+      console.log(room);
       reset({
         id: room.id,
         category: room.category,
-        floor: room.floor as string,
+        floor: room.floor,
         price: room.price as unknown as number,
-        roomNo: room.roomNo as string,
-        station: room.station as string,
+        roomNo: room.roomNo,
+        station: room.station,
         status: room.status,
       });
     }
@@ -67,8 +67,8 @@ const EditRoom: NextPage = () => {
     mutate({ ...values });
   }
   return (
-    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
-      <div className=" w-full h-full">
+    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen w-full">
+      <div className=" w-full h-fit">
         <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold text-gray-900">Edit Room Info</h1>
@@ -99,9 +99,10 @@ const EditRoom: NextPage = () => {
           </div>
         )}
       </div>
+
       {room && (
         <form
-          className="flex-1 flex flex-col items-center mt-5 mb-20"
+          className="flex-1 flex flex-col items-center mt-20 h-full w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col w-full max-w-md">

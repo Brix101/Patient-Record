@@ -8,7 +8,7 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { DollarSign, Edit, FileText, Trash2 } from "react-feather";
+import { Edit, FilePlus, Trash2 } from "react-feather";
 import AdmitForm from "./AdmitForm";
 import PatientForm from "./PatientForm";
 import PatientRecord from "./PatientRecord";
@@ -24,7 +24,7 @@ const PatientData: NextPage = () => {
   const dispatch = useAppDispatch();
   const { data: sessionData } = useSession();
   const [isActive, setIsActive] = useState<boolean>(false);
-  const { patient, isEditPatient, isAdmitPatient } =
+  const { patient, isEditPatient, isAddPatientRecord } =
     useAppSelector(patientsState);
 
   const { mutate: deleteMutation } = trpc.useMutation(
@@ -52,9 +52,9 @@ const PatientData: NextPage = () => {
         <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold text-gray-400">
-              {isAdmitPatient && "Admit Patient"}
+              {isAddPatientRecord && "Add Patient Record"}
               {isEditPatient && "Update Patient Information"}
-              {!isAdmitPatient && !isEditPatient && "Patient Information"}
+              {!isAddPatientRecord && !isEditPatient && "Patient Information"}
             </h1>
           </div>
           <div className="flex flex-row gap-5">
@@ -68,7 +68,7 @@ const PatientData: NextPage = () => {
                   <Trash2 className="group-hover:text-red-600" size={24} />
                 </OutlinedButton>
               ) : null}
-              {!isEditPatient && !isAdmitPatient && (
+              {!isEditPatient && !isAddPatientRecord && (
                 <PrimaryButton
                   className="w-11"
                   tooltip="Update Patient"
@@ -82,12 +82,12 @@ const PatientData: NextPage = () => {
                 tooltip="Add Patient Record"
                 onClick={() => dispatch(togglePatientAdmit())}
               >
-                <FileText size={24} />
+                <FilePlus size={24} />
               </SecondaryButton>
             </SuspenseComponent>
           </div>
         </div>
-        {isAdmitPatient ? <AdmitForm /> : <PatientForm />}
+        {isAddPatientRecord ? <AdmitForm /> : <PatientForm />}
       </div>
       {!isEditPatient ? (
         <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen mb-20">

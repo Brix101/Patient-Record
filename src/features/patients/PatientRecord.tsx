@@ -11,7 +11,7 @@ import {
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Suspense, useEffect, useState } from "react";
-import { File, Trash2 } from "react-feather";
+import { FileText, Trash2 } from "react-feather";
 import { patientsState } from "./patientsSlice";
 
 const PatientRecord: NextPage = () => {
@@ -142,7 +142,7 @@ const PatientRecord: NextPage = () => {
                         })
                       }
                     >
-                      <File className="text-green-600 hover:text-green-700" />
+                      <FileText className="text-green-600 hover:text-green-700" />
                     </button>
                     <button onClick={() => deleteDialog({ record: rec })}>
                       <Trash2 className="text-red-600 hover:text-red-700" />

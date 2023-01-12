@@ -8,7 +8,7 @@ import { SearchRoomInput } from "@/schema/room.schema";
 import { Room } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
-import React, { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Edit, PlusSquare, Trash2 } from "react-feather";
 import { setRoomsMode } from "./roomsSlice";
 
@@ -65,7 +65,7 @@ const ViewRoom: NextPage = () => {
     }
   };
   return (
-    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
+    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen w-full">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">Rooms</h1>

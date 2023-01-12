@@ -8,7 +8,6 @@ import { ErrorMessage } from "@hookform/error-message";
 import { RoomCat, RoomStatus } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
-import React from "react";
 import { ArrowLeft } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
@@ -54,7 +53,7 @@ const AddRoom: NextPage = () => {
     mutate({ ...values });
   }
   return (
-    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
+    <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen w-full">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">Add Room</h1>
