@@ -3,21 +3,26 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
 import Main from "@/components/Layout/Main";
-import SuspenseComponent from "@/components/SuspenseComponent";
+import { CreateAppointmentInput } from "@/schema/appointment.schema";
 import {
   CreateMedicineInput,
   UpdateMedicineInput,
 } from "@/schema/medicine.schema";
 import { trpc } from "@/utils/trpc";
-import { Dialog } from "@mui/material";
+import { Dialog, TextField } from "@mui/material";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Appointment, Medicine, Physician, User } from "@prisma/client";
+import moment, { Moment } from "moment";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Suspense, useEffect, useState } from "react";
 import { ArrowLeft, Edit, Plus, Trash2, XSquare } from "react-feather";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
 
 const PatientForm = dynamic(() => import("@features/patients/PatientForm"), {
   ssr: false,
@@ -42,7 +47,7 @@ const Patient: NextPage = () => {
   );
 
   if (data) {
-    console.log(data);
+    // console.log(data);
   }
   return (
     <>
@@ -77,6 +82,13 @@ const Patient: NextPage = () => {
   );
 };
 
+const TableStyle = (x: number) => {
+  if (x % 2) {
+    return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
+  }
+  return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
+};
+
 function PatientAppointments({
   appointments,
 }: {
@@ -86,9 +98,95 @@ function PatientAppointments({
     };
   })[];
 }) {
+  const router = useRouter();
+  const { record } = router.query;
   const [create, setCreate] = useState<boolean>(false);
+  const [update, setUpdate] = useState<boolean>(false);
+
+  const {
+    handleSubmit: handleCreateSubmit,
+    reset: resetCreate,
+    control: controlCreate,
+    formState: { isDirty: isCreateDirty },
+  } = useForm<CreateAppointmentInput>();
+
+  const [PatientAppointments, setPatientAppointment] = useState<
+    | (Appointment & {
+        physician: Physician & {
+          user: User;
+        };
+      })[]
+    | undefined
+  >();
+
+  const { data: physiciansData } = trpc.useQuery([
+    "physician.all-physicians",
+    { name: "" },
+  ]);
+
+  const physicians = physiciansData?.map(({ id, user }) => {
+    return {
+      label: user.lastName + " " + user.firstName,
+      value: id,
+    };
+  });
+
+  const { mutate: createMutate, isLoading: isCreateLoading } = trpc.useMutation(
+    "appointment.create-appointment",
+    {
+      onSuccess: ({ MedicalRecord }) => {
+        setPatientAppointment(MedicalRecord?.appointments);
+        resetCreate();
+        setCreate(false);
+      },
+    }
+  );
+
+  const { mutate: deleteMutate } = trpc.useMutation(
+    "appointment.delete-appointment",
+    {
+      onMutate: (variables) => {
+        setPatientAppointment((prev) =>
+          prev?.filter((items) => items.id !== variables.id)
+        );
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (appointments) {
+      setPatientAppointment(appointments);
+    }
+  }, [appointments]);
+
+  function onCreateSubmit(values: CreateAppointmentInput) {
+    const start = values.start as unknown as Moment;
+    const end = values.end as unknown as Moment;
+
+    createMutate({
+      ...values,
+      start: start.toDate(),
+      end: end.toDate(),
+      medicalRecordId: parseInt(record as unknown as string),
+    });
+  }
+
+  const deleteDialog = ({
+    appointment,
+  }: {
+    appointment: Appointment & {
+      physician: Physician & {
+        user: User;
+      };
+    };
+  }) => {
+    if (window.confirm("Are you sure to Delete this Appointment Data?")) {
+      deleteMutate({ ...appointment });
+    }
+  };
+
   return (
-    <>
+    <LocalizationProvider dateAdapter={AdapterMoment}>
       <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
         <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
           <div className="flex items-center">
@@ -102,6 +200,73 @@ function PatientAppointments({
             </SecondaryButton>
           </div>
         </div>
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="py-3 px-6">
+                Physician
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Schedule Start
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Schedule End
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Status
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <Suspense>
+            <tbody>
+              {PatientAppointments?.map((appointment, i) => {
+                return (
+                  <tr key={i} className={`${TableStyle(i)}`}>
+                    <th
+                      scope="row"
+                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                    >
+                      {appointment.physician.user.firstName}
+                    </th>
+                    <td className="py-4 px-6">
+                      {moment(appointment?.start).format("MMM d, YYYY hh:mm A")}
+                    </td>
+                    <td className="py-4 px-6">
+                      {moment(appointment?.end).format("MMM d, YYYY hh:mm A")}
+                    </td>
+                    <td className="py-4 px-6">{appointment.status}</td>
+                    <td className="py-4 px-6 flex gap-5">
+                      <span
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                        // onClick={() => {
+                        //   updateReset({
+                        //     id: medicine.id,
+                        //     name: medicine.name as string,
+                        //     price: medicine.price as unknown as number,
+                        //     quantity: medicine.quantity as number,
+                        //   });
+                        //   setUpdate(true);
+                        // }}
+                      >
+                        <Edit size={20} />
+                      </span>
+                      <span
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                        onClick={() => deleteDialog({ appointment })}
+                      >
+                        <Trash2 size={20} />
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+              {!PatientAppointments ? <>No Medicines Data</> : null}
+            </tbody>
+          </Suspense>
+        </table>
       </div>
       <Dialog open={create} onClose={() => setCreate(false)} maxWidth="md">
         <div className="w-[900px] h-screen">
@@ -112,9 +277,102 @@ function PatientAppointments({
               </OutlinedButton>
             </div>
           </div>
+          <form
+            className="flex-1 flex flex-col items-center mt-5 mb-20"
+            onSubmit={handleCreateSubmit(onCreateSubmit)}
+          >
+            <div className="flex flex-col w-full max-w-md">
+              <div className="col-span-1 space-y-3">
+                <div className="flex flex-col justify-between">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Physician
+                  </label>
+                  <Controller
+                    control={controlCreate}
+                    name="physicianId"
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        className="capitalize"
+                        classNamePrefix="addl-class"
+                        options={physicians}
+                        value={physicians?.find((c) => c.value === value)}
+                        onChange={(physicians) => onChange(physicians?.value)}
+                        placeholder="Physician"
+                        isSearchable
+                      />
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col justify-between">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Schedule Start
+                  </label>
+                  <Controller
+                    control={controlCreate}
+                    name="start"
+                    render={({ field: { onChange, value } }) => (
+                      <DateTimePicker
+                        renderInput={(props) => (
+                          <TextField
+                            size="small"
+                            {...props}
+                            sx={{ width: "100%" }}
+                          />
+                        )}
+                        value={value ? value : new Date()}
+                        onChange={(newValue) => {
+                          onChange(newValue ?? new Date());
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col justify-between">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Schedule End
+                  </label>
+                  <Controller
+                    control={controlCreate}
+                    name="end"
+                    render={({ field: { onChange, value } }) => (
+                      <DateTimePicker
+                        renderInput={(props) => (
+                          <TextField
+                            size="small"
+                            {...props}
+                            sx={{ width: "100%" }}
+                          />
+                        )}
+                        value={value ? value : new Date()}
+                        onChange={(newValue) => {
+                          onChange(newValue ?? new Date());
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="w-full max-w-md my-5 flex justify-end">
+              <div className="py-3 text-right flex gap-2 justify-end">
+                <PrimaryButton
+                  className="w-full min-w-[150px]"
+                  isLoading={isCreateLoading}
+                  disabled={!isCreateDirty}
+                  type="submit"
+                >
+                  Add
+                </PrimaryButton>
+
+                <OutlinedButton type="button" onClick={() => setCreate(false)}>
+                  Cancel
+                </OutlinedButton>
+              </div>
+            </div>
+          </form>
         </div>
       </Dialog>
-    </>
+    </LocalizationProvider>
   );
 }
 
@@ -199,13 +457,6 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
       ...values,
     });
   }
-
-  const TableStyle = (x: number) => {
-    if (x % 2) {
-      return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
-    }
-    return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
-  };
 
   const deleteDialog = ({ medicine }: { medicine: Medicine }) => {
     if (window.confirm("Are you sure to Delete this Medicine Data?")) {

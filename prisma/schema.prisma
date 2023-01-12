@@ -229,7 +229,6 @@ enum Role {
   ADMIN
   NURSE
   PHYSICIAN
-  PHARMACIST
 }
 
 enum RoomCat {

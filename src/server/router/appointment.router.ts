@@ -43,6 +43,8 @@ export const appointmentRouter = createProtectedRouter()
     input: createAppointmentSchema,
     async resolve({ ctx, input }) {
       const { medicalRecordId, end, start, physicianId } = input;
+
+      console.log(input);
       try {
         const appointment = await ctx.prisma.appointment.create({
           data: {
@@ -64,6 +66,15 @@ export const appointmentRouter = createProtectedRouter()
               include: {
                 room: true,
                 patient: true,
+                appointments: {
+                  include: {
+                    physician: {
+                      include: {
+                        user: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },

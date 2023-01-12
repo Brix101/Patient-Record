@@ -2,6 +2,7 @@ import { useAppSelector } from "@/app/hook";
 import { trpc } from "@/utils/trpc";
 import {
   MedicalRecord,
+  Medicine,
   MedicineRequest,
   Patient,
   Physician,
@@ -26,9 +27,9 @@ const PatientRecord: NextPage = () => {
             user: User;
           })
         | null;
-      medicineRequest: MedicineRequest[];
       room: Room | null;
       patient: Patient | null;
+      medicine: Medicine[];
     })[]
   >();
 
@@ -76,9 +77,9 @@ const PatientRecord: NextPage = () => {
             user: User;
           })
         | null;
-      medicineRequest: MedicineRequest[];
       room: Room | null;
       patient: Patient | null;
+      medicine: Medicine[];
     };
   }) => {
     if (window.confirm("Are you sure to Delete this Record")) {
