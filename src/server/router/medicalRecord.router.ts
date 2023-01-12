@@ -97,6 +97,7 @@ export const medicalRecordRouter = createProtectedRouter()
               },
             },
             room: true,
+            receipt: true,
           },
           orderBy: {
             createAt: "desc",
@@ -140,6 +141,7 @@ export const medicalRecordRouter = createProtectedRouter()
               },
             },
             room: true,
+            receipt: true,
           },
         });
 

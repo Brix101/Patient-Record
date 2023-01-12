@@ -36,13 +36,13 @@ const AdmitForm: NextPage = () => {
     {
       onSuccess: (data) => {
         const record = data.medicalRecord[data.medicalRecord.length - 1];
-        dispatch(togglePatientAdmit());
         if (record) {
           router.push({
             pathname: "record/[record]",
             query: { record: record?.id },
           });
         }
+        dispatch(togglePatientAdmit());
       },
     }
   );

@@ -5,6 +5,7 @@ import {
   MedicineRequest,
   Patient,
   Physician,
+  Receipt,
   Room,
   User,
 } from "@prisma/client";
@@ -19,12 +20,13 @@ const PatientRecord: NextPage = () => {
   const { patient, isEditPatient } = useAppSelector(patientsState);
   const [record, setRecord] = useState<
     (MedicalRecord & {
-      medicineRequest: MedicineRequest[];
+      receipt: Receipt | null;
       physician:
         | (Physician & {
             user: User;
           })
         | null;
+      medicineRequest: MedicineRequest[];
       room: Room | null;
       patient: Patient | null;
     })[]
@@ -68,12 +70,13 @@ const PatientRecord: NextPage = () => {
     record,
   }: {
     record: MedicalRecord & {
-      medicineRequest: MedicineRequest[];
+      receipt: Receipt | null;
       physician:
         | (Physician & {
             user: User;
           })
         | null;
+      medicineRequest: MedicineRequest[];
       room: Room | null;
       patient: Patient | null;
     };
@@ -144,9 +147,11 @@ const PatientRecord: NextPage = () => {
                     >
                       <FileText className="text-green-600 hover:text-green-700" />
                     </button>
-                    <button onClick={() => deleteDialog({ record: rec })}>
-                      <Trash2 className="text-red-600 hover:text-red-700" />
-                    </button>
+                    {rec.receipt ? null : (
+                      <button onClick={() => deleteDialog({ record: rec })}>
+                        <Trash2 className="text-red-600 hover:text-red-700" />
+                      </button>
+                    )}
                   </td>
                 </tr>
               );

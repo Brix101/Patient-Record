@@ -92,7 +92,7 @@ const PatientData: NextPage = () => {
         </div>
         {isAddPatientRecord ? <AdmitForm /> : <PatientForm />}
       </div>
-      {!isEditPatient ? (
+      {!isEditPatient && !isAddPatientRecord ? (
         <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen mb-20">
           <PatientRecord />
         </div>
