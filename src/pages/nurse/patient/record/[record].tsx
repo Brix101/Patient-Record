@@ -37,6 +37,13 @@ const PatientForm = dynamic(() => import("@features/patients/PatientForm"), {
   ssr: false,
 });
 
+const TableStyle = (x: number) => {
+  if (x % 2) {
+    return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
+  }
+  return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
+};
+
 const Patient: NextPage = () => {
   const router = useRouter();
   const { record } = router.query;
@@ -89,13 +96,6 @@ const Patient: NextPage = () => {
       </Main>
     </>
   );
-};
-
-const TableStyle = (x: number) => {
-  if (x % 2) {
-    return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
-  }
-  return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
 };
 
 function PatientAppointments({
@@ -203,13 +203,10 @@ function PatientAppointments({
   }, [appointments]);
 
   function onCreateSubmit(values: CreateAppointmentInput) {
-    const start = values.start as unknown as Moment | undefined;
-    const end = values.end as unknown as Moment | undefined;
-
     createMutate({
       ...values,
-      start: start ? start?.toDate() : new Date(),
-      end: end ? end?.toDate() : new Date(),
+      start: moment(values.start).toDate(),
+      end: moment(values.end).toDate(),
       medicalRecordId: parseInt(record as unknown as string),
     });
   }
@@ -217,6 +214,8 @@ function PatientAppointments({
   function onUpdateSubmit(values: UpdateAppointmentInput) {
     updateMutate({
       ...values,
+      start: moment(values.start).toDate(),
+      end: moment(values.end).toDate(),
     });
   }
 
@@ -235,7 +234,7 @@ function PatientAppointments({
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment}>
+    <>
       <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
         <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
           <div className="flex items-center">
@@ -327,9 +326,9 @@ function PatientAppointments({
       </div>
       <Dialog open={create} onClose={() => setCreate(false)} maxWidth="md">
         <div className="w-[900px] h-screen">
-          <div className="w-full h-auto flex justify-end p-10">
+          <div className="w-full h-auto flex justify-end p-5">
             <div className="w-fit">
-              <OutlinedButton>
+              <OutlinedButton onClick={() => setCreate(false)}>
                 <XSquare size={24} />
               </OutlinedButton>
             </div>
@@ -338,78 +337,80 @@ function PatientAppointments({
             className="flex-1 flex flex-col items-center mt-5 mb-20"
             onSubmit={handleCreateSubmit(onCreateSubmit)}
           >
-            <div className="flex flex-col w-full max-w-md">
-              <div className="col-span-1 space-y-3">
-                <div className="flex flex-col justify-between">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Physician
-                  </label>
-                  <Controller
-                    control={controlCreate}
-                    name="physicianId"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={physicians}
-                        value={physicians?.find((c) => c.value === value)}
-                        onChange={(physicians) => onChange(physicians?.value)}
-                        placeholder="Physician"
-                        isSearchable
-                      />
-                    )}
-                  />
-                </div>
-                <div className="flex flex-col justify-between">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Schedule Start
-                  </label>
-                  <Controller
-                    control={controlCreate}
-                    name="start"
-                    render={({ field: { onChange, value } }) => (
-                      <DateTimePicker
-                        renderInput={(props) => (
-                          <TextField
-                            size="small"
-                            {...props}
-                            sx={{ width: "100%" }}
-                          />
-                        )}
-                        value={value ? value : new Date()}
-                        onChange={(newValue) => {
-                          onChange(newValue ?? new Date());
-                        }}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="flex flex-col justify-between">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Schedule End
-                  </label>
-                  <Controller
-                    control={controlCreate}
-                    name="end"
-                    render={({ field: { onChange, value } }) => (
-                      <DateTimePicker
-                        renderInput={(props) => (
-                          <TextField
-                            size="small"
-                            {...props}
-                            sx={{ width: "100%" }}
-                          />
-                        )}
-                        value={value ? value : new Date()}
-                        onChange={(newValue) => {
-                          onChange(newValue ?? new Date());
-                        }}
-                      />
-                    )}
-                  />
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <div className="flex flex-col w-full max-w-md">
+                <div className="col-span-1 space-y-3">
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Physician
+                    </label>
+                    <Controller
+                      control={controlCreate}
+                      name="physicianId"
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          className="capitalize"
+                          classNamePrefix="addl-class"
+                          options={physicians}
+                          value={physicians?.find((c) => c.value === value)}
+                          onChange={(physicians) => onChange(physicians?.value)}
+                          placeholder="Physician"
+                          isSearchable
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Schedule Start
+                    </label>
+                    <Controller
+                      control={controlCreate}
+                      name="start"
+                      render={({ field: { onChange, value } }) => (
+                        <DateTimePicker
+                          renderInput={(props) => (
+                            <TextField
+                              size="small"
+                              {...props}
+                              sx={{ width: "100%" }}
+                            />
+                          )}
+                          value={value ? value : new Date()}
+                          onChange={(newValue) => {
+                            onChange(newValue ?? new Date());
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Schedule End
+                    </label>
+                    <Controller
+                      control={controlCreate}
+                      name="end"
+                      render={({ field: { onChange, value } }) => (
+                        <DateTimePicker
+                          renderInput={(props) => (
+                            <TextField
+                              size="small"
+                              {...props}
+                              sx={{ width: "100%" }}
+                            />
+                          )}
+                          value={value ? value : new Date()}
+                          onChange={(newValue) => {
+                            onChange(newValue ?? new Date());
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            </LocalizationProvider>
             <div className="w-full max-w-md my-5 flex justify-end">
               <div className="py-3 text-right flex gap-2 justify-end">
                 <PrimaryButton
@@ -431,9 +432,9 @@ function PatientAppointments({
       </Dialog>
       <Dialog open={update} onClose={() => setUpdate(false)} maxWidth="md">
         <div className="w-[900px] h-screen">
-          <div className="w-full h-auto flex justify-end p-10">
+          <div className="w-full h-auto flex justify-end p-5">
             <div className="w-fit">
-              <OutlinedButton>
+              <OutlinedButton onClick={() => setUpdate(false)}>
                 <XSquare size={24} />
               </OutlinedButton>
             </div>
@@ -442,96 +443,101 @@ function PatientAppointments({
             className="flex-1 flex flex-col items-center mt-5 mb-20"
             onSubmit={handleUpdateSubmit(onUpdateSubmit)}
           >
-            <div className="flex flex-col w-full max-w-md">
-              <div className="col-span-1 space-y-3">
-                <div className="flex flex-col justify-between">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Physician
-                  </label>
-                  <Controller
-                    control={controlUpdate}
-                    name="physicianId"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={physicians}
-                        value={physicians?.find((c) => c.value === value)}
-                        onChange={(physicians) => onChange(physicians?.value)}
-                        placeholder="Physician"
-                        isSearchable
-                      />
-                    )}
-                  />
-                </div>
-                <div className="flex flex-col justify-between">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Schedule Start
-                  </label>
-                  <Controller
-                    control={controlUpdate}
-                    name="start"
-                    render={({ field: { onChange, value } }) => (
-                      <DateTimePicker
-                        renderInput={(props) => (
-                          <TextField
-                            size="small"
-                            {...props}
-                            sx={{ width: "100%" }}
-                          />
-                        )}
-                        value={value ? value : new Date()}
-                        onChange={(newValue) => {
-                          onChange(newValue ?? new Date());
-                        }}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="flex flex-col justify-between">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Schedule End
-                  </label>
-                  <Controller
-                    control={controlUpdate}
-                    name="end"
-                    render={({ field: { onChange, value } }) => (
-                      <DateTimePicker
-                        renderInput={(props) => (
-                          <TextField
-                            size="small"
-                            {...props}
-                            sx={{ width: "100%" }}
-                          />
-                        )}
-                        value={value ? value : new Date()}
-                        onChange={(newValue) => {
-                          onChange(newValue ?? new Date());
-                        }}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="flex flex-col justify-between">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Status
-                  </label>
-                  <Controller
-                    control={controlUpdate}
-                    name="status"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        className="capitalize"
-                        classNamePrefix="addl-class"
-                        options={appointmentStatus}
-                        value={appointmentStatus.find((c) => c.value === value)}
-                        onChange={(status) => onChange(status?.value)}
-                      />
-                    )}
-                  />
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <div className="flex flex-col w-full max-w-md">
+                <div className="col-span-1 space-y-3">
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Physician
+                    </label>
+                    <Controller
+                      control={controlUpdate}
+                      name="physicianId"
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          className="capitalize"
+                          classNamePrefix="addl-class"
+                          options={physicians}
+                          value={physicians?.find((c) => c.value === value)}
+                          onChange={(physicians) => onChange(physicians?.value)}
+                          placeholder="Physician"
+                          isSearchable
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Schedule Start
+                    </label>
+                    <Controller
+                      control={controlUpdate}
+                      name="start"
+                      render={({ field: { onChange, value } }) => (
+                        <DateTimePicker
+                          renderInput={(props) => (
+                            <TextField
+                              size="small"
+                              {...props}
+                              sx={{ width: "100%" }}
+                            />
+                          )}
+                          value={value ? value : new Date()}
+                          onChange={(newValue) => {
+                            console.log(newValue);
+                            onChange(newValue ?? new Date());
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Schedule End
+                    </label>
+                    <Controller
+                      control={controlUpdate}
+                      name="end"
+                      render={({ field: { onChange, value } }) => (
+                        <DateTimePicker
+                          renderInput={(props) => (
+                            <TextField
+                              size="small"
+                              {...props}
+                              sx={{ width: "100%" }}
+                            />
+                          )}
+                          value={value ? value : new Date()}
+                          onChange={(newValue) => {
+                            onChange(newValue ?? new Date());
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Status
+                    </label>
+                    <Controller
+                      control={controlUpdate}
+                      name="status"
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          className="capitalize"
+                          classNamePrefix="addl-class"
+                          options={appointmentStatus}
+                          value={appointmentStatus.find(
+                            (c) => c.value === value
+                          )}
+                          onChange={(status) => onChange(status?.value)}
+                        />
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            </LocalizationProvider>
             <div className="w-full max-w-md my-5 flex justify-end">
               <div className="py-3 text-right flex gap-2 justify-end">
                 <PrimaryButton
@@ -551,7 +557,7 @@ function PatientAppointments({
           </form>
         </div>
       </Dialog>
-    </LocalizationProvider>
+    </>
   );
 }
 
@@ -724,9 +730,9 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
       </div>
       <Dialog open={create} onClose={() => setCreate(false)} maxWidth="md">
         <div className="w-[900px] h-screen">
-          <div className="w-full h-auto flex justify-end p-10">
+          <div className="w-full h-auto flex justify-end p-5">
             <div className="w-fit">
-              <OutlinedButton>
+              <OutlinedButton onClick={() => setCreate(false)}>
                 <XSquare size={24} />
               </OutlinedButton>
             </div>
@@ -790,9 +796,9 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
       </Dialog>
       <Dialog open={update} onClose={() => setUpdate(false)} maxWidth="md">
         <div className="w-[900px] h-screen">
-          <div className="w-full h-auto flex justify-end p-10">
+          <div className="w-full h-auto flex justify-end p-5">
             <div className="w-fit">
-              <OutlinedButton>
+              <OutlinedButton onClick={() => setUpdate(false)}>
                 <XSquare size={24} />
               </OutlinedButton>
             </div>
