@@ -17,8 +17,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Suspense, useEffect, useState } from "react";
 import { ArrowLeft, Edit, Plus, Trash2, XSquare } from "react-feather";
-import { Controller, useForm } from "react-hook-form";
-import Select from "react-select";
+import { useForm } from "react-hook-form";
 
 const PatientForm = dynamic(() => import("@features/patients/PatientForm"), {
   ssr: false,
