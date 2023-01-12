@@ -13,7 +13,6 @@ export const admitPatientSchema = z.object({
 
 export const updateMedicalRecordSchema = z.object({
   id: z.number(),
-  patientId: z.number(),
   height: z.string().nullish(),
   weight: z.string().nullish(),
   bloodPressure: z.string().nullish(),

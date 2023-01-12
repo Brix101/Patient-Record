@@ -1,4 +1,3 @@
-import { updateAppointmentSchema } from "@/schema/appointment.schema";
 import {
   admitPatientSchema,
   deleteMedicalRecordSchema,
@@ -189,7 +188,7 @@ export const medicalRecordRouter = createProtectedRouter()
       }
     },
   })
-  .mutation("delete-record", {
+  .mutation("update-record", {
     input: updateMedicalRecordSchema,
     resolve: async ({ ctx, input }) => {
       const {

@@ -7,6 +7,7 @@ import {
   CreateAppointmentInput,
   UpdateAppointmentInput,
 } from "@/schema/appointment.schema";
+import { UpdateMedicalRecordInput } from "@/schema/medicalRecord.schema";
 import {
   CreateMedicineInput,
   UpdateMedicineInput,
@@ -21,6 +22,7 @@ import {
   AppointmentStatus,
   Medicine,
   Physician,
+  RoomCat,
   User,
 } from "@prisma/client";
 import moment, { Moment } from "moment";
@@ -29,7 +31,15 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Suspense, useEffect, useState } from "react";
-import { ArrowLeft, Edit, Plus, Trash2, XSquare } from "react-feather";
+import {
+  ArrowLeft,
+  DollarSign,
+  Edit,
+  Edit2,
+  Plus,
+  Trash2,
+  XSquare,
+} from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 
@@ -47,7 +57,19 @@ const TableStyle = (x: number) => {
 const Patient: NextPage = () => {
   const router = useRouter();
   const { record } = router.query;
-  const { data, isLoading } = trpc.useQuery(
+  const [selectedCat, setSelectedCat] = useState<RoomCat>("WARD");
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { isDirty },
+    resetField,
+    reset,
+  } = useForm<UpdateMedicalRecordInput>();
+
+  const { data } = trpc.useQuery(
     [
       "medicalRecord.get-record",
       {
@@ -56,14 +78,64 @@ const Patient: NextPage = () => {
     ],
     {
       onSuccess(res) {
-        if (res) {
-        }
+        reset({
+          id: res?.id,
+          bloodPressure: res?.bloodPressure,
+          chiefComplaint: res?.chiefComplaint,
+          guardian: res?.guardian,
+          height: res?.height,
+          physicianId: res?.physicianId,
+          roomId: res?.roomId,
+          weight: res?.weight,
+        });
       },
     }
   );
 
-  if (data) {
-    // console.log(data);
+  const { mutate, isLoading } = trpc.useMutation(
+    ["medicalRecord.update-record"],
+    {
+      onSuccess: () => {
+        setIsEdit(false);
+      },
+    }
+  );
+
+  const { data: roomData } = trpc.useQuery([
+    "room.get-available-rooms",
+    { searchInput: "", category: selectedCat },
+  ]);
+
+  const { data: physiciansData } = trpc.useQuery([
+    "physician.all-physicians",
+    { name: "" },
+  ]);
+
+  const physicians = physiciansData?.map(({ id, user }) => {
+    return {
+      label: user.lastName + " " + user.firstName,
+      value: id,
+    };
+  });
+
+  const roomCategory = (Object.keys(RoomCat) as (keyof typeof RoomCat)[]).map(
+    (enumKey) => {
+      return {
+        label: RoomCat[enumKey].toLowerCase(),
+        value: RoomCat[enumKey],
+      };
+    }
+  );
+
+  const rooms = roomData?.map((room) => {
+    return {
+      label: "floor: " + room.floor + " / room no: " + room.roomNo,
+      value: room,
+    };
+  });
+
+  function onSubmit(values: UpdateMedicalRecordInput) {
+    mutate({ ...values });
   }
   return (
     <>
@@ -80,18 +152,188 @@ const Patient: NextPage = () => {
                   Patient Record
                 </h1>
               </div>
-              <div>
-                <SecondaryButton onClick={() => router.back()}>
-                  <ArrowLeft size={24} />
-                </SecondaryButton>
+              {!isEdit ? (
+                <div className="space-x-5 flex">
+                  <div>
+                    <OutlinedButton onClick={() => router.back()}>
+                      <ArrowLeft size={24} />
+                    </OutlinedButton>
+                  </div>
+                  {!data?.receipt ? (
+                    <>
+                      <PrimaryButton onClick={() => setIsEdit(true)}>
+                        <Edit2 size={24} />
+                      </PrimaryButton>
+                      <SecondaryButton onClick={() => router.back()}>
+                        <DollarSign size={24} />
+                      </SecondaryButton>
+                    </>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+            <div className="w-full h-auto relative">
+              {isEdit ? null : (
+                <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
+              )}
+              <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
+                <form className="max-w-9xl" onSubmit={handleSubmit(onSubmit)}>
+                  <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
+                    {data?.patient?.lastName +
+                      ", " +
+                      data?.patient?.firstName +
+                      " " +
+                      data?.patient?.middleName}
+                  </h1>
+                  <div className="flex flex-col">
+                    <div className="col-span-1 space-y-3">
+                      <div className="grid grid-cols-3 gap-3">
+                        <GenericInput
+                          label="Height"
+                          type="text"
+                          placeHolder="Height"
+                          register={register("height")}
+                        />
+                        <GenericInput
+                          label="Weight"
+                          type="text"
+                          placeHolder="Weight"
+                          register={register("weight")}
+                        />
+                        <GenericInput
+                          label="Blood Pressure"
+                          type="text"
+                          placeHolder="Blood Pressure"
+                          register={register("bloodPressure")}
+                        />
+                      </div>
+
+                      <Controller
+                        control={control}
+                        name="roomId"
+                        render={({ field: { onChange, value } }) => (
+                          <div className="grid grid-cols-2 gap-2 items-end">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                Room Type
+                              </label>
+                              <Select
+                                className="capitalize"
+                                classNamePrefix="addl-class"
+                                placeholder="Room Catergory..."
+                                options={roomCategory}
+                                value={roomCategory?.find(
+                                  (cat) => cat.value === selectedCat
+                                )}
+                                onChange={(e) => {
+                                  resetField("roomId");
+                                  onChange(undefined);
+                                  setSelectedCat(e?.value as RoomCat);
+                                }}
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                Room
+                              </label>
+                              <Select
+                                className="capitalize"
+                                classNamePrefix="addl-class"
+                                options={rooms}
+                                value={rooms?.find(
+                                  (c) =>
+                                    c.value.id === value &&
+                                    c.value.category === selectedCat
+                                )}
+                                onChange={(room) => {
+                                  if (room) {
+                                    onChange(room?.value.id);
+                                    setSelectedCat(
+                                      room?.value.category as RoomCat
+                                    );
+                                  } else {
+                                    setSelectedCat("WARD");
+                                    onChange(undefined);
+                                  }
+                                }}
+                                placeholder="Room"
+                                isClearable
+                              />
+                            </div>
+                          </div>
+                        )}
+                      />
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col justify-between">
+                          <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Physician
+                          </label>
+                          <Controller
+                            control={control}
+                            name="physicianId"
+                            render={({ field: { onChange, value } }) => (
+                              <Select
+                                className="capitalize"
+                                classNamePrefix="addl-class"
+                                options={physicians}
+                                value={physicians?.find(
+                                  (c) => c.value === value
+                                )}
+                                onChange={(physicians) =>
+                                  onChange(physicians?.value)
+                                }
+                                placeholder="Physician"
+                                isSearchable
+                              />
+                            )}
+                          />
+                        </div>
+                        <GenericInput
+                          label="Guardian"
+                          type="text"
+                          placeHolder="Mobile"
+                          register={register("guardian")}
+                        />
+                      </div>
+
+                      <GenericInput
+                        label="Chief Complaint"
+                        type="text"
+                        placeHolder="Address"
+                        register={register("chiefComplaint")}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full my-5 flex justify-end">
+                    {isEdit ? (
+                      <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
+                        <PrimaryButton
+                          className="w-full"
+                          type="submit"
+                          disabled={!isDirty}
+                          isLoading={isLoading}
+                        >
+                          Update
+                        </PrimaryButton>
+                        <OutlinedButton
+                          type="button"
+                          onClick={() => setIsEdit(false)}
+                        >
+                          Cancel
+                        </OutlinedButton>
+                      </div>
+                    ) : null}
+                  </div>
+                </form>
               </div>
             </div>
-            <div className="w-full h-auto">
-              <PatientForm />
-            </div>
           </div>
-          <PatientAppointments appointments={data?.appointments} />
-          <PatientMedicines medicines={data?.medicine} />
+          {!isEdit ? (
+            <>
+              <PatientAppointments appointments={data?.appointments} />
+              <PatientMedicines medicines={data?.medicine} />
+            </>
+          ) : null}
         </div>
       </Main>
     </>
