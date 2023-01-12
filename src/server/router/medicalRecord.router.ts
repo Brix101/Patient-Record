@@ -52,6 +52,9 @@ export const medicalRecordRouter = createProtectedRouter()
               },
             },
           },
+          include: {
+            medicalRecord: true,
+          },
         });
         if (roomId) {
           await ctx.prisma.room.update({
@@ -161,7 +164,7 @@ export const medicalRecordRouter = createProtectedRouter()
           },
         });
 
-        if (patientRecord) {
+        if (patientRecord.roomId) {
           await ctx.prisma.room.update({
             where: {
               id: patientRecord.roomId as number,

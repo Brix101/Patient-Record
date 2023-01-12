@@ -69,21 +69,24 @@ const PatientData: NextPage = () => {
                 </OutlinedButton>
               ) : null}
               {!isEditPatient && !isAddPatientRecord && (
-                <PrimaryButton
-                  className="w-11"
-                  tooltip="Update Patient"
-                  onClick={() => dispatch(togglePatientEditMode())}
-                >
-                  <Edit size={24} />
-                </PrimaryButton>
+                <>
+                  <PrimaryButton
+                    className="w-11"
+                    tooltip="Update Patient"
+                    onClick={() => dispatch(togglePatientEditMode())}
+                  >
+                    <Edit size={24} />
+                  </PrimaryButton>
+
+                  <SecondaryButton
+                    className="w-11"
+                    tooltip="Add Patient Record"
+                    onClick={() => dispatch(togglePatientAdmit())}
+                  >
+                    <FilePlus size={24} />
+                  </SecondaryButton>
+                </>
               )}
-              <SecondaryButton
-                className="w-11"
-                tooltip="Add Patient Record"
-                onClick={() => dispatch(togglePatientAdmit())}
-              >
-                <FilePlus size={24} />
-              </SecondaryButton>
             </SuspenseComponent>
           </div>
         </div>
