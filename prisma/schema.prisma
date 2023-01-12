@@ -102,6 +102,7 @@ model MedicalRecord {
   updateAt        DateTime          @updatedAt
   active          Boolean           @default(true)
   result          MedicalResult?
+  receipt         Receipt?
   medicineRequest MedicineRequest[]
   appointments    Appointment[]
 
@@ -117,6 +118,17 @@ model MedicalRecord {
   @@index([roomId])
   @@index([patientId])
   @@index([physicianId])
+}
+
+model Receipt {
+  id              Int            @id @default(autoincrement())
+  philHealdId     String?
+  total           Int?
+  medicalRecord   MedicalRecord? @relation(fields: [medicalRecordId], references: [id])
+  medicalRecordId Int?           @unique
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
 
 model Appointment {
