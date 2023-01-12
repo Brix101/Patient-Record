@@ -215,6 +215,12 @@ const AddUser: NextPage = () => {
                     label="Expertise"
                     register={register("expertise")}
                   />
+                  <PhysicianInput
+                    enable={isPhysician}
+                    placeHolder="Expertise"
+                    label="Expertise"
+                    register={register("sessionCharge")}
+                  />
                 </>
               ) : null}
             </div>

@@ -59,6 +59,7 @@ const Patient: NextPage = () => {
   const { record } = router.query;
   const [selectedCat, setSelectedCat] = useState<RoomCat>("WARD");
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isBilling, setIsBilling] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -164,7 +165,7 @@ const Patient: NextPage = () => {
                       <PrimaryButton onClick={() => setIsEdit(true)}>
                         <Edit2 size={24} />
                       </PrimaryButton>
-                      <SecondaryButton onClick={() => router.back()}>
+                      <SecondaryButton onClick={() => setIsBilling(true)}>
                         <DollarSign size={24} />
                       </SecondaryButton>
                     </>
@@ -334,6 +335,13 @@ const Patient: NextPage = () => {
               <PatientMedicines medicines={data?.medicine} />
             </>
           ) : null}
+          <Dialog
+            open={isBilling}
+            onClose={() => setIsBilling(false)}
+            maxWidth="md"
+          >
+            <div className="w-[900px] h-screen"></div>
+          </Dialog>
         </div>
       </Main>
     </>

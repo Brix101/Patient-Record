@@ -37,11 +37,12 @@ model User {
 }
 
 model Physician {
-  id            Int     @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   expertise     String?
   licenseNumber String?
-  userId        Int     @unique
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionCharge Decimal? @db.Decimal(10, 2)
+  userId        Int      @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   medicalRecord MedicalRecord[]
   Appointment   Appointment[]
@@ -123,7 +124,7 @@ model MedicalRecord {
 model Receipt {
   id              Int            @id @default(autoincrement())
   philHealdId     String?
-  total           Int?
+  total           Decimal?       @db.Decimal(10, 2)
   medicalRecord   MedicalRecord? @relation(fields: [medicalRecordId], references: [id])
   medicalRecordId Int?           @unique
 

@@ -1,6 +1,6 @@
 import { env } from "@/env/server.mjs";
 import { comparePassword, hashPassword } from "@/utils/bcryptHash";
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import {
   changePasswordSchema,
@@ -28,6 +28,7 @@ export const usersRouter = createProtectedRouter()
         mobile,
         expertise,
         licenseNumber,
+        sessionCharge,
       } = input;
 
       try {
@@ -49,6 +50,9 @@ export const usersRouter = createProtectedRouter()
                     create: {
                       expertise,
                       licenseNumber,
+                      sessionCharge: sessionCharge
+                        ? new Prisma.Decimal(sessionCharge)
+                        : undefined,
                     },
                   }
                 : undefined,
@@ -150,6 +154,7 @@ export const usersRouter = createProtectedRouter()
         mobile,
         expertise,
         licenseNumber,
+        sessionCharge,
       } = input;
 
       try {
@@ -173,6 +178,9 @@ export const usersRouter = createProtectedRouter()
                     update: {
                       expertise,
                       licenseNumber,
+                      sessionCharge: sessionCharge
+                        ? new Prisma.Decimal(sessionCharge)
+                        : undefined,
                     },
                   }
                 : undefined,
