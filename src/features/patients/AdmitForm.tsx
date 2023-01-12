@@ -6,6 +6,7 @@ import { AdmitPatientInput } from "@/schema/medicalRecord.schema";
 import { trpc } from "@/utils/trpc";
 import { RoomCat } from "@prisma/client";
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
@@ -13,6 +14,7 @@ import { patientsState, togglePatientAdmit } from "./patientsSlice";
 
 const AdmitForm: NextPage = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const [selectedCat, setSelectedCat] = useState<RoomCat>("WARD");
   const { patient } = useAppSelector(patientsState);
   const {
@@ -32,8 +34,12 @@ const AdmitForm: NextPage = () => {
   const { mutate, error, isLoading } = trpc.useMutation(
     ["medicalRecord.admit-patient"],
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         dispatch(togglePatientAdmit());
+        router.push({
+          pathname: "record/[record]",
+          query: { record: data.id },
+        });
       },
     }
   );

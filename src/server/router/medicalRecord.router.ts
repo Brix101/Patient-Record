@@ -1,5 +1,6 @@
 import {
   admitPatientSchema,
+  deleteMedicalRecordSchema,
   getAllMedicalRecordSchema,
   getMedicalRecordSchema,
 } from "@/schema/medicalRecord.schema";
@@ -136,6 +137,27 @@ export const medicalRecordRouter = createProtectedRouter()
               },
             },
             room: true,
+          },
+        });
+
+        return patientRecord;
+      } catch (e) {
+        console.log(e);
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    },
+  })
+  .mutation("delete-record", {
+    input: deleteMedicalRecordSchema,
+    resolve: async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const patientRecord = await ctx.prisma.medicalRecord.delete({
+          where: {
+            id: id,
           },
         });
 

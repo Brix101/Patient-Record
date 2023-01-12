@@ -19,6 +19,10 @@ export const getMedicalRecordSchema = z.object({
   id: z.number().optional(),
 });
 
+export const deleteMedicalRecordSchema = z.object({
+  id: z.number(),
+});
+
 export type AdmitPatientInput = z.TypeOf<typeof admitPatientSchema>;
 
 export type GetAllMedicalRecordInput = z.TypeOf<
@@ -26,3 +30,7 @@ export type GetAllMedicalRecordInput = z.TypeOf<
 >;
 
 export type GetMedicalRecordInput = z.TypeOf<typeof getMedicalRecordSchema>;
+
+export type DeleteMedicalRecordInput = z.TypeOf<
+  typeof deleteMedicalRecordSchema
+>;
