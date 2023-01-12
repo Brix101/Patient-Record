@@ -4,7 +4,10 @@ import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
 import Main from "@/components/Layout/Main";
 import SuspenseComponent from "@/components/SuspenseComponent";
-import { CreateMedicineInput } from "@/schema/medicine.schema";
+import {
+  CreateMedicineInput,
+  UpdateMedicineInput,
+} from "@/schema/medicine.schema";
 import { trpc } from "@/utils/trpc";
 import { Dialog } from "@mui/material";
 import { Appointment, Medicine, Physician, User } from "@prisma/client";
@@ -120,6 +123,7 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
   const router = useRouter();
   const { record } = router.query;
   const [create, setCreate] = useState<boolean>(false);
+  const [update, setUpdate] = useState<boolean>(false);
   const [patientMedicine, setPatientMedicine] = useState<
     Medicine[] | undefined
   >();
@@ -128,22 +132,55 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
     handleSubmit,
     register,
     reset,
-    control,
     formState: { isDirty },
   } = useForm<CreateMedicineInput>();
 
   const {
-    mutate: addMutate,
-    error: addError,
-    isLoading: isAddLoading,
-    isSuccess: isAddSuccess,
-  } = trpc.useMutation(["medicine.add-medicine"], {
-    onSuccess: ({ medicine }) => {
-      setPatientMedicine(medicine);
-      setCreate(false);
-      reset();
-    },
-  });
+    handleSubmit: handleUpdateSubmit,
+    register: updateRegister,
+    reset: updateReset,
+    formState: { isDirty: isUpdateDirty },
+  } = useForm<UpdateMedicineInput>();
+
+  const { mutate: addMutate, isLoading: isAddLoading } = trpc.useMutation(
+    ["medicine.add-medicine"],
+    {
+      onSuccess: ({ medicine }) => {
+        setPatientMedicine(medicine);
+        setCreate(false);
+        reset();
+      },
+    }
+  );
+
+  const { mutate: updateMutate, isLoading: isUpdateLoading } = trpc.useMutation(
+    ["medicine.update-medicine"],
+    {
+      onSuccess: (data) => {
+        setPatientMedicine((prev) =>
+          prev?.map((med) => {
+            if (med.id === data.id) {
+              return data;
+            }
+            return med;
+          })
+        );
+        setUpdate(false);
+        updateReset();
+      },
+    }
+  );
+
+  const { mutate: deleteMutate } = trpc.useMutation(
+    ["medicine.delete-medicine"],
+    {
+      onMutate: (variables) => {
+        setPatientMedicine((prev) =>
+          prev?.filter((items) => items.id !== variables.id)
+        );
+      },
+    }
+  );
 
   useEffect(() => {
     if (medicines) {
@@ -151,10 +188,16 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
     }
   }, [medicines]);
 
-  function onSubmit(values: CreateMedicineInput) {
+  function onAddSubmit(values: CreateMedicineInput) {
     addMutate({
       ...values,
       medicalRecordId: parseInt(record as unknown as string),
+    });
+  }
+
+  function onUpdateSubmit(values: UpdateMedicineInput) {
+    updateMutate({
+      ...values,
     });
   }
 
@@ -163,6 +206,12 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
       return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
     }
     return "bg-white border-b dark:bg-gray-900 dark:border-gray-700`";
+  };
+
+  const deleteDialog = ({ medicine }: { medicine: Medicine }) => {
+    if (window.confirm("Are you sure to Delete this Medicine Data?")) {
+      deleteMutate({ ...medicine });
+    }
   };
 
   return (
@@ -217,20 +266,21 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
                     <td className="py-4 px-6 flex gap-5">
                       <span
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                        // onClick={() =>
-                        //   dispatch(
-                        //     setMedicinesMode({
-                        //       mode: "Edit",
-                        //       medicine: medicine,
-                        //     })
-                        //   )
-                        // }
+                        onClick={() => {
+                          updateReset({
+                            id: medicine.id,
+                            name: medicine.name as string,
+                            price: medicine.price as unknown as number,
+                            quantity: medicine.quantity as number,
+                          });
+                          setUpdate(true);
+                        }}
                       >
                         <Edit size={20} />
                       </span>
                       <span
                         className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                        // onClick={() => deleteDialog({ medicine })}
+                        onClick={() => deleteDialog({ medicine })}
                       >
                         <Trash2 size={20} />
                       </span>
@@ -254,7 +304,7 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
           </div>
           <form
             className="flex-1 flex flex-col items-center mt-5 mb-20"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onAddSubmit)}
           >
             <div className="flex flex-col w-full max-w-md">
               <div className="col-span-1 space-y-3">
@@ -302,6 +352,72 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
                 </PrimaryButton>
 
                 <OutlinedButton type="button" onClick={() => setCreate(false)}>
+                  Cancel
+                </OutlinedButton>
+              </div>
+            </div>
+          </form>
+        </div>
+      </Dialog>
+      <Dialog open={update} onClose={() => setUpdate(false)} maxWidth="md">
+        <div className="w-[900px] h-screen">
+          <div className="w-full h-auto flex justify-end p-10">
+            <div className="w-fit">
+              <OutlinedButton>
+                <XSquare size={24} />
+              </OutlinedButton>
+            </div>
+          </div>
+          <form
+            className="flex-1 flex flex-col items-center mt-5 mb-20"
+            onSubmit={handleUpdateSubmit(onUpdateSubmit)}
+          >
+            <div className="flex flex-col w-full max-w-md">
+              <div className="col-span-1 space-y-3">
+                <GenericInput
+                  label="Name"
+                  type="text"
+                  placeHolder="Name"
+                  required
+                  register={updateRegister("name")}
+                />
+                <GenericInput
+                  label="Quantity"
+                  type="number"
+                  placeHolder="Quantity"
+                  required
+                  register={updateRegister("quantity", {
+                    valueAsNumber: true,
+                    validate: (value) => value > 0,
+                    max: 999999999,
+                  })}
+                />
+
+                <GenericInput
+                  label="Price"
+                  type="number"
+                  placeHolder="Price"
+                  required
+                  register={updateRegister("price", {
+                    valueAsNumber: true,
+                    validate: (value) => value > 0,
+                    max: 999999999,
+                  })}
+                />
+              </div>
+            </div>
+            <div className="w-full max-w-md my-5 flex justify-end">
+              <div className="py-3 text-right flex gap-2 justify-end">
+                <PrimaryButton
+                  className="w-full min-w-[150px]"
+                  isLoading={isUpdateLoading}
+                  disabled={!isUpdateDirty}
+                  type="submit"
+                >
+                  Update
+                </PrimaryButton>
+
+                <OutlinedButton type="button" onClick={() => setUpdate(false)}>
                   Cancel
                 </OutlinedButton>
               </div>

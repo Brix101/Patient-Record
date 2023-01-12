@@ -1,5 +1,4 @@
 import medicalRecordReducer from "@/features/medicalRecord/medicalRecordSlice";
-import medicinesReducer from "@/features/medicines/medicinesSlice";
 import patientReducer from "@features/patients/patientsSlice";
 import roomsReducer from "@features/rooms/roomsSlice";
 import sidebarReducer from "@features/sideBar/sidebarSlice";
@@ -13,7 +12,6 @@ export function makeStore() {
       sidebar: sidebarReducer,
       users: usersReducer,
       rooms: roomsReducer,
-      medicines: medicinesReducer,
       user: userReducer,
       patient: patientReducer,
       medicalRecord: medicalRecordReducer,
