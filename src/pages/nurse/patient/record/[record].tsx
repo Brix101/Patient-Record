@@ -447,7 +447,7 @@ const Patient: NextPage = () => {
                         <GenericInput
                           label="Guardian"
                           type="text"
-                          placeHolder="Mobile"
+                          placeHolder="Guardian"
                           register={register("guardian")}
                         />
                       </div>

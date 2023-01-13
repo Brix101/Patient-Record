@@ -161,7 +161,7 @@ const Apointment: NextPage = () => {
       deleteMutate({ ...appointment });
     }
   };
-
+  // TODO add physician data
   return (
     <div className="w-full h-full">
       {appointments ? (
