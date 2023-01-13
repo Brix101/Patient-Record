@@ -235,7 +235,11 @@ const EditUser: NextPage = () => {
                       enable={getValues("role") === "PHYSICIAN"}
                       placeHolder="Session Charge"
                       label="Session Charge"
-                      register={register("sessionCharge")}
+                      register={register("sessionCharge", {
+                        valueAsNumber: true,
+                        validate: (value) => (value as number) > 0,
+                        max: 999999999,
+                      })}
                     />
                   </>
                 ) : null}
