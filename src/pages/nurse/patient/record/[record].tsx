@@ -218,8 +218,8 @@ const Patient: NextPage = () => {
   }
 
   const admitedD = moment(data?.admittedAt);
-  const nowD = moment(new Date());
-  const roomTime = nowD.diff(admitedD, "days", true);
+  const nowD = moment(data?.receipt?.createAt ?? new Date());
+  const roomTime = nowD.diff(admitedD, "days");
   const roomPrice = (data?.room ? data?.room?.price : 0) as unknown as number;
   const roomCharge = roomPrice * roomTime; //room total price
 
@@ -451,63 +451,132 @@ const Patient: NextPage = () => {
                         />
                       </div>
                     </div>
+
+                    {data?.receipt ? (
+                      <>
+                        <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
+                          Billing Summary
+                        </h1>
+                        <div className="col-span-1 space-y-3 mt-5">
+                          <div className="grid grid-cols-3 gap-3">
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Room Charges
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {roomCharge.toFixed(2)}
+                                </h3>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Appointment Charges
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {appointmentCharge.toFixed(2)}
+                                </h3>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Medicine Charges
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {medicineCharge.toFixed(2)}
+                                </h3>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Reference #
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {data.receipt.id}
+                                </h3>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Total Charges
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {totalCharge.toFixed(2)}
+                                </h3>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
                     {data?.discharedAt ? (
-                      <div className="col-span-1 space-y-3 mt-5">
-                        <div className="grid grid-cols-3 gap-3">
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Addmitting Diagnosis
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {data.admittingDiagnosis}
-                              </h3>
+                      <>
+                        <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
+                          Discharged Summary
+                        </h1>
+                        <div className="col-span-1 space-y-3 mt-5">
+                          <div className="grid grid-cols-3 gap-3">
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Addmitting Diagnosis
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {data.admittingDiagnosis}
+                                </h3>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Final Diagnosis
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {data.finalDiagnosis}
+                                </h3>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Other Diagnosis
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {data.otherDiagnosis}
+                                </h3>
+                              </div>
                             </div>
                           </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Final Diagnosis
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {data.finalDiagnosis}
-                              </h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Medical Result
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {data.result}
+                                </h3>
+                              </div>
                             </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Other Diagnosis
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {data.otherDiagnosis}
-                              </h3>
+                            <div>
+                              <label className="block text-sm font-medium text-grey-700">
+                                Disposition
+                              </label>
+                              <div className="relative mt-1 rounded-md shadow-sm ">
+                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                  {data.status}
+                                </h3>
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Medical Result
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {data.result}
-                              </h3>
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Disposition
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {data.status}
-                              </h3>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      </>
                     ) : null}
                   </div>
                   <div className="w-full my-5 flex justify-end">
@@ -571,7 +640,7 @@ const Patient: NextPage = () => {
                           Room Charge
                         </label>
                         <div className="relative mt-1 rounded-md shadow-sm ">
-                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
                             {roomCharge && roomCharge.toFixed(2)}
                           </h3>
                         </div>
@@ -581,7 +650,7 @@ const Patient: NextPage = () => {
                           Appointment Charge
                         </label>
                         <div className="relative mt-1 rounded-md shadow-sm ">
-                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
                             {appointmentCharge && appointmentCharge.toFixed(2)}
                           </h3>
                         </div>
@@ -591,7 +660,7 @@ const Patient: NextPage = () => {
                           Medicine Charge
                         </label>
                         <div className="relative mt-1 rounded-md shadow-sm ">
-                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
                             {medicineCharge && medicineCharge.toFixed(2)}
                           </h3>
                         </div>
@@ -601,7 +670,7 @@ const Patient: NextPage = () => {
                           Total Charge
                         </label>
                         <div className="relative mt-1 rounded-md shadow-sm ">
-                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
                             {totalCharge.toFixed(2)}
                           </h3>
                         </div>
