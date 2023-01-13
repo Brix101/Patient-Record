@@ -72,7 +72,7 @@ const BillingPage: NextPage = () => {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <Admin>
-        <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen w-full">
+        <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
           <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">Users</h1>
