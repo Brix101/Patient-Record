@@ -1,11 +1,13 @@
 import {
   admitPatientSchema,
+  billingMedicalRecordSchema,
   deleteMedicalRecordSchema,
+  dischargedMedicalRecordSchema,
   getAllMedicalRecordSchema,
   getMedicalRecordSchema,
   updateMedicalRecordSchema,
 } from "@/schema/medicalRecord.schema";
-import { RoomStatus } from "@prisma/client";
+import { Prisma, RoomStatus } from "@prisma/client";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 
@@ -200,8 +202,24 @@ export const medicalRecordRouter = createProtectedRouter()
         physicianId,
         roomId,
         weight,
+        status,
       } = input;
       try {
+        if (roomId) {
+          await ctx.prisma.medicalRecord.update({
+            where: {
+              id: id,
+            },
+            data: {
+              room: {
+                update: {
+                  status: RoomStatus["VACANT" as keyof typeof RoomStatus],
+                },
+              },
+            },
+          });
+        }
+
         const patientRecord = await ctx.prisma.medicalRecord.update({
           where: {
             id: id,
@@ -212,6 +230,7 @@ export const medicalRecordRouter = createProtectedRouter()
             guardian,
             height,
             weight,
+            status,
             physician: physicianId
               ? {
                   connect: {
@@ -226,6 +245,87 @@ export const medicalRecordRouter = createProtectedRouter()
                   },
                 }
               : undefined,
+          },
+        });
+
+        if (patientRecord.roomId) {
+          await ctx.prisma.room.update({
+            where: {
+              id: patientRecord.roomId,
+            },
+            data: {
+              status: RoomStatus["OCCUPIED" as keyof typeof RoomStatus],
+            },
+          });
+        }
+
+        return patientRecord;
+      } catch (e) {
+        console.log(e);
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    },
+  })
+  .mutation("billing-record", {
+    input: billingMedicalRecordSchema,
+    resolve: async ({ ctx, input }) => {
+      const { medicalRecordId, total, philHealthId } = input;
+      try {
+        const patientRecord = await ctx.prisma.medicalRecord.update({
+          where: {
+            id: medicalRecordId,
+          },
+          data: {
+            receipt: {
+              create: {
+                philHealthId,
+                total: new Prisma.Decimal(total),
+              },
+            },
+          },
+        });
+
+        return patientRecord;
+      } catch (e) {
+        console.log(e);
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    },
+  })
+  .mutation("discharged-record", {
+    input: dischargedMedicalRecordSchema,
+    resolve: async ({ ctx, input }) => {
+      const {
+        medicalRecordId,
+        admittingDiagnosis,
+        finalDiagnosis,
+        otherDiagnosis,
+        result,
+        status,
+      } = input;
+      try {
+        const patientRecord = await ctx.prisma.medicalRecord.update({
+          where: {
+            id: medicalRecordId,
+          },
+          data: {
+            admittingDiagnosis,
+            finalDiagnosis,
+            otherDiagnosis,
+            result,
+            status,
+            discharedAt: new Date(),
+            room: {
+              update: {
+                status: RoomStatus["VACANT" as keyof typeof RoomStatus],
+              },
+            },
           },
         });
 

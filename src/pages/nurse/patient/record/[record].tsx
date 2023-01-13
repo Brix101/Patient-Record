@@ -7,7 +7,11 @@ import {
   CreateAppointmentInput,
   UpdateAppointmentInput,
 } from "@/schema/appointment.schema";
-import { UpdateMedicalRecordInput } from "@/schema/medicalRecord.schema";
+import {
+  BillingMedicalRecordInput,
+  DischargedMedicalRecordInput,
+  UpdateMedicalRecordInput,
+} from "@/schema/medicalRecord.schema";
 import {
   CreateMedicineInput,
   UpdateMedicineInput,
@@ -20,14 +24,17 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
   Appointment,
   AppointmentStatus,
+  MedicalResult,
+  MedicalStatus,
   Medicine,
   Physician,
+  Room,
   RoomCat,
   User,
 } from "@prisma/client";
-import moment, { Moment } from "moment";
+import { Decimal } from "@prisma/client/runtime";
+import moment from "moment";
 import type { NextPage } from "next";
-import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Suspense, useEffect, useState } from "react";
@@ -36,16 +43,13 @@ import {
   DollarSign,
   Edit,
   Edit2,
+  ExternalLink,
   Plus,
   Trash2,
   XSquare,
 } from "react-feather";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
-
-const PatientForm = dynamic(() => import("@features/patients/PatientForm"), {
-  ssr: false,
-});
 
 const TableStyle = (x: number) => {
   if (x % 2) {
@@ -60,6 +64,13 @@ const Patient: NextPage = () => {
   const [selectedCat, setSelectedCat] = useState<RoomCat>("WARD");
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isBilling, setIsBilling] = useState<boolean>(false);
+  const [isDischarged, setIsDischarged] = useState<boolean>(false);
+  const [rooms, setRooms] = useState<
+    {
+      label: string;
+      value: Room;
+    }[]
+  >();
 
   const {
     handleSubmit,
@@ -70,7 +81,20 @@ const Patient: NextPage = () => {
     reset,
   } = useForm<UpdateMedicalRecordInput>();
 
-  const { data } = trpc.useQuery(
+  const {
+    handleSubmit: handleBillingSubmit,
+    register: registerBilling,
+    reset: resetBilling,
+  } = useForm<BillingMedicalRecordInput>();
+
+  const {
+    handleSubmit: handleDischargedSubmit,
+    control: controlDischarged,
+    register: registerDischarged,
+    reset: resetDischarged,
+  } = useForm<DischargedMedicalRecordInput>();
+
+  const { data, refetch: refetchRecord } = trpc.useQuery(
     [
       "medicalRecord.get-record",
       {
@@ -89,6 +113,21 @@ const Patient: NextPage = () => {
           roomId: res?.roomId,
           weight: res?.weight,
         });
+
+        if (res?.room) {
+          const patientRoom = {
+            label:
+              "floor: " + res?.room.floor + " / room no: " + res?.room.roomNo,
+            value: res?.room,
+          };
+          setRooms((prev) => (prev ? [patientRoom, ...prev] : [patientRoom]));
+        }
+
+        resetDischarged({
+          medicalRecordId: res?.id,
+          status: res?.status,
+          result: res?.result,
+        });
       },
     }
   );
@@ -102,10 +141,39 @@ const Patient: NextPage = () => {
     }
   );
 
-  const { data: roomData } = trpc.useQuery([
-    "room.get-available-rooms",
-    { searchInput: "", category: selectedCat },
-  ]);
+  const { mutate: mutateBiling, isLoading: isBillingLoading } =
+    trpc.useMutation(["medicalRecord.billing-record"], {
+      onSuccess: () => {
+        refetchRecord().then(() => {
+          setIsBilling(false);
+        });
+      },
+    });
+
+  const { mutate: mutateDischarged, isLoading: isDischargedLoading } =
+    trpc.useMutation(["medicalRecord.discharged-record"], {
+      onSuccess: () => {
+        refetchRecord().then(() => {
+          setIsDischarged(false);
+        });
+      },
+    });
+
+  trpc.useQuery(
+    ["room.get-available-rooms", { searchInput: "", category: selectedCat }],
+    {
+      onSuccess: (data) => {
+        setRooms(
+          data.map((room) => {
+            return {
+              label: "floor: " + room.floor + " / room no: " + room.roomNo,
+              value: room,
+            };
+          })
+        );
+      },
+    }
+  );
 
   const { data: physiciansData } = trpc.useQuery([
     "physician.all-physicians",
@@ -128,16 +196,88 @@ const Patient: NextPage = () => {
     }
   );
 
-  const rooms = roomData?.map((room) => {
+  const recordStatus = (
+    Object.keys(MedicalStatus) as (keyof typeof MedicalStatus)[]
+  ).map((enumKey) => {
     return {
-      label: "floor: " + room.floor + " / room no: " + room.roomNo,
-      value: room,
+      label: MedicalStatus[enumKey].toLowerCase(),
+      value: MedicalStatus[enumKey],
+    };
+  });
+
+  const medicalResult = (
+    Object.keys(MedicalResult) as (keyof typeof MedicalResult)[]
+  ).map((enumKey) => {
+    return {
+      label: MedicalResult[enumKey].toLowerCase(),
+      value: MedicalResult[enumKey],
     };
   });
 
   function onSubmit(values: UpdateMedicalRecordInput) {
     mutate({ ...values });
   }
+
+  const admitedD = moment(data?.admittedAt);
+  const nowD = moment(new Date());
+  const roomTime = nowD.diff(admitedD, "days", true);
+  const roomPrice = data?.room?.price as unknown as number;
+  const roomCharge = roomPrice * roomTime; //room total price
+
+  const appointmentCharge = data?.appointments
+    .map((appointment) => {
+      const startD = moment(appointment?.start);
+      const endD = moment(appointment.end);
+      const totalTime = endD.diff(startD, "hours", true);
+      const phyCharge = appointment.physician
+        .sessionCharge as unknown as number;
+      const subTotal = totalTime * phyCharge;
+      const total = appointment.status === "Finished" ? subTotal : 0;
+
+      return total;
+    })
+    .reduce((a, b) => a + b) as unknown as number;
+
+  const medicineCharge = data?.medicine
+    .map((item) => item.total)
+    .reduce((a, b) => {
+      const totalA = a as unknown as string;
+      const totalB = b as unknown as string;
+      const total = parseFloat(totalA) + parseFloat(totalB);
+
+      return total as unknown as Decimal;
+    }) as unknown as number;
+
+  const totalCharge = roomCharge + appointmentCharge + medicineCharge;
+
+  // useEffect(() => {
+  //   if (data) {
+  //     resetBilling({
+  //       medicalRecordId: data.id,
+  //       total: totalCharge,
+  //     });
+  //   }
+  // }, [data]);
+
+  function onBillingSubmit(values: BillingMedicalRecordInput) {
+    if (data) {
+      mutateBiling({
+        ...values,
+        medicalRecordId: data?.id,
+        total: totalCharge,
+      });
+    }
+  }
+
+  function onDischargedSubmit(values: DischargedMedicalRecordInput) {
+    if (data) {
+      mutateDischarged({
+        ...values,
+        medicalRecordId: data?.id,
+      });
+    }
+  }
+
   return (
     <>
       <Head>
@@ -160,14 +300,22 @@ const Patient: NextPage = () => {
                       <ArrowLeft size={24} />
                     </OutlinedButton>
                   </div>
-                  {!data?.receipt ? (
+                  {!data?.discharedAt ? (
                     <>
-                      <PrimaryButton onClick={() => setIsEdit(true)}>
-                        <Edit2 size={24} />
-                      </PrimaryButton>
-                      <SecondaryButton onClick={() => setIsBilling(true)}>
-                        <DollarSign size={24} />
-                      </SecondaryButton>
+                      {!data?.receipt ? (
+                        <>
+                          <PrimaryButton onClick={() => setIsEdit(true)}>
+                            <Edit2 size={24} />
+                          </PrimaryButton>
+                          <SecondaryButton onClick={() => setIsBilling(true)}>
+                            <DollarSign size={24} />
+                          </SecondaryButton>
+                        </>
+                      ) : (
+                        <SecondaryButton onClick={() => setIsDischarged(true)}>
+                          <ExternalLink size={24} />
+                        </SecondaryButton>
+                      )}
                     </>
                   ) : null}
                 </div>
@@ -264,7 +412,7 @@ const Patient: NextPage = () => {
                           </div>
                         )}
                       />
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid gap-3">
                         <div className="flex flex-col justify-between">
                           <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                             Physician
@@ -289,6 +437,14 @@ const Patient: NextPage = () => {
                             )}
                           />
                         </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <GenericInput
+                          label="Chief Complaint"
+                          type="text"
+                          placeHolder="Address"
+                          register={register("chiefComplaint")}
+                        />
                         <GenericInput
                           label="Guardian"
                           type="text"
@@ -296,13 +452,6 @@ const Patient: NextPage = () => {
                           register={register("guardian")}
                         />
                       </div>
-
-                      <GenericInput
-                        label="Chief Complaint"
-                        type="text"
-                        placeHolder="Address"
-                        register={register("chiefComplaint")}
-                      />
                     </div>
                   </div>
                   <div className="w-full my-5 flex justify-end">
@@ -331,8 +480,14 @@ const Patient: NextPage = () => {
           </div>
           {!isEdit ? (
             <>
-              <PatientAppointments appointments={data?.appointments} />
-              <PatientMedicines medicines={data?.medicine} />
+              <PatientAppointments
+                appointments={data?.appointments}
+                isDisabled={data?.receipt ? true : false}
+              />
+              <PatientMedicines
+                medicines={data?.medicine}
+                isDisabled={data?.receipt ? true : false}
+              />
             </>
           ) : null}
           <Dialog
@@ -340,7 +495,227 @@ const Patient: NextPage = () => {
             onClose={() => setIsBilling(false)}
             maxWidth="md"
           >
-            <div className="w-[900px] h-screen"></div>
+            <div className="w-[900px] h-screen">
+              <div className="w-full h-auto flex justify-end p-5">
+                <div className="w-fit">
+                  <OutlinedButton onClick={() => setIsBilling(false)}>
+                    <XSquare size={24} />
+                  </OutlinedButton>
+                </div>
+              </div>
+              <form
+                className="flex-1 flex flex-col items-center mt-5 mb-20"
+                onSubmit={handleBillingSubmit(onBillingSubmit)}
+              >
+                <div className="flex flex-col w-full max-w-md">
+                  <div className="col-span-1 space-y-3">
+                    <div className="col-span-1 space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Room Charge
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {roomCharge && roomCharge.toFixed(2)}
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Appointment Charge
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {appointmentCharge && appointmentCharge.toFixed(2)}
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Medicine Charge
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {medicineCharge && medicineCharge.toFixed(2)}
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Total Charge
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {totalCharge.toFixed(2)}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Philhealth Id
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <input
+                            type={"text"}
+                            className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                            {...registerBilling("philHealthId")}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="w-full max-w-md my-5 flex justify-end">
+                      <div className="py-3 text-right flex gap-2 justify-end">
+                        <PrimaryButton
+                          className="w-full min-w-[150px]"
+                          isLoading={isBillingLoading}
+                          type="submit"
+                        >
+                          Bill
+                        </PrimaryButton>
+
+                        <OutlinedButton
+                          type="button"
+                          onClick={() => setIsBilling(false)}
+                        >
+                          Cancel
+                        </OutlinedButton>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </Dialog>
+
+          <Dialog
+            open={isDischarged}
+            onClose={() => setIsDischarged(false)}
+            maxWidth="md"
+          >
+            <div className="w-[900px] h-screen">
+              <div className="w-full h-auto flex justify-end p-5">
+                <div className="w-fit">
+                  <OutlinedButton onClick={() => setIsDischarged(false)}>
+                    <XSquare size={24} />
+                  </OutlinedButton>
+                </div>
+              </div>
+              <form
+                className="flex-1 flex flex-col items-center mt-5 mb-20"
+                onSubmit={handleDischargedSubmit(onDischargedSubmit)}
+              >
+                <div className="flex flex-col w-full max-w-md">
+                  <div className="col-span-1 space-y-3">
+                    <div className="col-span-1 space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Addmitting Diagnosis
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <input
+                            type={"text"}
+                            className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                            {...registerDischarged("admittingDiagnosis")}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Final Diagnosis
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <input
+                            type={"text"}
+                            className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                            {...registerDischarged("finalDiagnosis")}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Other Diagnosis
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <input
+                            type={"text"}
+                            className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                            {...registerDischarged("otherDiagnosis")}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col justify-between">
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Result
+                        </label>
+                        <Controller
+                          control={controlDischarged}
+                          name="result"
+                          render={({ field: { onChange, value } }) => (
+                            <Select
+                              className="capitalize"
+                              classNamePrefix="aDDl-class"
+                              options={medicalResult}
+                              value={medicalResult?.find(
+                                (c) => c.value === value
+                              )}
+                              onChange={(medicalResult) =>
+                                onChange(medicalResult?.value)
+                              }
+                              placeholder="Result"
+                              isSearchable
+                            />
+                          )}
+                        />
+                      </div>
+                      <div className="flex flex-col justify-between">
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Status
+                        </label>
+                        <Controller
+                          control={controlDischarged}
+                          name="status"
+                          render={({ field: { onChange, value } }) => (
+                            <Select
+                              className="capitalize"
+                              classNamePrefix="aDDl-class"
+                              options={recordStatus}
+                              value={recordStatus?.find(
+                                (c) => c.value === value
+                              )}
+                              onChange={(recordStatus) =>
+                                onChange(recordStatus?.value)
+                              }
+                              placeholder="Status"
+                              isSearchable
+                            />
+                          )}
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full max-w-md my-5 flex justify-end">
+                      <div className="py-3 text-right flex gap-2 justify-end">
+                        <PrimaryButton
+                          className="w-full min-w-[150px]"
+                          isLoading={isBillingLoading}
+                          type="submit"
+                        >
+                          Discharged
+                        </PrimaryButton>
+
+                        <OutlinedButton
+                          type="button"
+                          onClick={() => setIsDischarged(false)}
+                        >
+                          Cancel
+                        </OutlinedButton>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
           </Dialog>
         </div>
       </Main>
@@ -350,12 +725,14 @@ const Patient: NextPage = () => {
 
 function PatientAppointments({
   appointments,
+  isDisabled,
 }: {
   appointments?: (Appointment & {
     physician: Physician & {
       user: User;
     };
   })[];
+  isDisabled?: boolean;
 }) {
   const router = useRouter();
   const { record } = router.query;
@@ -493,9 +870,11 @@ function PatientAppointments({
             </h1>
           </div>
           <div>
-            <SecondaryButton onClick={() => setCreate(true)}>
-              <Plus size={24} />
-            </SecondaryButton>
+            {!isDisabled ? (
+              <SecondaryButton onClick={() => setCreate(true)}>
+                <Plus size={24} />
+              </SecondaryButton>
+            ) : null}
           </div>
         </div>
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -516,9 +895,11 @@ function PatientAppointments({
               <th scope="col" className="py-3 px-6">
                 Status
               </th>
-              <th scope="col" className="py-3 px-6">
-                Action
-              </th>
+              {!isDisabled ? (
+                <th scope="col" className="py-3 px-6">
+                  Action
+                </th>
+              ) : null}
             </tr>
           </thead>
           <Suspense>
@@ -545,29 +926,31 @@ function PatientAppointments({
                       {moment(appointment?.end).format("MMM DD, YYYY hh:mm A")}
                     </td>
                     <td className="py-4 px-6">{appointment.status}</td>
-                    <td className="py-4 px-6 flex gap-5">
-                      <span
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                        onClick={() => {
-                          resetUpdate({
-                            id: appointment.id,
-                            end: appointment.end as Date,
-                            physicianId: appointment.physicianId,
-                            start: appointment.start as Date,
-                            status: appointment.status,
-                          });
-                          setUpdate(true);
-                        }}
-                      >
-                        <Edit size={20} />
-                      </span>
-                      <span
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                        onClick={() => deleteDialog({ appointment })}
-                      >
-                        <Trash2 size={20} />
-                      </span>
-                    </td>
+                    {!isDisabled ? (
+                      <td className="py-4 px-6 flex gap-5">
+                        <span
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                          onClick={() => {
+                            resetUpdate({
+                              id: appointment.id,
+                              end: appointment.end as Date,
+                              physicianId: appointment.physicianId,
+                              start: appointment.start as Date,
+                              status: appointment.status,
+                            });
+                            setUpdate(true);
+                          }}
+                        >
+                          <Edit size={20} />
+                        </span>
+                        <span
+                          className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                          onClick={() => deleteDialog({ appointment })}
+                        >
+                          <Trash2 size={20} />
+                        </span>
+                      </td>
+                    ) : null}
                   </tr>
                 );
               })}
@@ -813,7 +1196,13 @@ function PatientAppointments({
   );
 }
 
-function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
+function PatientMedicines({
+  medicines,
+  isDisabled,
+}: {
+  medicines?: Medicine[];
+  isDisabled?: boolean;
+}) {
   const router = useRouter();
   const { record } = router.query;
   const [create, setCreate] = useState<boolean>(false);
@@ -911,9 +1300,11 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
             </h1>
           </div>
           <div>
-            <SecondaryButton onClick={() => setCreate(true)}>
-              <Plus size={24} />
-            </SecondaryButton>
+            {!isDisabled ? (
+              <SecondaryButton onClick={() => setCreate(true)}>
+                <Plus size={24} />
+              </SecondaryButton>
+            ) : null}
           </div>
         </div>
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -931,9 +1322,11 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
               <th scope="col" className="py-3 px-6">
                 total
               </th>
-              <th scope="col" className="py-3 px-6">
-                Action
-              </th>
+              {!isDisabled ? (
+                <th scope="col" className="py-3 px-6">
+                  Action
+                </th>
+              ) : null}
             </tr>
           </thead>
           <Suspense>
@@ -950,28 +1343,30 @@ function PatientMedicines({ medicines }: { medicines?: Medicine[] }) {
                     <td className="py-4 px-6">{medicine.quantity}</td>
                     <td className="py-4 px-6">{medicine.price?.toString()}</td>
                     <td className="py-4 px-6">{medicine.total?.toString()}</td>
-                    <td className="py-4 px-6 flex gap-5">
-                      <span
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                        onClick={() => {
-                          updateReset({
-                            id: medicine.id,
-                            name: medicine.name as string,
-                            price: medicine.price as unknown as number,
-                            quantity: medicine.quantity as number,
-                          });
-                          setUpdate(true);
-                        }}
-                      >
-                        <Edit size={20} />
-                      </span>
-                      <span
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                        onClick={() => deleteDialog({ medicine })}
-                      >
-                        <Trash2 size={20} />
-                      </span>
-                    </td>
+                    {!isDisabled ? (
+                      <td className="py-4 px-6 flex gap-5">
+                        <span
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                          onClick={() => {
+                            updateReset({
+                              id: medicine.id,
+                              name: medicine.name as string,
+                              price: medicine.price as unknown as number,
+                              quantity: medicine.quantity as number,
+                            });
+                            setUpdate(true);
+                          }}
+                        >
+                          <Edit size={20} />
+                        </span>
+                        <span
+                          className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                          onClick={() => deleteDialog({ medicine })}
+                        >
+                          <Trash2 size={20} />
+                        </span>
+                      </td>
+                    ) : null}
                   </tr>
                 );
               })}

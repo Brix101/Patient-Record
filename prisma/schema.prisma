@@ -95,16 +95,20 @@ model MedicalRecord {
   bloodPressure  String?
   chiefComplaint String?
   guardian       String?
-  status         MedicalStatus?
+  status         MedicalStatus? @default(Admitted)
   admittedAt     DateTime       @default(now())
   discharedAt    DateTime?
   createAt       DateTime       @default(now())
   updateAt       DateTime       @updatedAt
   active         Boolean        @default(true)
-  result         MedicalResult?
   receipt        Receipt?
   medicine       Medicine[]
   appointments   Appointment[]
+
+  admittingDiagnosis String?
+  finalDiagnosis     String?
+  otherDiagnosis     String?
+  result             MedicalResult?
 
   room   Room? @relation(fields: [roomId], references: [id])
   roomId Int?
@@ -123,7 +127,7 @@ model MedicalRecord {
 
 model Receipt {
   id              Int            @id @default(autoincrement())
-  philHealdId     String?
+  philHealthId    String?
   total           Decimal?       @db.Decimal(10, 2)
   medicalRecord   MedicalRecord? @relation(fields: [medicalRecordId], references: [id])
   medicalRecordId Int?           @unique

@@ -54,7 +54,6 @@ export const logsRouter = createProtectedRouter()
         });
         return logout;
       }
-      console.log(email);
       throw new trpc.TRPCError({
         code: "UNAUTHORIZED",
         message: "Invalid User",

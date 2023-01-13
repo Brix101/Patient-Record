@@ -1,3 +1,4 @@
+import { MedicalResult, MedicalStatus } from "@prisma/client";
 import z from "zod";
 
 export const admitPatientSchema = z.object({
@@ -20,6 +21,22 @@ export const updateMedicalRecordSchema = z.object({
   physicianId: z.number().nullish(),
   guardian: z.string().nullish(),
   chiefComplaint: z.string().nullish(),
+  status: z.nativeEnum(MedicalStatus).nullish(),
+});
+
+export const billingMedicalRecordSchema = z.object({
+  medicalRecordId: z.number(),
+  philHealthId: z.string().nullish(),
+  total: z.number(),
+});
+
+export const dischargedMedicalRecordSchema = z.object({
+  medicalRecordId: z.number(),
+  admittingDiagnosis: z.string().nullish(),
+  finalDiagnosis: z.string().nullish(),
+  otherDiagnosis: z.string().nullish(),
+  result: z.nativeEnum(MedicalResult).nullish(),
+  status: z.nativeEnum(MedicalStatus).nullish(),
 });
 
 export const getAllMedicalRecordSchema = z.object({
@@ -38,6 +55,14 @@ export type AdmitPatientInput = z.TypeOf<typeof admitPatientSchema>;
 
 export type UpdateMedicalRecordInput = z.TypeOf<
   typeof updateMedicalRecordSchema
+>;
+
+export type BillingMedicalRecordInput = z.TypeOf<
+  typeof billingMedicalRecordSchema
+>;
+
+export type DischargedMedicalRecordInput = z.TypeOf<
+  typeof dischargedMedicalRecordSchema
 >;
 
 export type GetAllMedicalRecordInput = z.TypeOf<
