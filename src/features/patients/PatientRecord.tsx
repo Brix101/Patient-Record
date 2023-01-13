@@ -123,7 +123,7 @@ const PatientRecord: NextPage = () => {
                 <tr key={i} className={`${TableStyle(i)}`}>
                   <th
                     scope="row"
-                    className="py-3 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer"
+                    className="py-3 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
                   >
                     {rec?.physician ? (
                       <>

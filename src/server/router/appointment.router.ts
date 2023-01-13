@@ -27,6 +27,7 @@ export const appointmentRouter = createProtectedRouter()
               include: {
                 room: true,
                 patient: true,
+                receipt: true,
               },
             },
             physician: {
@@ -79,6 +80,7 @@ export const appointmentRouter = createProtectedRouter()
                     },
                   },
                 },
+                receipt: true,
               },
             },
           },

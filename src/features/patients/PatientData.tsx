@@ -6,7 +6,6 @@ import SuspenseComponent from "@/components/SuspenseComponent";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { Edit, FilePlus, Trash2 } from "react-feather";
 import AdmitForm from "./AdmitForm";
@@ -20,7 +19,6 @@ import {
 } from "./patientsSlice";
 
 const PatientData: NextPage = () => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const { data: sessionData } = useSession();
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -77,14 +75,15 @@ const PatientData: NextPage = () => {
                   >
                     <Edit size={24} />
                   </PrimaryButton>
-
-                  <SecondaryButton
-                    className="w-11"
-                    tooltip="Add Patient Record"
-                    onClick={() => dispatch(togglePatientAdmit())}
-                  >
-                    <FilePlus size={24} />
-                  </SecondaryButton>
+                  {!patient?.isAdmitted ? (
+                    <SecondaryButton
+                      className="w-11"
+                      tooltip="Admit Patient"
+                      onClick={() => dispatch(togglePatientAdmit())}
+                    >
+                      <FilePlus size={24} />
+                    </SecondaryButton>
+                  ) : null}
                 </>
               )}
             </SuspenseComponent>

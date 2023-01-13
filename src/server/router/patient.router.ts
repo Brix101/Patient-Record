@@ -55,6 +55,9 @@ export const patientRouter = createProtectedRouter()
               active: false,
             },
           },
+          include: {
+            medicalRecord: true,
+          },
           orderBy: {
             lastName: "asc",
           },

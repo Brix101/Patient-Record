@@ -9,6 +9,7 @@ import {
   MedicalRecord,
   Patient,
   Physician,
+  Receipt,
   Room,
   User,
 } from "@prisma/client";
@@ -50,6 +51,7 @@ const Apointment: NextPage = () => {
           | (MedicalRecord & {
               room: Room | null;
               patient: Patient | null;
+              receipt: Receipt | null;
             })
           | null;
         physician: Physician & {
@@ -72,6 +74,7 @@ const Apointment: NextPage = () => {
           | (MedicalRecord & {
               room: Room | null;
               patient: Patient | null;
+              receipt: Receipt | null;
             })
           | null;
         physician: Physician & {
@@ -166,9 +169,7 @@ const Apointment: NextPage = () => {
       deleteMutate({ ...appointment });
     }
   };
-  // TODO add physician data
 
-  console.log(selectedAppointment);
   return (
     <div className="w-full h-full">
       {appointments ? (
@@ -211,8 +212,8 @@ const Apointment: NextPage = () => {
           onClose={() => setSelectedAppointment(undefined)}
           maxWidth="md"
         >
-          <div className="w-[900px] h-screen flex flex-col items-center overflow-hidden">
-            <div className="w-full h-auto flex justify-end p-5">
+          <div className="w-[900px] p-5 h-screen flex flex-col items-center overflow-hidden">
+            <div className="w-full h-auto flex justify-end px-5">
               <div className="w-fit">
                 <OutlinedButton
                   onClick={() => setSelectedAppointment(undefined)}
@@ -357,28 +358,30 @@ const Apointment: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full max-w-md my-5 flex items-center justify-between">
-                    <div className="py-3 text-right flex gap-2 justify-end">
-                      <OutlinedButton
-                        type="button"
-                        onClick={() =>
-                          deleteDialog({ appointment: selectedAppointment })
-                        }
-                      >
-                        <Trash2 size={24} />
-                      </OutlinedButton>
+                  {!selectedAppointment.MedicalRecord?.receipt ? (
+                    <div className="w-full max-w-md my-5 flex items-center justify-between">
+                      <div className="py-3 text-right flex gap-2 justify-end">
+                        <OutlinedButton
+                          type="button"
+                          onClick={() =>
+                            deleteDialog({ appointment: selectedAppointment })
+                          }
+                        >
+                          <Trash2 size={24} />
+                        </OutlinedButton>
+                      </div>
+                      <div>
+                        <PrimaryButton
+                          className="w-full min-w-[150px]"
+                          isLoading={isUpdateLoading}
+                          disabled={!isUpdateDirty}
+                          type="submit"
+                        >
+                          Update
+                        </PrimaryButton>
+                      </div>
                     </div>
-                    <div>
-                      <PrimaryButton
-                        className="w-full min-w-[150px]"
-                        isLoading={isUpdateLoading}
-                        disabled={!isUpdateDirty}
-                        type="submit"
-                      >
-                        Update
-                      </PrimaryButton>
-                    </div>
-                  </div>
+                  ) : null}
                 </form>
               </>
             ) : null}

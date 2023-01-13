@@ -122,7 +122,7 @@ const Patient: NextPage = () => {
 
         resetDischarged({
           medicalRecordId: res?.id,
-          status: res?.status,
+          status: "Discharged",
           result: res?.result,
         });
       },
@@ -147,14 +147,16 @@ const Patient: NextPage = () => {
       },
     });
 
-  const { mutate: mutateDischarged, isLoading: isDischargedLoading } =
-    trpc.useMutation(["medicalRecord.discharged-record"], {
+  const { mutate: mutateDischarged } = trpc.useMutation(
+    ["medicalRecord.discharged-record"],
+    {
       onSuccess: () => {
         refetchRecord().then(() => {
           setIsDischarged(false);
         });
       },
-    });
+    }
+  );
 
   trpc.useQuery(
     ["room.get-available-rooms", { searchInput: "", category: selectedCat }],
@@ -218,7 +220,7 @@ const Patient: NextPage = () => {
   const admitedD = moment(data?.admittedAt);
   const nowD = moment(new Date());
   const roomTime = nowD.diff(admitedD, "days", true);
-  const roomPrice = data?.room?.price as unknown as number;
+  const roomPrice = (data?.room ? data?.room?.price : 0) as unknown as number;
   const roomCharge = roomPrice * roomTime; //room total price
 
   const appointmentCharge = data?.appointments
@@ -246,15 +248,6 @@ const Patient: NextPage = () => {
     }, 0) as unknown as number;
 
   const totalCharge = roomCharge + appointmentCharge + medicineCharge;
-
-  // useEffect(() => {
-  //   if (data) {
-  //     resetBilling({
-  //       medicalRecordId: data.id,
-  //       total: totalCharge,
-  //     });
-  //   }
-  // }, [data]);
 
   function onBillingSubmit(values: BillingMedicalRecordInput) {
     if (data) {
@@ -301,9 +294,11 @@ const Patient: NextPage = () => {
                     <>
                       {!data?.receipt ? (
                         <>
-                          <PrimaryButton onClick={() => setIsEdit(true)}>
-                            <Edit2 size={24} />
-                          </PrimaryButton>
+                          {!data?.patient?.isAdmitted ? (
+                            <PrimaryButton onClick={() => setIsEdit(true)}>
+                              <Edit2 size={24} />
+                            </PrimaryButton>
+                          ) : null}
                           <SecondaryButton onClick={() => setIsBilling(true)}>
                             <DollarSign size={24} />
                           </SecondaryButton>
@@ -746,7 +741,11 @@ const Patient: NextPage = () => {
                                 (c) => c.value === value
                               )}
                               onChange={(recordStatus) =>
-                                onChange(recordStatus?.value)
+                                onChange(
+                                  recordStatus?.value === "Admitted"
+                                    ? "Discharged"
+                                    : recordStatus?.value
+                                )
                               }
                               placeholder="Status"
                               isSearchable
@@ -844,16 +843,17 @@ function PatientAppointments({
     };
   });
 
-  const { mutate: createMutate, isLoading: isCreateLoading } = trpc.useMutation(
-    "appointment.create-appointment",
-    {
-      onSuccess: ({ MedicalRecord }) => {
-        setPatientAppointment(MedicalRecord?.appointments);
-        resetCreate();
-        setCreate(false);
-      },
-    }
-  );
+  const {
+    mutate: createMutate,
+    isLoading: isCreateLoading,
+    error: createError,
+  } = trpc.useMutation("appointment.create-appointment", {
+    onSuccess: ({ MedicalRecord }) => {
+      setPatientAppointment(MedicalRecord?.appointments);
+      resetCreate();
+      setCreate(false);
+    },
+  });
 
   const { mutate: updateMutate, isLoading: isUpdateLoading } = trpc.useMutation(
     "appointment.update-appointment",
@@ -1029,6 +1029,15 @@ function PatientAppointments({
               </OutlinedButton>
             </div>
           </div>
+          {createError && (
+            <div
+              className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+              role="alert"
+            >
+              <span className="font-medium">Error alert! </span>
+              {createError && createError.message}
+            </div>
+          )}
           <form
             className="flex-1 flex flex-col items-center mt-5 mb-20"
             onSubmit={handleCreateSubmit(onCreateSubmit)}

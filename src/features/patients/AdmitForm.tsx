@@ -232,7 +232,7 @@ const AdmitForm: NextPage = () => {
                 disabled={!isDirty}
                 isLoading={isLoading}
               >
-                Add Record
+                Admit
               </PrimaryButton>
               <OutlinedButton
                 type="button"

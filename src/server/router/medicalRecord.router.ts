@@ -172,7 +172,18 @@ export const medicalRecordRouter = createProtectedRouter()
           },
         });
 
-        if (patientRecord.roomId) {
+        if (patientRecord) {
+          await ctx.prisma.patient.update({
+            where: {
+              id: patientRecord.patientId,
+            },
+            data: {
+              isAdmitted: false,
+            },
+          });
+        }
+
+        if (patientRecord) {
           await ctx.prisma.room.update({
             where: {
               id: patientRecord.roomId as number,
@@ -290,6 +301,18 @@ export const medicalRecordRouter = createProtectedRouter()
                 total: new Prisma.Decimal(total),
               },
             },
+            appointments: {
+              updateMany: {
+                where: {
+                  status: {
+                    not: "Finished",
+                  },
+                },
+                data: {
+                  status: "Cancelled",
+                },
+              },
+            },
           },
         });
 
@@ -326,18 +349,36 @@ export const medicalRecordRouter = createProtectedRouter()
             result,
             status,
             discharedAt: new Date(),
-            room: {
-              update: {
-                status: RoomStatus["VACANT" as keyof typeof RoomStatus],
-              },
-            },
             patient: {
               update: {
                 isAdmitted: false,
               },
             },
+            appointments: {
+              updateMany: {
+                where: {
+                  status: {
+                    not: "Finished",
+                  },
+                },
+                data: {
+                  status: "Cancelled",
+                },
+              },
+            },
           },
         });
+
+        if (patientRecord.roomId) {
+          await ctx.prisma.room.update({
+            where: {
+              id: patientRecord.roomId,
+            },
+            data: {
+              status: RoomStatus["VACANT" as keyof typeof RoomStatus],
+            },
+          });
+        }
 
         return patientRecord;
       } catch (e) {

@@ -5,20 +5,24 @@ import LinearLoading from "@/components/LinearLoading";
 import useDebounce from "@/hooks/useDebounce";
 import { SearchPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
-import { Patient } from "@prisma/client";
+import { Tooltip } from "@mui/material";
+import { MedicalRecord, Patient } from "@prisma/client";
 import type { NextPage } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { Suspense, useState } from "react";
-import { PlusSquare } from "react-feather";
+import { ExternalLink, FilePlus, FileText, PlusSquare } from "react-feather";
 import Select from "react-select";
-import { setPatientsMode } from "./patientsSlice";
+import { setPatientsMode, togglePatientAdmit } from "./patientsSlice";
 
 const ViewPatient: NextPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const [patientData, setPatientData] = useState<Patient[] | undefined>();
+  const [patientData, setPatientData] = useState<
+    (Patient & {
+      medicalRecord: MedicalRecord[];
+    })[]
+  >();
   const [filter, setFilter] = useState<boolean>(true);
   const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
@@ -50,6 +54,19 @@ const ViewPatient: NextPage = () => {
   const filterData = patientData?.filter(
     (patient) => patient.isAdmitted === filter
   );
+
+  const viewPatient = ({ patient }: { patient: Patient }) => {
+    router.push({
+      pathname: "nurse/patient/[patient]",
+      query: { patient: patient.id },
+    });
+  };
+  const viewRecord = ({ id }: { id: number }) => {
+    router.push({
+      pathname: "nurse/patient/record/[record]",
+      query: { record: id },
+    });
+  };
 
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
@@ -118,6 +135,9 @@ const ViewPatient: NextPage = () => {
             <th scope="col" className="py-3 px-2">
               Blood type
             </th>
+            <th scope="col" className="py-3 px-1">
+              Action
+            </th>
           </tr>
         </thead>
         <Suspense>
@@ -125,17 +145,20 @@ const ViewPatient: NextPage = () => {
             {filterData?.map((patient, i) => {
               return (
                 <tr key={i} className={`${TableStyle(i)}`}>
-                  <Link href={isNurse ? `nurse/patient/${patient.id}` : "#"}>
-                    <th
-                      scope="row"
-                      className={`py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize ${
-                        isNurse ? "cursor-pointer hover:underline" : ""
-                      }`}
-                    >
-                      {patient?.lastName}, {patient?.firstName}{" "}
-                      {patient?.middleName}
-                    </th>
-                  </Link>
+                  <th
+                    scope="row"
+                    className={`py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline`}
+                    onClick={() => {
+                      viewPatient({ patient });
+                    }}
+                  >
+                    <Tooltip title="View patient data" arrow>
+                      <>
+                        {patient?.lastName}, {patient?.firstName}{" "}
+                        {patient?.middleName}
+                      </>
+                    </Tooltip>
+                  </th>
                   <td className="py-4 px-6">{patient.gender}</td>
                   <td className="py-4 px-6">
                     {patient.birthday?.toLocaleDateString("en-US", {
@@ -149,6 +172,37 @@ const ViewPatient: NextPage = () => {
                   </td>
                   <td className="py-4 px-6">{patient.mobile}</td>
                   <td className="py-4 px-6">{patient.bloodType}</td>
+                  <td className="py-4 px-6 flex gap-2">
+                    {!patient.isAdmitted ? (
+                      <Tooltip title="Admit patient" arrow>
+                        <FilePlus
+                          className="text-blue-500 cursor-pointer"
+                          size={24}
+                          onClick={() => {
+                            viewPatient({ patient });
+                            dispatch(togglePatientAdmit());
+                          }}
+                        />
+                      </Tooltip>
+                    ) : (
+                      <>
+                        <Tooltip title="View Patient Record" arrow>
+                          <FileText
+                            className="text-blue-500 cursor-pointer"
+                            size={20}
+                            onClick={() => {
+                              if (patient.medicalRecord.at(-1)) {
+                                viewRecord({
+                                  id: patient.medicalRecord.at(-1)
+                                    ?.id as number,
+                                });
+                              }
+                            }}
+                          />
+                        </Tooltip>
+                      </>
+                    )}
+                  </td>
                 </tr>
               );
             })}
