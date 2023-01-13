@@ -231,6 +231,12 @@ const EditUser: NextPage = () => {
                       label="Expertise"
                       register={register("expertise")}
                     />
+                    <PhysicianInput
+                      enable={getValues("role") === "PHYSICIAN"}
+                      placeHolder="Session Charge"
+                      label="Session Charge"
+                      register={register("sessionCharge")}
+                    />
                   </>
                 ) : null}
               </div>

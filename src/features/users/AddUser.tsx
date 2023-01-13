@@ -217,8 +217,8 @@ const AddUser: NextPage = () => {
                   />
                   <PhysicianInput
                     enable={isPhysician}
-                    placeHolder="Expertise"
-                    label="Expertise"
+                    placeHolder="Session Charge"
+                    label="Session Charge"
                     register={register("sessionCharge")}
                   />
                 </>
