@@ -5,17 +5,21 @@ import LinearLoading from "@/components/LinearLoading";
 import useDebounce from "@/hooks/useDebounce";
 import { SearchPatientInput } from "@/schema/patient.schema";
 import { trpc } from "@/utils/trpc";
+import { Patient } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Suspense, useState } from "react";
 import { PlusSquare } from "react-feather";
+import Select from "react-select";
 import { setPatientsMode } from "./patientsSlice";
 
 const ViewPatient: NextPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  const [patientData, setPatientData] = useState<Patient[] | undefined>();
+  const [filter, setFilter] = useState<boolean>(true);
   const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
   const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
@@ -26,7 +30,12 @@ const ViewPatient: NextPage = () => {
         ...debouncedValue,
       },
     ],
-    { enabled: true }
+    {
+      enabled: true,
+      onSuccess: (data) => {
+        setPatientData(data);
+      },
+    }
   );
 
   const TableStyle = (x: number) => {
@@ -38,13 +47,28 @@ const ViewPatient: NextPage = () => {
 
   const isNurse = router.pathname.includes("nurse");
 
+  const filterData = patientData?.filter(
+    (patient) => patient.isAdmitted === filter
+  );
+
   return (
     <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden min-h-screen">
       <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-900">Patients</h1>
         </div>
-        <div className="flex flex-row gap-5">
+        <div className="flex flex-row gap-5 items-center">
+          <div>
+            <Select
+              className="w-40"
+              defaultValue={{ label: "Admitted" }}
+              options={[{ label: "Admitted" }, { label: "Discharged" }]}
+              value={filter ? { label: "Admitted" } : { label: "Discharged" }}
+              onChange={(newValue) => {
+                setFilter(newValue?.label === "Admitted" ? true : false);
+              }}
+            />
+          </div>
           <div>
             <SearchInput
               placeholder="Search a Name"
@@ -98,7 +122,7 @@ const ViewPatient: NextPage = () => {
         </thead>
         <Suspense>
           <tbody>
-            {data?.map((patient, i) => {
+            {filterData?.map((patient, i) => {
               return (
                 <tr key={i} className={`${TableStyle(i)}`}>
                   <Link href={isNurse ? `nurse/patient/${patient.id}` : "#"}>

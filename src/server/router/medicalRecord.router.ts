@@ -32,6 +32,7 @@ export const medicalRecordRouter = createProtectedRouter()
             id: patientId,
           },
           data: {
+            isAdmitted: true,
             medicalRecord: {
               create: {
                 bloodPressure,
@@ -328,6 +329,11 @@ export const medicalRecordRouter = createProtectedRouter()
             room: {
               update: {
                 status: RoomStatus["VACANT" as keyof typeof RoomStatus],
+              },
+            },
+            patient: {
+              update: {
+                isAdmitted: false,
               },
             },
           },
