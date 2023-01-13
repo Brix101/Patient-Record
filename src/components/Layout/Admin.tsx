@@ -7,7 +7,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense } from "react";
-import { Clipboard, Package, Server, Sliders, Users } from "react-feather";
+import { Clipboard, DollarSign, Server, Sliders, Users } from "react-feather";
 
 function Admin({ children }: { children?: React.ReactNode }) {
   return (
@@ -50,10 +50,10 @@ function Admin({ children }: { children?: React.ReactNode }) {
                     <Clipboard size={20} />
                     <a>Patient</a>
                   </SideBarButton>
-                  {/* <SideBarButton href={"/admin/medicine"}>
-                    <Package size={20} />
-                    <a>Medicines</a>
-                  </SideBarButton> */}
+                  <SideBarButton href={"/admin/billing"}>
+                    <DollarSign size={20} />
+                    <a>Billing</a>
+                  </SideBarButton>
                   <SideBarButton href={"/admin/users"}>
                     <Users size={20} />
                     <a>Users</a>
