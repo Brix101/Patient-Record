@@ -32,7 +32,6 @@ import {
   RoomCat,
   User,
 } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime";
 import moment from "moment";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -236,7 +235,7 @@ const Patient: NextPage = () => {
 
       return total;
     })
-    .reduce((a, b) => a + b) as unknown as number;
+    .reduce((a, b) => a + b, 0) as unknown as number;
 
   const medicineCharge = data?.medicine
     .map((item) => item.total)
@@ -245,8 +244,8 @@ const Patient: NextPage = () => {
       const totalB = b as unknown as string;
       const total = parseFloat(totalA) + parseFloat(totalB);
 
-      return total as unknown as Decimal;
-    }) as unknown as number;
+      return total as unknown as number;
+    }, 0) as unknown as number;
 
   const totalCharge = roomCharge + appointmentCharge + medicineCharge;
 

@@ -1,6 +1,7 @@
 // src/server/router/index.ts
 import { appointmentRouter } from "@server/router/appointment.router";
 import { authRouter } from "@server/router/auth.router";
+import { billingRouter } from "@server/router/billing.router";
 import { createRouter } from "@server/router/context";
 import { dashboardRouter } from "@server/router/dashboard.router";
 import { exampleRouter } from "@server/router/example";
@@ -17,6 +18,7 @@ export const appRouter = createRouter()
   .transformer(superjson)
   .merge("appointment.", appointmentRouter)
   .merge("auth.", authRouter)
+  .merge("billing.", billingRouter)
   .merge("logs.", logsRouter)
   .merge("dashboard.", dashboardRouter)
   .merge("medicalRecord.", medicalRecordRouter)
