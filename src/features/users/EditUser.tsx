@@ -8,7 +8,7 @@ import { trpc } from "@/utils/trpc";
 import { setUsersMode, usersState } from "@features/users/usersSlice";
 import { Role } from "@prisma/client";
 import { NextPage } from "next";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { XSquare } from "react-feather";
 import { Controller, useForm } from "react-hook-form";

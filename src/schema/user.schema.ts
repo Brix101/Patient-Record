@@ -13,7 +13,7 @@ export const createUserSchema = z.object({
   mobile: z.string().nullable(),
   expertise: z.string().nullable(),
   licenseNumber: z.string().nullable(),
-  sessionCharge: z.number().nullable(),
+  sessionCharge: z.number().nullable().optional(),
 });
 
 export const createUserOutputSchema = z.object({
@@ -41,7 +41,7 @@ export const updateUserSchema = z.object({
   mobile: z.string().nullable(),
   expertise: z.string().nullable(),
   licenseNumber: z.string().nullable(),
-  sessionCharge: z.number().nullable(),
+  sessionCharge: z.number().nullable().optional(),
 });
 
 export const deleteUserSchema = z.object({

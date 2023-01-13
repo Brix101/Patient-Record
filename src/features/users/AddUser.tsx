@@ -9,7 +9,7 @@ import { Role } from "@prisma/client";
 import { CreateUserInput } from "@schema/user.schema";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ArrowLeft } from "react-feather";
