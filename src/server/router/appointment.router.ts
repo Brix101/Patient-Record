@@ -29,7 +29,11 @@ export const appointmentRouter = createProtectedRouter()
                 patient: true,
               },
             },
-            physician: true,
+            physician: {
+              include: {
+                user: true,
+              },
+            },
           },
         });
         return appointments;

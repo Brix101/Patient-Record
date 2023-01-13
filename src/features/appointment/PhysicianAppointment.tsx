@@ -10,6 +10,7 @@ import {
   Patient,
   Physician,
   Room,
+  User,
 } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import moment from "moment";
@@ -51,7 +52,9 @@ const Apointment: NextPage = () => {
               patient: Patient | null;
             })
           | null;
-        physician: Physician;
+        physician: Physician & {
+          user: User;
+        };
       }
     | undefined
   >();
@@ -71,7 +74,9 @@ const Apointment: NextPage = () => {
               patient: Patient | null;
             })
           | null;
-        physician: Physician;
+        physician: Physician & {
+          user: User;
+        };
       }[]
     | undefined
   >();
@@ -162,6 +167,8 @@ const Apointment: NextPage = () => {
     }
   };
   // TODO add physician data
+
+  console.log(selectedAppointment);
   return (
     <div className="w-full h-full">
       {appointments ? (
@@ -236,6 +243,17 @@ const Apointment: NextPage = () => {
                               selectedAppointment.MedicalRecord?.patient
                                 ?.lastName
                             }
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-grey-700">
+                          Physician Name
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {selectedAppointment.physician?.user.lastName}{" "}
+                            {selectedAppointment.physician.user.firstName}
                           </h3>
                         </div>
                       </div>

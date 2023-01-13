@@ -95,6 +95,7 @@ model MedicalRecord {
   bloodPressure  String?
   chiefComplaint String?
   guardian       String?
+  guardianNo       String?
   status         MedicalStatus? @default(Admitted)
   admittedAt     DateTime       @default(now())
   discharedAt    DateTime?
