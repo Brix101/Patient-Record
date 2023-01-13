@@ -202,19 +202,26 @@ const AdmitForm: NextPage = () => {
                   />
                 </div>
                 <GenericInput
-                  label="Guardian"
+                  label="Chief Complaint"
                   type="text"
-                  placeHolder="Mobile"
-                  register={register("guardian")}
+                  placeHolder="Address"
+                  register={register("chiefComplaint")}
                 />
               </div>
-
-              <GenericInput
-                label="Chief Complaint"
-                type="text"
-                placeHolder="Address"
-                register={register("chiefComplaint")}
-              />
+              <div className="grid grid-cols-2 gap-3">
+                <GenericInput
+                  label="Guardian"
+                  type="text"
+                  placeHolder="Guardian"
+                  register={register("guardian")}
+                />
+                <GenericInput
+                  label="Guardian No"
+                  type="text"
+                  placeHolder="Guardian No"
+                  register={register("guardianNo")}
+                />
+              </div>
             </div>
           </div>
           <div className="w-full my-5 flex justify-end">

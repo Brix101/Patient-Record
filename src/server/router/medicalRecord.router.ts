@@ -24,6 +24,7 @@ export const medicalRecordRouter = createProtectedRouter()
         physicianId,
         roomId,
         weight,
+        guardianNo,
       } = input;
       try {
         const record = await ctx.prisma.patient.update({
@@ -38,6 +39,7 @@ export const medicalRecordRouter = createProtectedRouter()
                 guardian,
                 height,
                 weight,
+                guardianNo,
                 physician: physicianId
                   ? {
                       connect: {
@@ -203,6 +205,7 @@ export const medicalRecordRouter = createProtectedRouter()
         roomId,
         weight,
         status,
+        guardianNo,
       } = input;
       try {
         if (roomId) {
@@ -231,6 +234,7 @@ export const medicalRecordRouter = createProtectedRouter()
             height,
             weight,
             status,
+            guardianNo,
             physician: physicianId
               ? {
                   connect: {

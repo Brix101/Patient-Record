@@ -80,11 +80,8 @@ const Patient: NextPage = () => {
     reset,
   } = useForm<UpdateMedicalRecordInput>();
 
-  const {
-    handleSubmit: handleBillingSubmit,
-    register: registerBilling,
-    reset: resetBilling,
-  } = useForm<BillingMedicalRecordInput>();
+  const { handleSubmit: handleBillingSubmit, register: registerBilling } =
+    useForm<BillingMedicalRecordInput>();
 
   const {
     handleSubmit: handleDischargedSubmit,
@@ -111,6 +108,7 @@ const Patient: NextPage = () => {
           physicianId: res?.physicianId,
           roomId: res?.roomId,
           weight: res?.weight,
+          guardianNo: res?.guardianNo,
         });
 
         if (res?.room) {
@@ -411,7 +409,7 @@ const Patient: NextPage = () => {
                           </div>
                         )}
                       />
-                      <div className="grid gap-3">
+                      <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col justify-between">
                           <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
                             Physician
@@ -436,22 +434,86 @@ const Patient: NextPage = () => {
                             )}
                           />
                         </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
                         <GenericInput
                           label="Chief Complaint"
                           type="text"
                           placeHolder="Address"
                           register={register("chiefComplaint")}
                         />
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
                         <GenericInput
                           label="Guardian"
                           type="text"
                           placeHolder="Guardian"
                           register={register("guardian")}
                         />
+                        <GenericInput
+                          label="Guardian No"
+                          type="text"
+                          placeHolder="Guardian No"
+                          register={register("guardianNo")}
+                        />
                       </div>
                     </div>
+                    {data?.discharedAt ? (
+                      <div className="col-span-1 space-y-3 mt-5">
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Addmitting Diagnosis
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {data.admittingDiagnosis}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Final Diagnosis
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {data.finalDiagnosis}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Other Diagnosis
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {data.otherDiagnosis}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Medical Result
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {data.result}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Disposition
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {data.status}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                   <div className="w-full my-5 flex justify-end">
                     {isEdit ? (

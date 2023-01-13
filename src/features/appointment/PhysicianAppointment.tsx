@@ -252,8 +252,8 @@ const Apointment: NextPage = () => {
                         </label>
                         <div className="relative mt-1 rounded-md shadow-sm ">
                           <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                            {selectedAppointment.physician?.user.lastName}{" "}
-                            {selectedAppointment.physician.user.firstName}
+                            {selectedAppointment.physician?.user.firstName}{" "}
+                            {selectedAppointment.physician.user.lastName}
                           </h3>
                         </div>
                       </div>

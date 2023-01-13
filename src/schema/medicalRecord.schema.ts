@@ -9,6 +9,7 @@ export const admitPatientSchema = z.object({
   roomId: z.number().nullish(),
   physicianId: z.number().nullish(),
   guardian: z.string().nullish(),
+  guardianNo: z.string().nullish(),
   chiefComplaint: z.string().nullish(),
 });
 
@@ -20,6 +21,7 @@ export const updateMedicalRecordSchema = z.object({
   roomId: z.number().nullish(),
   physicianId: z.number().nullish(),
   guardian: z.string().nullish(),
+  guardianNo: z.string().nullish(),
   chiefComplaint: z.string().nullish(),
   status: z.nativeEnum(MedicalStatus).nullish(),
 });
