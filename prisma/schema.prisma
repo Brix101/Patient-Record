@@ -95,7 +95,7 @@ model MedicalRecord {
   bloodPressure  String?
   chiefComplaint String?
   guardian       String?
-  guardianNo       String?
+  guardianNo     String?
   status         MedicalStatus? @default(Admitted)
   admittedAt     DateTime       @default(now())
   discharedAt    DateTime?
@@ -127,8 +127,13 @@ model MedicalRecord {
 }
 
 model Receipt {
-  id              Int            @id @default(autoincrement())
-  philHealthId    String?
+  id           Int     @id @default(autoincrement())
+  philHealthId String?
+
+  roomCharge        Decimal? @db.Decimal(10, 2)
+  appointmentCharge Decimal? @db.Decimal(10, 2)
+  medicineCharge    Decimal? @db.Decimal(10, 2)
+
   total           Decimal?       @db.Decimal(10, 2)
   medicalRecord   MedicalRecord? @relation(fields: [medicalRecordId], references: [id])
   medicalRecordId Int?           @unique

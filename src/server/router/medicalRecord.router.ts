@@ -10,6 +10,7 @@ import {
 import { Prisma, RoomStatus } from "@prisma/client";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
+import moment from "moment";
 
 export const medicalRecordRouter = createProtectedRouter()
   .mutation("admit-patient", {
@@ -290,6 +291,64 @@ export const medicalRecordRouter = createProtectedRouter()
     resolve: async ({ ctx, input }) => {
       const { medicalRecordId, total, philHealthId } = input;
       try {
+        const record = await ctx.prisma.medicalRecord.findUnique({
+          where: {
+            id: medicalRecordId,
+          },
+          include: {
+            medicine: true,
+            appointments: {
+              include: {
+                physician: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
+            physician: {
+              include: {
+                user: true,
+              },
+            },
+            room: true,
+          },
+        });
+
+        const admitedD = moment(record?.admittedAt);
+        const nowD = moment(new Date());
+        const roomTime = nowD.diff(admitedD, "days");
+        const roomPrice = (record?.room
+          ? record?.room?.price
+          : 0) as unknown as number;
+        const roomCharge = roomPrice * roomTime; //room total price
+
+        const appointmentCharge = record?.appointments
+          .map((appointment) => {
+            const startD = moment(appointment?.start);
+            const endD = moment(appointment.end);
+            const totalTime = endD.diff(startD, "hours", true);
+            const phyCharge = appointment.physician
+              .sessionCharge as unknown as number;
+            const subTotal = totalTime * phyCharge;
+            const total = appointment.status === "Finished" ? subTotal : 0;
+
+            return total;
+          })
+          .reduce((a, b) => a + b, 0) as unknown as number;
+
+        const medicineCharge = record?.medicine
+          .map((item) => item.total)
+          .reduce((a, b) => {
+            const totalA = a as unknown as string;
+            const totalB = b as unknown as string;
+            const total = parseFloat(totalA) + parseFloat(totalB);
+
+            return total as unknown as number;
+          }, 0) as unknown as number;
+
+        const totalCharge = roomCharge + appointmentCharge + medicineCharge;
+
         const patientRecord = await ctx.prisma.medicalRecord.update({
           where: {
             id: medicalRecordId,
@@ -298,7 +357,10 @@ export const medicalRecordRouter = createProtectedRouter()
             receipt: {
               create: {
                 philHealthId,
-                total: new Prisma.Decimal(total),
+                appointmentCharge: new Prisma.Decimal(appointmentCharge),
+                medicineCharge: new Prisma.Decimal(medicineCharge),
+                roomCharge: new Prisma.Decimal(roomCharge),
+                total: new Prisma.Decimal(totalCharge),
               },
             },
             appointments: {

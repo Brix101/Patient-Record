@@ -294,11 +294,9 @@ const Patient: NextPage = () => {
                     <>
                       {!data?.receipt ? (
                         <>
-                          {!data?.patient?.isAdmitted ? (
-                            <PrimaryButton onClick={() => setIsEdit(true)}>
-                              <Edit2 size={24} />
-                            </PrimaryButton>
-                          ) : null}
+                          <PrimaryButton onClick={() => setIsEdit(true)}>
+                            <Edit2 size={24} />
+                          </PrimaryButton>
                           <SecondaryButton onClick={() => setIsBilling(true)}>
                             <DollarSign size={24} />
                           </SecondaryButton>
@@ -465,7 +463,7 @@ const Patient: NextPage = () => {
                               </label>
                               <div className="relative mt-1 rounded-md shadow-sm ">
                                 <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {roomCharge.toFixed(2)}
+                                  {data?.receipt.roomCharge?.toString()}
                                 </h3>
                               </div>
                             </div>
@@ -475,7 +473,7 @@ const Patient: NextPage = () => {
                               </label>
                               <div className="relative mt-1 rounded-md shadow-sm ">
                                 <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {appointmentCharge.toFixed(2)}
+                                  {data?.receipt.appointmentCharge?.toString()}
                                 </h3>
                               </div>
                             </div>
@@ -485,7 +483,7 @@ const Patient: NextPage = () => {
                               </label>
                               <div className="relative mt-1 rounded-md shadow-sm ">
                                 <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {medicineCharge.toFixed(2)}
+                                  {data?.receipt.medicineCharge?.toString()}
                                 </h3>
                               </div>
                             </div>
@@ -608,10 +606,12 @@ const Patient: NextPage = () => {
               <PatientAppointments
                 appointments={data?.appointments}
                 isDisabled={data?.receipt ? true : false}
+                refetchRecord={refetchRecord}
               />
               <PatientMedicines
                 medicines={data?.medicine}
                 isDisabled={data?.receipt ? true : false}
+                refetchRecord={refetchRecord}
               />
             </>
           ) : null}
@@ -855,6 +855,7 @@ const Patient: NextPage = () => {
 function PatientAppointments({
   appointments,
   isDisabled,
+  refetchRecord,
 }: {
   appointments?: (Appointment & {
     physician: Physician & {
@@ -862,6 +863,7 @@ function PatientAppointments({
     };
   })[];
   isDisabled?: boolean;
+  refetchRecord?: any;
 }) {
   const router = useRouter();
   const { record } = router.query;
@@ -921,6 +923,7 @@ function PatientAppointments({
       setPatientAppointment(MedicalRecord?.appointments);
       resetCreate();
       setCreate(false);
+      refetchRecord();
     },
   });
 
@@ -938,6 +941,7 @@ function PatientAppointments({
         );
         resetUpdate();
         setUpdate(false);
+        refetchRecord();
       },
     }
   );
@@ -949,6 +953,9 @@ function PatientAppointments({
         setPatientAppointment((prev) =>
           prev?.filter((item) => item.id !== variables.id)
         );
+      },
+      onSuccess: () => {
+        refetchRecord();
       },
     }
   );
@@ -1338,9 +1345,12 @@ function PatientAppointments({
 function PatientMedicines({
   medicines,
   isDisabled,
+  refetchRecord,
 }: {
   medicines?: Medicine[];
   isDisabled?: boolean;
+
+  refetchRecord?: any;
 }) {
   const router = useRouter();
   const { record } = router.query;
@@ -1371,6 +1381,7 @@ function PatientMedicines({
         setPatientMedicine(medicine);
         setCreate(false);
         reset();
+        refetchRecord();
       },
     }
   );
@@ -1389,6 +1400,7 @@ function PatientMedicines({
         );
         setUpdate(false);
         updateReset();
+        refetchRecord();
       },
     }
   );
@@ -1400,6 +1412,9 @@ function PatientMedicines({
         setPatientMedicine((prev) =>
           prev?.filter((items) => items.id !== variables.id)
         );
+      },
+      onSuccess: () => {
+        refetchRecord();
       },
     }
   );
