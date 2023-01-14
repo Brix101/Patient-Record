@@ -8,15 +8,17 @@ import { trpc } from "@/utils/trpc";
 import { Tooltip } from "@mui/material";
 import { MedicalRecord, Patient } from "@prisma/client";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Suspense, useState } from "react";
-import { ExternalLink, FilePlus, FileText, PlusSquare } from "react-feather";
+import { FilePlus, FileText, PlusSquare, Trash2 } from "react-feather";
 import Select from "react-select";
 import { setPatientsMode, togglePatientAdmit } from "./patientsSlice";
 
 const ViewPatient: NextPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { data: sessionData } = useSession();
 
   const [patientData, setPatientData] = useState<
     (Patient & {
@@ -42,6 +44,14 @@ const ViewPatient: NextPage = () => {
     }
   );
 
+  const { mutate } = trpc.useMutation(["patient.delete-patient"], {
+    onMutate: (variables) => {
+      setPatientData((prev) =>
+        prev?.filter((patient) => patient.id !== variables.id)
+      );
+    },
+  });
+
   const TableStyle = (x: number) => {
     if (x % 2) {
       return "bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700";
@@ -66,6 +76,14 @@ const ViewPatient: NextPage = () => {
       pathname: "nurse/patient/record/[record]",
       query: { record: id },
     });
+  };
+
+  const isAdmin = sessionData?.user?.role === "ADMIN";
+
+  const deleteDialog = ({ patient }: { patient: Patient }) => {
+    if (window.confirm("Are you sure to Delete this Patient Data?")) {
+      mutate({ ...patient });
+    }
   };
 
   return (
@@ -173,33 +191,49 @@ const ViewPatient: NextPage = () => {
                   <td className="py-4 px-6">{patient.mobile}</td>
                   <td className="py-4 px-6">{patient.bloodType}</td>
                   <td className="py-4 px-6 flex gap-2">
-                    {!patient.isAdmitted ? (
-                      <Tooltip title="Admit patient" arrow>
-                        <FilePlus
-                          className="text-blue-500 cursor-pointer"
-                          size={24}
-                          onClick={() => {
-                            viewPatient({ patient });
-                            dispatch(togglePatientAdmit());
-                          }}
-                        />
-                      </Tooltip>
-                    ) : (
+                    {!patient.isAdmitted && isAdmin ? (
                       <>
-                        <Tooltip title="View Patient Record" arrow>
-                          <FileText
-                            className="text-blue-500 cursor-pointer"
-                            size={20}
+                        <Tooltip title="Delete Record" arrow>
+                          <Trash2
+                            className="text-red-500 cursor-pointer"
+                            size={24}
                             onClick={() => {
-                              if (patient.medicalRecord.at(-1)) {
-                                viewRecord({
-                                  id: patient.medicalRecord.at(-1)
-                                    ?.id as number,
-                                });
-                              }
+                              deleteDialog({ patient });
                             }}
                           />
                         </Tooltip>
+                      </>
+                    ) : (
+                      <>
+                        {!patient.isAdmitted ? (
+                          <Tooltip title="Admit patient" arrow>
+                            <FilePlus
+                              className="text-blue-500 cursor-pointer"
+                              size={24}
+                              onClick={() => {
+                                viewPatient({ patient });
+                                dispatch(togglePatientAdmit());
+                              }}
+                            />
+                          </Tooltip>
+                        ) : (
+                          <>
+                            <Tooltip title="View Patient Record" arrow>
+                              <FileText
+                                className="text-blue-500 cursor-pointer"
+                                size={20}
+                                onClick={() => {
+                                  if (patient.medicalRecord.at(-1)) {
+                                    viewRecord({
+                                      id: patient.medicalRecord.at(-1)
+                                        ?.id as number,
+                                    });
+                                  }
+                                }}
+                              />
+                            </Tooltip>
+                          </>
+                        )}
                       </>
                     )}
                   </td>

@@ -140,25 +140,12 @@ export const patientRouter = createProtectedRouter()
       const { role } = ctx.session.user;
 
       if (role === Role.ADMIN) {
-        const deletedPatient = await ctx.prisma.patient.update({
+        const deletedPatient = await ctx.prisma.patient.delete({
           where: {
             id: input.id,
           },
-          data: {
-            active: false,
-            medicalRecord: {
-              updateMany: {
-                where: {
-                  patientId: input.id,
-                },
-                data: {
-                  active: false,
-                },
-              },
-            },
-          },
         });
-        return { detail: "Patient Data Deleted", deletedPatient };
+        return deletedPatient;
       }
 
       throw new trpc.TRPCError({
