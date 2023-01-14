@@ -155,16 +155,14 @@ const Patient: NextPage = () => {
       },
     });
 
-  const { mutate: mutateDischarged } = trpc.useMutation(
-    ["medicalRecord.discharged-record"],
-    {
+  const { mutate: mutateDischarged, isLoading: isDischargedLoading } =
+    trpc.useMutation(["medicalRecord.discharged-record"], {
       onSuccess: () => {
         refetchRecord().then(() => {
           setIsDischarged(false);
         });
       },
-    }
-  );
+    });
 
   trpc.useQuery(
     ["room.get-available-rooms", { searchInput: "", category: selectedCat }],
@@ -839,7 +837,7 @@ const Patient: NextPage = () => {
                         <div className="py-3 text-right flex gap-2 justify-end">
                           <PrimaryButton
                             className="w-full min-w-[150px]"
-                            isLoading={isBillingLoading}
+                            isLoading={isDischargedLoading}
                             type="submit"
                           >
                             Discharged
@@ -1015,6 +1013,8 @@ function PatientAppointments({
       const startD = moment(appointment?.start);
       const endD = moment(appointment.end);
       const totalTime = endD.diff(startD, "hours", true);
+
+      console.log(totalTime);
       const phyCharge = appointment.physician
         .sessionCharge as unknown as number;
       const subTotal = totalTime * phyCharge;
