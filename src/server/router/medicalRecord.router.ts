@@ -321,7 +321,7 @@ export const medicalRecordRouter = createProtectedRouter()
 
         const admitedD = moment(record?.admittedAt);
         const nowD = moment(new Date());
-        const roomTime = nowD.diff(admitedD, "days");
+        const roomTime = nowD.diff(admitedD, "days", true);
         const roomPrice = (record?.room
           ? record?.room?.price
           : 0) as unknown as number;

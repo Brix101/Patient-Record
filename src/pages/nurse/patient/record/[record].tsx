@@ -225,7 +225,7 @@ const Patient: NextPage = () => {
 
   const admitedD = moment(data?.admittedAt);
   const nowD = moment(data?.receipt?.createAt ?? new Date());
-  const roomTime = nowD.diff(admitedD, "days");
+  const roomTime = nowD.diff(admitedD, "days", true);
   const roomPrice = (data?.room ? data?.room?.price : 0) as unknown as number;
   const roomCharge = roomPrice * roomTime; //room total price
 
