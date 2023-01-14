@@ -1117,7 +1117,7 @@ function PatientAppointments({
           <div className="flex items-center gap-2">
             <h1 className="text-lg  text-gray-900">Total :</h1>
             <h1 className="text-lg  text-gray-900">
-              {appointmentCharge.toFixed(2)}
+              {appointmentCharge?.toFixed(2)}
             </h1>
           </div>
         </div>
@@ -1569,7 +1569,7 @@ function PatientMedicines({
           <div className="flex items-center gap-2">
             <h1 className="text-lg  text-gray-900">Total :</h1>
             <h1 className="text-lg  text-gray-900">
-              {medicineCharge.toFixed(2)}
+              {medicineCharge?.toFixed(2)}
             </h1>
           </div>
         </div>
