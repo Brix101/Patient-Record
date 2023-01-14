@@ -36,6 +36,7 @@ const Apointment: NextPage = () => {
     control: controlUpdate,
     reset: resetUpdate,
     formState: { isDirty: isUpdateDirty },
+    getValues: getRecordValues,
   } = useForm<UpdateAppointmentInput>();
 
   const [selectedAppointment, setSelectedAppointment] = useState<
@@ -89,7 +90,10 @@ const Apointment: NextPage = () => {
       return data?.map((appointment) => {
         return {
           ...appointment,
-          title: "Appointment " + appointment.id,
+          title:
+            appointment.physician.user.firstName +
+            " " +
+            appointment.physician.user.lastName,
         };
       });
     },
@@ -194,16 +198,6 @@ const Apointment: NextPage = () => {
               resetUpdate(data);
             }
           }}
-          // onNavigate={(data) => {
-          //   console.log("onNavigate", data);
-          // }}
-          // onSelectSlot={(data) => {
-          //   console.log("onSelectSlot Start", data.start);
-          //   console.log("onSelectSlot End", data.end);
-          // }}
-          // onKeyPressEvent={(e) => {
-          //   console.log(e, "Event data");
-          // }}
         />
       ) : null}
       <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -305,7 +299,13 @@ const Apointment: NextPage = () => {
                               onChange={(newValue) => {
                                 onChange(newValue ?? new Date());
                               }}
-                              disabled={!isNurse}
+                              disabled={
+                                !isNurse ||
+                                Boolean(
+                                  selectedAppointment.MedicalRecord?.receipt
+                                )
+                              }
+                              minDateTime={moment(new Date())}
                             />
                           )}
                         />
@@ -330,7 +330,13 @@ const Apointment: NextPage = () => {
                               onChange={(newValue) => {
                                 onChange(newValue ?? new Date());
                               }}
-                              disabled={!isNurse}
+                              disabled={
+                                !isNurse ||
+                                Boolean(
+                                  selectedAppointment.MedicalRecord?.receipt
+                                )
+                              }
+                              minDateTime={moment(getRecordValues("start"))}
                             />
                           )}
                         />
@@ -351,7 +357,12 @@ const Apointment: NextPage = () => {
                                 (c) => c.value === value
                               )}
                               onChange={(status) => onChange(status?.value)}
-                              isDisabled={!isNurse}
+                              isDisabled={
+                                !isNurse ||
+                                Boolean(
+                                  selectedAppointment.MedicalRecord?.receipt
+                                )
+                              }
                             />
                           )}
                         />

@@ -876,6 +876,7 @@ function PatientAppointments({
   isDisabled?: boolean;
   refetchRecord?: any;
 }) {
+  const dateNow = new Date();
   const router = useRouter();
   const { record } = router.query;
   const [create, setCreate] = useState<boolean>(false);
@@ -886,6 +887,8 @@ function PatientAppointments({
     reset: resetCreate,
     control: controlCreate,
     formState: { isDirty: isCreateDirty },
+    getValues: getCreateValues,
+    setError: setCreateError,
   } = useForm<CreateAppointmentInput>();
 
   const {
@@ -893,6 +896,7 @@ function PatientAppointments({
     reset: resetUpdate,
     control: controlUpdate,
     formState: { isDirty: isUpdateDirty },
+    getValues: getUpdateValues,
   } = useForm<UpdateAppointmentInput>();
 
   const [PatientAppointments, setPatientAppointment] = useState<
@@ -1193,10 +1197,11 @@ function PatientAppointments({
                               sx={{ width: "100%" }}
                             />
                           )}
-                          value={value ? value : new Date()}
+                          value={value ? value : dateNow}
                           onChange={(newValue) => {
-                            onChange(newValue ?? new Date());
+                            onChange(newValue ?? dateNow);
                           }}
+                          minDateTime={moment(dateNow)}
                         />
                       )}
                     />
@@ -1217,10 +1222,20 @@ function PatientAppointments({
                               sx={{ width: "100%" }}
                             />
                           )}
-                          value={value ? value : new Date()}
+                          value={value ? value : dateNow}
                           onChange={(newValue) => {
-                            onChange(newValue ?? new Date());
+                            onChange(newValue ?? dateNow);
                           }}
+                          minDateTime={moment(getCreateValues("start"))}
+                          onError={() =>
+                            setCreateError(
+                              "end",
+                              { type: "onChange", message: "error" },
+                              {
+                                shouldFocus: true,
+                              }
+                            )
+                          }
                         />
                       )}
                     />
@@ -1299,11 +1314,11 @@ function PatientAppointments({
                               sx={{ width: "100%" }}
                             />
                           )}
-                          value={value ? value : new Date()}
+                          value={value ? value : dateNow}
                           onChange={(newValue) => {
-                            console.log(newValue);
-                            onChange(newValue ?? new Date());
+                            onChange(newValue ?? dateNow);
                           }}
+                          minDateTime={moment(dateNow)}
                         />
                       )}
                     />
@@ -1324,10 +1339,11 @@ function PatientAppointments({
                               sx={{ width: "100%" }}
                             />
                           )}
-                          value={value ? value : new Date()}
+                          value={value ? value : dateNow}
                           onChange={(newValue) => {
-                            onChange(newValue ?? new Date());
+                            onChange(newValue ?? dateNow);
                           }}
+                          minDateTime={moment(getUpdateValues("start"))}
                         />
                       )}
                     />

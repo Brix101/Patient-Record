@@ -13,7 +13,11 @@ export default function ProfileButton() {
   const userImage = data?.user?.image as string;
   const useAlt = data?.user?.name as string;
 
-  const { mutate } = trpc.useMutation(["logs.time-out"]);
+  const { mutate } = trpc.useMutation(["logs.time-out"], {
+    onSuccess: () => {
+      signOut();
+    },
+  });
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -70,8 +74,9 @@ export default function ProfileButton() {
                 type="submit"
                 className="text-gray-700 flex gap-2 w-full px-4 py-2 text-left text-sm hover:bg-green-100"
                 onClick={() => {
-                  mutate();
-                  signOut();
+                  if (window.confirm("Are you sure logout?")) {
+                    mutate();
+                  }
                 }}
               >
                 <LogOut size={20} />
