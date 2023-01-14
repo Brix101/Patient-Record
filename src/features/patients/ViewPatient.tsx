@@ -25,6 +25,7 @@ const ViewPatient: NextPage = () => {
       medicalRecord: MedicalRecord[];
     })[]
   >();
+  const [enabled, setEnabled] = useState<boolean>(true);
   const [filter, setFilter] = useState<boolean>(true);
   const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
@@ -37,7 +38,7 @@ const ViewPatient: NextPage = () => {
       },
     ],
     {
-      enabled: true,
+      enabled: enabled,
       onSuccess: (data) => {
         setPatientData(data);
       },
@@ -46,11 +47,13 @@ const ViewPatient: NextPage = () => {
 
   const { mutate } = trpc.useMutation(["patient.delete-patient"], {
     onMutate: (variables) => {
+      setEnabled(false);
       setPatientData((prev) =>
         prev?.filter((patient) => patient.id !== variables.id)
       );
     },
     onSuccess: () => {
+      setEnabled(true);
       refetch();
     },
   });
