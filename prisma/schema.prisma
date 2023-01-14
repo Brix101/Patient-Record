@@ -75,7 +75,7 @@ model Patient {
   religion    String?
   bloodType   String?
   active      Boolean      @default(true)
-  isAdmitted  Boolean      @default(false)
+  isAdmitted  Boolean      @default(true)
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
