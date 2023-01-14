@@ -228,6 +228,8 @@ const ViewPatient: NextPage = () => {
                                       id: patient.medicalRecord.at(-1)
                                         ?.id as number,
                                     });
+                                  } else {
+                                    viewPatient({ patient });
                                   }
                                 }}
                               />

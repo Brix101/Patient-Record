@@ -75,7 +75,7 @@ const PatientData: NextPage = () => {
                   >
                     <Edit size={24} />
                   </PrimaryButton>
-                  {!patient?.isAdmitted ? (
+                  {patient?.isAdmitted ? (
                     <SecondaryButton
                       className="w-11"
                       tooltip="Admit Patient"
