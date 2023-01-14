@@ -29,7 +29,7 @@ const ViewPatient: NextPage = () => {
   const [name, setName] = useState<SearchPatientInput>({ name: undefined });
 
   const debouncedValue = useDebounce<SearchPatientInput>(name, 500);
-  const { data, isLoading, isRefetching, error } = trpc.useQuery(
+  const { data, isLoading, isRefetching, error, refetch } = trpc.useQuery(
     [
       "patient.all-patients",
       {
@@ -49,6 +49,9 @@ const ViewPatient: NextPage = () => {
       setPatientData((prev) =>
         prev?.filter((patient) => patient.id !== variables.id)
       );
+    },
+    onSuccess: () => {
+      refetch();
     },
   });
 
