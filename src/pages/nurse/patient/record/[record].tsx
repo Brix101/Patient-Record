@@ -129,7 +129,7 @@ const Patient: NextPage = () => {
     }
   );
 
-  const { mutate, isLoading } = trpc.useMutation(
+  const { mutate, isLoading, error } = trpc.useMutation(
     ["medicalRecord.update-record"],
     {
       onSuccess: () => {
@@ -137,6 +137,9 @@ const Patient: NextPage = () => {
       },
     }
   );
+  if (error) {
+    console.log(error);
+  }
 
   const { mutate: mutateBiling, isLoading: isBillingLoading } =
     trpc.useMutation(["medicalRecord.billing-record"], {
@@ -997,6 +1000,20 @@ function PatientAppointments({
     }
   };
 
+  const appointmentCharge = appointments
+    ?.map((appointment) => {
+      const startD = moment(appointment?.start);
+      const endD = moment(appointment.end);
+      const totalTime = endD.diff(startD, "hours", true);
+      const phyCharge = appointment.physician
+        .sessionCharge as unknown as number;
+      const subTotal = totalTime * phyCharge;
+      const total = appointment.status === "Finished" ? subTotal : 0;
+
+      return total;
+    })
+    .reduce((a, b) => a + b, 0) as unknown as number;
+
   return (
     <>
       <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
@@ -1095,6 +1112,15 @@ function PatientAppointments({
             </tbody>
           </Suspense>
         </table>
+        <div className="h-20 w-full flex justify-between items-center pt-2 px-5 mr-20">
+          <div></div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg  text-gray-900">Total :</h1>
+            <h1 className="text-lg  text-gray-900">
+              {appointmentCharge.toFixed(2)}
+            </h1>
+          </div>
+        </div>
       </div>
       <Dialog open={create} onClose={() => setCreate(false)} maxWidth="md">
         <div className="w-[900px] h-screen">
@@ -1444,6 +1470,16 @@ function PatientMedicines({
     }
   };
 
+  const medicineCharge = medicines
+    ?.map((item) => item.total)
+    .reduce((a, b) => {
+      const totalA = a as unknown as string;
+      const totalB = b as unknown as string;
+      const total = parseFloat(totalA) + parseFloat(totalB);
+
+      return total as unknown as number;
+    }, 0) as unknown as number;
+
   return (
     <>
       <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
@@ -1528,6 +1564,15 @@ function PatientMedicines({
             </tbody>
           </Suspense>
         </table>
+        <div className="h-20 w-full flex justify-between items-center pt-2 px-5 mr-20">
+          <div></div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg  text-gray-900">Total :</h1>
+            <h1 className="text-lg  text-gray-900">
+              {medicineCharge.toFixed(2)}
+            </h1>
+          </div>
+        </div>
       </div>
       <Dialog open={create} onClose={() => setCreate(false)} maxWidth="md">
         <div className="w-[900px] h-screen">

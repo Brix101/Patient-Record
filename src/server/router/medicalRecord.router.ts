@@ -222,18 +222,22 @@ export const medicalRecordRouter = createProtectedRouter()
       } = input;
       try {
         if (roomId) {
-          await ctx.prisma.medicalRecord.update({
+          const oldRecord = await ctx.prisma.medicalRecord.findUnique({
             where: {
               id: id,
             },
-            data: {
-              room: {
-                update: {
-                  status: RoomStatus["VACANT" as keyof typeof RoomStatus],
-                },
-              },
-            },
           });
+
+          if (oldRecord?.roomId) {
+            await ctx.prisma.room.update({
+              where: {
+                id: oldRecord.roomId,
+              },
+              data: {
+                status: RoomStatus["VACANT" as keyof typeof RoomStatus],
+              },
+            });
+          }
         }
 
         const patientRecord = await ctx.prisma.medicalRecord.update({
