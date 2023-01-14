@@ -3,6 +3,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import GenericInput from "@/components/inputs/GenericInput";
 import Main from "@/components/Layout/Main";
+import SuspenseComponent from "@/components/SuspenseComponent";
 import {
   CreateAppointmentInput,
   UpdateAppointmentInput,
@@ -90,7 +91,11 @@ const Patient: NextPage = () => {
     reset: resetDischarged,
   } = useForm<DischargedMedicalRecordInput>();
 
-  const { data, refetch: refetchRecord } = trpc.useQuery(
+  const {
+    data,
+    refetch: refetchRecord,
+    isLoading: isRecordLoading,
+  } = trpc.useQuery(
     [
       "medicalRecord.get-record",
       {
@@ -278,578 +283,583 @@ const Patient: NextPage = () => {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <Main>
-        <div className="flex-1 h-full w-full space-y-5 overflow-x-hidden">
-          <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
-            <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
-              <div className="flex items-center">
-                <h1 className="text-2xl font-bold text-gray-400">
-                  Patient Record
-                </h1>
-              </div>
-              {!isEdit ? (
-                <div className="space-x-5 flex">
-                  <div>
-                    <OutlinedButton onClick={() => router.back()}>
-                      <ArrowLeft size={24} />
-                    </OutlinedButton>
-                  </div>
-                  {!data?.discharedAt ? (
-                    <>
-                      {!data?.receipt ? (
-                        <>
-                          <PrimaryButton onClick={() => setIsEdit(true)}>
-                            <Edit2 size={24} />
-                          </PrimaryButton>
-                          <SecondaryButton onClick={() => setIsBilling(true)}>
-                            <DollarSign size={24} />
-                          </SecondaryButton>
-                        </>
-                      ) : (
-                        <SecondaryButton onClick={() => setIsDischarged(true)}>
-                          <ExternalLink size={24} />
-                        </SecondaryButton>
-                      )}
-                    </>
-                  ) : null}
-                </div>
-              ) : null}
-            </div>
-            <div className="w-full h-auto relative">
-              {isEdit ? null : (
-                <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
-              )}
-              <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
-                <form className="max-w-9xl" onSubmit={handleSubmit(onSubmit)}>
-                  <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
-                    {data?.patient?.lastName +
-                      ", " +
-                      data?.patient?.firstName +
-                      " " +
-                      data?.patient?.middleName}
+        <SuspenseComponent isLoading={isRecordLoading}>
+          <div className="flex-1 h-full w-full space-y-5 overflow-x-hidden">
+            <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
+              <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+                <div className="flex items-center">
+                  <h1 className="text-2xl font-bold text-gray-400">
+                    Patient Record
                   </h1>
-                  <div className="flex flex-col">
-                    <div className="col-span-1 space-y-3">
-                      <div className="grid grid-cols-3 gap-3">
-                        <GenericInput
-                          label="Height"
-                          type="text"
-                          placeHolder="Height"
-                          register={register("height")}
+                </div>
+                {!isEdit ? (
+                  <div className="space-x-5 flex">
+                    <div>
+                      <OutlinedButton onClick={() => router.back()}>
+                        <ArrowLeft size={24} />
+                      </OutlinedButton>
+                    </div>
+                    {!data?.discharedAt ? (
+                      <>
+                        {!data?.receipt ? (
+                          <>
+                            <PrimaryButton onClick={() => setIsEdit(true)}>
+                              <Edit2 size={24} />
+                            </PrimaryButton>
+                            <SecondaryButton onClick={() => setIsBilling(true)}>
+                              <DollarSign size={24} />
+                            </SecondaryButton>
+                          </>
+                        ) : (
+                          <SecondaryButton
+                            onClick={() => setIsDischarged(true)}
+                          >
+                            <ExternalLink size={24} />
+                          </SecondaryButton>
+                        )}
+                      </>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+              <div className="w-full h-auto relative">
+                {isEdit ? null : (
+                  <div className="absolute top-0 left-0 w-full h-full z-10 bg-transparent"></div>
+                )}
+                <div className="relative w-full h-auto p-2 flex justify-center overflow-hidden">
+                  <form className="max-w-9xl" onSubmit={handleSubmit(onSubmit)}>
+                    <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
+                      {data?.patient?.lastName +
+                        ", " +
+                        data?.patient?.firstName +
+                        " " +
+                        data?.patient?.middleName}
+                    </h1>
+                    <div className="flex flex-col">
+                      <div className="col-span-1 space-y-3">
+                        <div className="grid grid-cols-3 gap-3">
+                          <GenericInput
+                            label="Height"
+                            type="text"
+                            placeHolder="Height"
+                            register={register("height")}
+                          />
+                          <GenericInput
+                            label="Weight"
+                            type="text"
+                            placeHolder="Weight"
+                            register={register("weight")}
+                          />
+                          <GenericInput
+                            label="Blood Pressure"
+                            type="text"
+                            placeHolder="Blood Pressure"
+                            register={register("bloodPressure")}
+                          />
+                        </div>
+
+                        <Controller
+                          control={control}
+                          name="roomId"
+                          render={({ field: { onChange, value } }) => (
+                            <div className="grid grid-cols-2 gap-2 items-end">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Room Type
+                                </label>
+                                <Select
+                                  className="capitalize"
+                                  classNamePrefix="addl-class"
+                                  placeholder="Room Catergory..."
+                                  options={roomCategory}
+                                  value={roomCategory?.find(
+                                    (cat) => cat.value === selectedCat
+                                  )}
+                                  onChange={(e) => {
+                                    resetField("roomId");
+                                    onChange(undefined);
+                                    setSelectedCat(e?.value as RoomCat);
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Room
+                                </label>
+                                <Select
+                                  className="capitalize"
+                                  classNamePrefix="addl-class"
+                                  options={rooms}
+                                  value={rooms?.find(
+                                    (c) =>
+                                      c.value.id === value &&
+                                      c.value.category === selectedCat
+                                  )}
+                                  onChange={(room) => {
+                                    if (room) {
+                                      onChange(room?.value.id);
+                                      setSelectedCat(
+                                        room?.value.category as RoomCat
+                                      );
+                                    } else {
+                                      setSelectedCat("WARD");
+                                      onChange(undefined);
+                                    }
+                                  }}
+                                  placeholder="Room"
+                                  isClearable
+                                />
+                              </div>
+                            </div>
+                          )}
                         />
-                        <GenericInput
-                          label="Weight"
-                          type="text"
-                          placeHolder="Weight"
-                          register={register("weight")}
-                        />
-                        <GenericInput
-                          label="Blood Pressure"
-                          type="text"
-                          placeHolder="Blood Pressure"
-                          register={register("bloodPressure")}
-                        />
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="flex flex-col justify-between">
+                            <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                              Physician
+                            </label>
+                            <Controller
+                              control={control}
+                              name="physicianId"
+                              render={({ field: { onChange, value } }) => (
+                                <Select
+                                  className="capitalize"
+                                  classNamePrefix="addl-class"
+                                  options={physicians}
+                                  value={physicians?.find(
+                                    (c) => c.value === value
+                                  )}
+                                  onChange={(physicians) =>
+                                    onChange(physicians?.value)
+                                  }
+                                  placeholder="Physician"
+                                  isSearchable
+                                />
+                              )}
+                            />
+                          </div>
+                          <GenericInput
+                            label="Chief Complaint"
+                            type="text"
+                            placeHolder="Address"
+                            register={register("chiefComplaint")}
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <GenericInput
+                            label="Guardian"
+                            type="text"
+                            placeHolder="Guardian"
+                            register={register("guardian")}
+                          />
+                          <GenericInput
+                            label="Guardian No"
+                            type="text"
+                            placeHolder="Guardian No"
+                            register={register("guardianNo")}
+                          />
+                        </div>
                       </div>
 
-                      <Controller
-                        control={control}
-                        name="roomId"
-                        render={({ field: { onChange, value } }) => (
-                          <div className="grid grid-cols-2 gap-2 items-end">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                                Room Type
-                              </label>
-                              <Select
-                                className="capitalize"
-                                classNamePrefix="addl-class"
-                                placeholder="Room Catergory..."
-                                options={roomCategory}
-                                value={roomCategory?.find(
-                                  (cat) => cat.value === selectedCat
-                                )}
-                                onChange={(e) => {
-                                  resetField("roomId");
-                                  onChange(undefined);
-                                  setSelectedCat(e?.value as RoomCat);
-                                }}
-                              />
+                      {data?.receipt ? (
+                        <>
+                          <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
+                            Billing Summary
+                          </h1>
+                          <div className="col-span-1 space-y-3 mt-5">
+                            <div className="grid grid-cols-3 gap-3">
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Room Charges
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data?.receipt.roomCharge?.toString()}
+                                  </h3>
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Appointment Charges
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data?.receipt.appointmentCharge?.toString()}
+                                  </h3>
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Medicine Charges
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data?.receipt.medicineCharge?.toString()}
+                                  </h3>
+                                </div>
+                              </div>
                             </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                                Room
-                              </label>
-                              <Select
-                                className="capitalize"
-                                classNamePrefix="addl-class"
-                                options={rooms}
-                                value={rooms?.find(
-                                  (c) =>
-                                    c.value.id === value &&
-                                    c.value.category === selectedCat
-                                )}
-                                onChange={(room) => {
-                                  if (room) {
-                                    onChange(room?.value.id);
-                                    setSelectedCat(
-                                      room?.value.category as RoomCat
-                                    );
-                                  } else {
-                                    setSelectedCat("WARD");
-                                    onChange(undefined);
-                                  }
-                                }}
-                                placeholder="Room"
-                                isClearable
-                              />
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Reference #
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data.receipt.id}
+                                  </h3>
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Total Charges
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {totalCharge.toFixed(2)}
+                                  </h3>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        )}
-                      />
-                      <div className="grid grid-cols-2 gap-3">
+                        </>
+                      ) : null}
+                      {data?.discharedAt ? (
+                        <>
+                          <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
+                            Discharged Summary
+                          </h1>
+                          <div className="col-span-1 space-y-3 mt-5">
+                            <div className="grid grid-cols-3 gap-3">
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Addmitting Diagnosis
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data.admittingDiagnosis}
+                                  </h3>
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Final Diagnosis
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data.finalDiagnosis}
+                                  </h3>
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Other Diagnosis
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data.otherDiagnosis}
+                                  </h3>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Medical Result
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data.result}
+                                  </h3>
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-grey-700">
+                                  Disposition
+                                </label>
+                                <div className="relative mt-1 rounded-md shadow-sm ">
+                                  <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                    {data.status}
+                                  </h3>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      ) : null}
+                    </div>
+                    <div className="w-full my-5 flex justify-end">
+                      {isEdit ? (
+                        <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
+                          <PrimaryButton
+                            className="w-full"
+                            type="submit"
+                            disabled={!isDirty}
+                            isLoading={isLoading}
+                          >
+                            Update
+                          </PrimaryButton>
+                          <OutlinedButton
+                            type="button"
+                            onClick={() => setIsEdit(false)}
+                          >
+                            Cancel
+                          </OutlinedButton>
+                        </div>
+                      ) : null}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {!isEdit ? (
+              <>
+                <PatientAppointments
+                  appointments={data?.appointments}
+                  isDisabled={data?.receipt ? true : false}
+                  refetchRecord={refetchRecord}
+                />
+                <PatientMedicines
+                  medicines={data?.medicine}
+                  isDisabled={data?.receipt ? true : false}
+                  refetchRecord={refetchRecord}
+                />
+              </>
+            ) : null}
+            <Dialog
+              open={isBilling}
+              onClose={() => setIsBilling(false)}
+              maxWidth="md"
+            >
+              <div className="w-[900px] h-screen">
+                <div className="w-full h-auto flex justify-end p-5">
+                  <div className="w-fit">
+                    <OutlinedButton onClick={() => setIsBilling(false)}>
+                      <XSquare size={24} />
+                    </OutlinedButton>
+                  </div>
+                </div>
+                <form
+                  className="flex-1 flex flex-col items-center mt-5 mb-20"
+                  onSubmit={handleBillingSubmit(onBillingSubmit)}
+                >
+                  <div className="flex flex-col w-full max-w-md">
+                    <div className="col-span-1 space-y-3">
+                      <div className="col-span-1 space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Room Charge
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                              {roomCharge && roomCharge.toFixed(2)}
+                            </h3>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Appointment Charge
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                              {appointmentCharge &&
+                                appointmentCharge.toFixed(2)}
+                            </h3>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Medicine Charge
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                              {medicineCharge && medicineCharge.toFixed(2)}
+                            </h3>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Total Charge
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                              {totalCharge.toFixed(2)}
+                            </h3>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Philhealth Id
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <input
+                              type={"text"}
+                              className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                              {...registerBilling("philHealthId")}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="w-full max-w-md my-5 flex justify-end">
+                        <div className="py-3 text-right flex gap-2 justify-end">
+                          <PrimaryButton
+                            className="w-full min-w-[150px]"
+                            isLoading={isBillingLoading}
+                            type="submit"
+                          >
+                            Bill
+                          </PrimaryButton>
+
+                          <OutlinedButton
+                            type="button"
+                            onClick={() => setIsBilling(false)}
+                          >
+                            Cancel
+                          </OutlinedButton>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </Dialog>
+
+            <Dialog
+              open={isDischarged}
+              onClose={() => setIsDischarged(false)}
+              maxWidth="md"
+            >
+              <div className="w-[900px] h-screen">
+                <div className="w-full h-auto flex justify-end p-5">
+                  <div className="w-fit">
+                    <OutlinedButton onClick={() => setIsDischarged(false)}>
+                      <XSquare size={24} />
+                    </OutlinedButton>
+                  </div>
+                </div>
+                <form
+                  className="flex-1 flex flex-col items-center mt-5 mb-20"
+                  onSubmit={handleDischargedSubmit(onDischargedSubmit)}
+                >
+                  <div className="flex flex-col w-full max-w-md">
+                    <div className="col-span-1 space-y-3">
+                      <div className="col-span-1 space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Addmitting Diagnosis
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <input
+                              type={"text"}
+                              className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                              {...registerDischarged("admittingDiagnosis")}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Final Diagnosis
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <input
+                              type={"text"}
+                              className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                              {...registerDischarged("finalDiagnosis")}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Other Diagnosis
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <input
+                              type={"text"}
+                              className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
+                              {...registerDischarged("otherDiagnosis")}
+                            />
+                          </div>
+                        </div>
+
                         <div className="flex flex-col justify-between">
                           <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                            Physician
+                            Result
                           </label>
                           <Controller
-                            control={control}
-                            name="physicianId"
+                            control={controlDischarged}
+                            name="result"
                             render={({ field: { onChange, value } }) => (
                               <Select
                                 className="capitalize"
-                                classNamePrefix="addl-class"
-                                options={physicians}
-                                value={physicians?.find(
+                                classNamePrefix="aDDl-class"
+                                options={medicalResult}
+                                value={medicalResult?.find(
                                   (c) => c.value === value
                                 )}
-                                onChange={(physicians) =>
-                                  onChange(physicians?.value)
+                                onChange={(medicalResult) =>
+                                  onChange(medicalResult?.value)
                                 }
-                                placeholder="Physician"
+                                placeholder="Result"
                                 isSearchable
                               />
                             )}
                           />
                         </div>
-                        <GenericInput
-                          label="Chief Complaint"
-                          type="text"
-                          placeHolder="Address"
-                          register={register("chiefComplaint")}
-                        />
+                        <div className="flex flex-col justify-between">
+                          <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Status
+                          </label>
+                          <Controller
+                            control={controlDischarged}
+                            name="status"
+                            render={({ field: { onChange, value } }) => (
+                              <Select
+                                className="capitalize"
+                                classNamePrefix="aDDl-class"
+                                options={recordStatus}
+                                value={recordStatus?.find(
+                                  (c) => c.value === value
+                                )}
+                                onChange={(recordStatus) =>
+                                  onChange(
+                                    recordStatus?.value === "Admitted"
+                                      ? "Discharged"
+                                      : recordStatus?.value
+                                  )
+                                }
+                                placeholder="Status"
+                                isSearchable
+                              />
+                            )}
+                          />
+                        </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <GenericInput
-                          label="Guardian"
-                          type="text"
-                          placeHolder="Guardian"
-                          register={register("guardian")}
-                        />
-                        <GenericInput
-                          label="Guardian No"
-                          type="text"
-                          placeHolder="Guardian No"
-                          register={register("guardianNo")}
-                        />
+                      <div className="w-full max-w-md my-5 flex justify-end">
+                        <div className="py-3 text-right flex gap-2 justify-end">
+                          <PrimaryButton
+                            className="w-full min-w-[150px]"
+                            isLoading={isBillingLoading}
+                            type="submit"
+                          >
+                            Discharged
+                          </PrimaryButton>
+
+                          <OutlinedButton
+                            type="button"
+                            onClick={() => setIsDischarged(false)}
+                          >
+                            Cancel
+                          </OutlinedButton>
+                        </div>
                       </div>
                     </div>
-
-                    {data?.receipt ? (
-                      <>
-                        <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
-                          Billing Summary
-                        </h1>
-                        <div className="col-span-1 space-y-3 mt-5">
-                          <div className="grid grid-cols-3 gap-3">
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Room Charges
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data?.receipt.roomCharge?.toString()}
-                                </h3>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Appointment Charges
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data?.receipt.appointmentCharge?.toString()}
-                                </h3>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Medicine Charges
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data?.receipt.medicineCharge?.toString()}
-                                </h3>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Reference #
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data.receipt.id}
-                                </h3>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Total Charges
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {totalCharge.toFixed(2)}
-                                </h3>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-                    {data?.discharedAt ? (
-                      <>
-                        <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
-                          Discharged Summary
-                        </h1>
-                        <div className="col-span-1 space-y-3 mt-5">
-                          <div className="grid grid-cols-3 gap-3">
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Addmitting Diagnosis
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data.admittingDiagnosis}
-                                </h3>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Final Diagnosis
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data.finalDiagnosis}
-                                </h3>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Other Diagnosis
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data.otherDiagnosis}
-                                </h3>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Medical Result
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data.result}
-                                </h3>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-grey-700">
-                                Disposition
-                              </label>
-                              <div className="relative mt-1 rounded-md shadow-sm ">
-                                <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                  {data.status}
-                                </h3>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-                  </div>
-                  <div className="w-full my-5 flex justify-end">
-                    {isEdit ? (
-                      <div className="py-3 w-1/2 text-right flex gap-2 justify-end">
-                        <PrimaryButton
-                          className="w-full"
-                          type="submit"
-                          disabled={!isDirty}
-                          isLoading={isLoading}
-                        >
-                          Update
-                        </PrimaryButton>
-                        <OutlinedButton
-                          type="button"
-                          onClick={() => setIsEdit(false)}
-                        >
-                          Cancel
-                        </OutlinedButton>
-                      </div>
-                    ) : null}
                   </div>
                 </form>
               </div>
-            </div>
+            </Dialog>
           </div>
-          {!isEdit ? (
-            <>
-              <PatientAppointments
-                appointments={data?.appointments}
-                isDisabled={data?.receipt ? true : false}
-                refetchRecord={refetchRecord}
-              />
-              <PatientMedicines
-                medicines={data?.medicine}
-                isDisabled={data?.receipt ? true : false}
-                refetchRecord={refetchRecord}
-              />
-            </>
-          ) : null}
-          <Dialog
-            open={isBilling}
-            onClose={() => setIsBilling(false)}
-            maxWidth="md"
-          >
-            <div className="w-[900px] h-screen">
-              <div className="w-full h-auto flex justify-end p-5">
-                <div className="w-fit">
-                  <OutlinedButton onClick={() => setIsBilling(false)}>
-                    <XSquare size={24} />
-                  </OutlinedButton>
-                </div>
-              </div>
-              <form
-                className="flex-1 flex flex-col items-center mt-5 mb-20"
-                onSubmit={handleBillingSubmit(onBillingSubmit)}
-              >
-                <div className="flex flex-col w-full max-w-md">
-                  <div className="col-span-1 space-y-3">
-                    <div className="col-span-1 space-y-3">
-                      <div>
-                        <label className="block text-sm font-medium text-grey-700">
-                          Room Charge
-                        </label>
-                        <div className="relative mt-1 rounded-md shadow-sm ">
-                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                            {roomCharge && roomCharge.toFixed(2)}
-                          </h3>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-grey-700">
-                          Appointment Charge
-                        </label>
-                        <div className="relative mt-1 rounded-md shadow-sm ">
-                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                            {appointmentCharge && appointmentCharge.toFixed(2)}
-                          </h3>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-grey-700">
-                          Medicine Charge
-                        </label>
-                        <div className="relative mt-1 rounded-md shadow-sm ">
-                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                            {medicineCharge && medicineCharge.toFixed(2)}
-                          </h3>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-grey-700">
-                          Total Charge
-                        </label>
-                        <div className="relative mt-1 rounded-md shadow-sm ">
-                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                            {totalCharge.toFixed(2)}
-                          </h3>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-grey-700">
-                          Philhealth Id
-                        </label>
-                        <div className="relative mt-1 rounded-md shadow-sm ">
-                          <input
-                            type={"text"}
-                            className="block w-full h-12 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
-                            {...registerBilling("philHealthId")}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-full max-w-md my-5 flex justify-end">
-                      <div className="py-3 text-right flex gap-2 justify-end">
-                        <PrimaryButton
-                          className="w-full min-w-[150px]"
-                          isLoading={isBillingLoading}
-                          type="submit"
-                        >
-                          Bill
-                        </PrimaryButton>
-
-                        <OutlinedButton
-                          type="button"
-                          onClick={() => setIsBilling(false)}
-                        >
-                          Cancel
-                        </OutlinedButton>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </Dialog>
-
-          <Dialog
-            open={isDischarged}
-            onClose={() => setIsDischarged(false)}
-            maxWidth="md"
-          >
-            <div className="w-[900px] h-screen">
-              <div className="w-full h-auto flex justify-end p-5">
-                <div className="w-fit">
-                  <OutlinedButton onClick={() => setIsDischarged(false)}>
-                    <XSquare size={24} />
-                  </OutlinedButton>
-                </div>
-              </div>
-              <form
-                className="flex-1 flex flex-col items-center mt-5 mb-20"
-                onSubmit={handleDischargedSubmit(onDischargedSubmit)}
-              >
-                <div className="flex flex-col w-full max-w-md">
-                  <div className="col-span-1 space-y-3">
-                    <div className="col-span-1 space-y-3">
-                      <div>
-                        <label className="block text-sm font-medium text-grey-700">
-                          Addmitting Diagnosis
-                        </label>
-                        <div className="relative mt-1 rounded-md shadow-sm ">
-                          <input
-                            type={"text"}
-                            className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
-                            {...registerDischarged("admittingDiagnosis")}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-grey-700">
-                          Final Diagnosis
-                        </label>
-                        <div className="relative mt-1 rounded-md shadow-sm ">
-                          <input
-                            type={"text"}
-                            className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
-                            {...registerDischarged("finalDiagnosis")}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-grey-700">
-                          Other Diagnosis
-                        </label>
-                        <div className="relative mt-1 rounded-md shadow-sm ">
-                          <input
-                            type={"text"}
-                            className="block w-full h-10 rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm focus:outline-green-500"
-                            {...registerDischarged("otherDiagnosis")}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col justify-between">
-                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Result
-                        </label>
-                        <Controller
-                          control={controlDischarged}
-                          name="result"
-                          render={({ field: { onChange, value } }) => (
-                            <Select
-                              className="capitalize"
-                              classNamePrefix="aDDl-class"
-                              options={medicalResult}
-                              value={medicalResult?.find(
-                                (c) => c.value === value
-                              )}
-                              onChange={(medicalResult) =>
-                                onChange(medicalResult?.value)
-                              }
-                              placeholder="Result"
-                              isSearchable
-                            />
-                          )}
-                        />
-                      </div>
-                      <div className="flex flex-col justify-between">
-                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Status
-                        </label>
-                        <Controller
-                          control={controlDischarged}
-                          name="status"
-                          render={({ field: { onChange, value } }) => (
-                            <Select
-                              className="capitalize"
-                              classNamePrefix="aDDl-class"
-                              options={recordStatus}
-                              value={recordStatus?.find(
-                                (c) => c.value === value
-                              )}
-                              onChange={(recordStatus) =>
-                                onChange(
-                                  recordStatus?.value === "Admitted"
-                                    ? "Discharged"
-                                    : recordStatus?.value
-                                )
-                              }
-                              placeholder="Status"
-                              isSearchable
-                            />
-                          )}
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full max-w-md my-5 flex justify-end">
-                      <div className="py-3 text-right flex gap-2 justify-end">
-                        <PrimaryButton
-                          className="w-full min-w-[150px]"
-                          isLoading={isBillingLoading}
-                          type="submit"
-                        >
-                          Discharged
-                        </PrimaryButton>
-
-                        <OutlinedButton
-                          type="button"
-                          onClick={() => setIsDischarged(false)}
-                        >
-                          Cancel
-                        </OutlinedButton>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </Dialog>
-        </div>
+        </SuspenseComponent>
       </Main>
     </>
   );
