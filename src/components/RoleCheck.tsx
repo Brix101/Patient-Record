@@ -6,7 +6,7 @@ export function RoleCheck({ children }: { children?: React.ReactNode }) {
   const { data, status } = useSession();
   const view = router.pathname.split("/")[1];
 
-  const unPro = ["/", "/signin"];
+  const unPro = ["/", "/signin", "/register"];
 
   const role = data?.user?.role?.toLowerCase();
 

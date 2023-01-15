@@ -56,27 +56,17 @@ const Home: NextPage = () => {
           </button>
           <div className="hidden w-full md:block md:w-auto" id="navbar-default">
             <ul className="flex flex-col p-4 mt-4 rounded-lg border border-green-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 items-center">
-              <li>
-                <a
-                  href="#"
-                  className="hidden py-2 pr-4 pl-3 text-white bg-green-700 rounded md:bg-transparent md:text-green-700 md:p-0 dark:text-white"
-                  aria-current="page"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="hidden py-2 pr-4 pl-3 text-grey-700 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-green-400 md:dark:hover:text-white dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  About
-                </a>
-              </li>
               <li className="bg-green-300 p-2 rounded-full hover:bg-green-200">
                 <Link href="/signin">
                   <a className="block py-2 pr-4 pl-3 text-grey-700 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-green-400 md:dark:hover:text-white dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent">
                     Sign In
+                  </a>
+                </Link>
+              </li>
+              <li className="bg-green-300 p-2 rounded-full hover:bg-green-200">
+                <Link href="/register">
+                  <a className="block py-2 pr-4 pl-3 text-grey-700 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-green-400 md:dark:hover:text-white dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                    Register
                   </a>
                 </Link>
               </li>

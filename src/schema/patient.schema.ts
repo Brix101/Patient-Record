@@ -42,6 +42,12 @@ export const deletePatientSchema = z.object({
   id: z.number(),
 });
 
+export const registerPatientUserSchema = z.object({
+  patiendId: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+});
+
 export type AddPatientInput = z.TypeOf<typeof addPatientSchema>;
 
 export type UpdatePatientInput = z.TypeOf<typeof updatePatientSchema>;
@@ -51,3 +57,7 @@ export type SearchPatientInput = z.TypeOf<typeof searchPatientSchema>;
 export type GetPatientInput = z.TypeOf<typeof getPatientSchema>;
 
 export type DeletePatientInput = z.TypeOf<typeof deletePatientSchema>;
+
+export type RegisterPatientUserInput = z.TypeOf<
+  typeof registerPatientUserSchema
+>;
