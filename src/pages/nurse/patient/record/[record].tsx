@@ -1033,6 +1033,21 @@ function PatientAppointments({
     resetCreate();
   };
 
+  const appointmentTotal = ({
+    data,
+  }: {
+    data: Appointment & { physician: Physician };
+  }) => {
+    const startD = moment(data?.start);
+    const endD = moment(data.end);
+    const totalTime = endD.diff(startD, "hours", true);
+    const phyCharge = data.physician.sessionCharge as unknown as number;
+    const subTotal = totalTime * phyCharge;
+    const total = data.status === "Finished" ? subTotal : 0;
+
+    return total.toFixed(2).toString();
+  };
+
   return (
     <>
       <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
@@ -1068,6 +1083,9 @@ function PatientAppointments({
               <th scope="col" className="py-3 px-6">
                 Status
               </th>
+              <th scope="col" className="py-3 px-6">
+                Sub Total
+              </th>
               {!isDisabled ? (
                 <th scope="col" className="py-3 px-6">
                   Action
@@ -1099,6 +1117,9 @@ function PatientAppointments({
                       {moment(appointment?.end).format("MMM DD, YYYY hh:mm A")}
                     </td>
                     <td className="py-4 px-6">{appointment.status}</td>
+                    <td className="py-4 px-6">
+                      {appointmentTotal({ data: appointment })}
+                    </td>
                     {!isDisabled ? (
                       <td className="py-4 px-6 flex gap-5">
                         <span
@@ -1546,7 +1567,7 @@ function PatientMedicines({
                 price
               </th>
               <th scope="col" className="py-3 px-6">
-                total
+                sub total
               </th>
               {!isDisabled ? (
                 <th scope="col" className="py-3 px-6">
