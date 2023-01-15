@@ -1028,6 +1028,11 @@ function PatientAppointments({
     })
     .reduce((a, b) => a + b, 0) as unknown as number;
 
+  const createCloseClick = () => {
+    setCreate(false);
+    resetCreate();
+  };
+
   return (
     <>
       <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
@@ -1136,11 +1141,11 @@ function PatientAppointments({
           </div>
         </div>
       </div>
-      <Dialog open={create} onClose={() => setCreate(false)} maxWidth="md">
+      <Dialog open={create} onClose={createCloseClick} maxWidth="md">
         <div className="w-[900px] h-screen">
           <div className="w-full h-auto flex justify-end p-5">
             <div className="w-fit">
-              <OutlinedButton onClick={() => setCreate(false)}>
+              <OutlinedButton onClick={createCloseClick}>
                 <XSquare size={24} />
               </OutlinedButton>
             </div>
@@ -1254,7 +1259,7 @@ function PatientAppointments({
                   Add
                 </PrimaryButton>
 
-                <OutlinedButton type="button" onClick={() => setCreate(false)}>
+                <OutlinedButton type="button" onClick={createCloseClick}>
                   Cancel
                 </OutlinedButton>
               </div>
@@ -1506,6 +1511,11 @@ function PatientMedicines({
       return total as unknown as number;
     }, 0) as unknown as number;
 
+  const createCloseClick = () => {
+    setCreate(false);
+    reset();
+  };
+
   return (
     <>
       <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
@@ -1600,11 +1610,11 @@ function PatientMedicines({
           </div>
         </div>
       </div>
-      <Dialog open={create} onClose={() => setCreate(false)} maxWidth="md">
+      <Dialog open={create} onClose={createCloseClick} maxWidth="md">
         <div className="w-[900px] h-screen">
           <div className="w-full h-auto flex justify-end p-5">
             <div className="w-fit">
-              <OutlinedButton onClick={() => setCreate(false)}>
+              <OutlinedButton onClick={createCloseClick}>
                 <XSquare size={24} />
               </OutlinedButton>
             </div>
@@ -1658,7 +1668,7 @@ function PatientMedicines({
                   Add
                 </PrimaryButton>
 
-                <OutlinedButton type="button" onClick={() => setCreate(false)}>
+                <OutlinedButton type="button" onClick={createCloseClick}>
                   Cancel
                 </OutlinedButton>
               </div>

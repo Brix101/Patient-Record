@@ -18,8 +18,8 @@ const SignInPage: NextPage = () => {
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["auth.login-user"],
     {
-      onSuccess: ({ email, role }) => {
-        signIn("credentials", {
+      onSuccess: async ({ email, role }) => {
+        await signIn("credentials", {
           email,
           expires: Date,
           callbackUrl: `${window.location.origin}/${role.toLowerCase()}`,

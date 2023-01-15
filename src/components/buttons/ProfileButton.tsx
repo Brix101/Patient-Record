@@ -14,17 +14,17 @@ export default function ProfileButton() {
   const useAlt = data?.user?.name as string;
 
   const { mutate } = trpc.useMutation(["logs.time-out"], {
-    onSuccess: () => {
-      signOut();
+    onSuccess: async () => {
+      await signOut();
     },
   });
 
   const isPatient = data?.user?.role === "PATIENT";
 
-  const signOutClick = () => {
+  const signOutClick = async () => {
     if (window.confirm("Are you sure logout?")) {
       if (isPatient) {
-        signOut();
+        await signOut();
       } else {
         mutate();
       }
