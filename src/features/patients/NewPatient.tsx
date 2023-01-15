@@ -22,9 +22,9 @@ const NewPatient: NextPage = () => {
     "patient.add-patient",
     {
       onSuccess: (patient) => {
+        dispatch(setPatientsMode({ mode: "Add", isAddPatientRecord: true }));
         reset();
         router.push(`nurse/patient/${patient.id}`);
-        dispatch(setPatientsMode({ mode: "View" }));
       },
     }
   );

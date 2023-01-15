@@ -19,11 +19,39 @@ export default function ProfileButton() {
     },
   });
 
+  const isPatient = data?.user?.role === "PATIENT";
+
+  const signOutClick = () => {
+    if (window.confirm("Are you sure logout?")) {
+      if (isPatient) {
+        signOut();
+      } else {
+        mutate();
+      }
+    }
+  };
+
+  const { data: patientData } = trpc.useQuery(
+    [
+      "patient.get-registered-patient",
+      {
+        id: parseInt(data?.user?.id as string),
+      },
+    ],
+    {
+      enabled: isPatient,
+    }
+  );
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="flex items-center gap-5">
         <h1 className="capitalize text-gray-900 text-base font-bold">
-          {data?.user?.name}
+          {isPatient ? (
+            <>{patientData?.firstName + " " + patientData?.lastName}</>
+          ) : (
+            <>{data?.user?.name}</>
+          )}
         </h1>
         <span className="inline-block h-10 w-10 overflow-hidden rounded-full bg-gray-100 border border-gray-500">
           {data?.user && (
@@ -49,35 +77,35 @@ export default function ProfileButton() {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-2">
-            <Menu.Item>
-              <button
-                type="submit"
-                className="text-gray-700 w-full px-4 py-2 text-left text-sm hover:bg-green-100 flex gap-2"
-                onClick={() => {
-                  if (data?.user) {
-                    dispatch(
-                      setEditMode({
-                        edit: true,
-                        id: data?.user?.id as unknown as number,
-                      })
-                    );
-                  }
-                }}
-              >
-                <Settings size={20} />
-                Account Settings
-              </button>
-            </Menu.Item>
-            <div className="w-full border-b-2 border-gray-600 my-2" />
+            {!isPatient ? (
+              <>
+                <Menu.Item>
+                  <button
+                    type="submit"
+                    className="text-gray-700 w-full px-4 py-2 text-left text-sm hover:bg-green-100 flex gap-2"
+                    onClick={() => {
+                      if (data?.user) {
+                        dispatch(
+                          setEditMode({
+                            edit: true,
+                            id: data?.user?.id as unknown as number,
+                          })
+                        );
+                      }
+                    }}
+                  >
+                    <Settings size={20} />
+                    Account Settings
+                  </button>
+                </Menu.Item>
+                <div className="w-full border-b-2 border-gray-600 my-2" />
+              </>
+            ) : null}
             <Menu.Item>
               <button
                 type="submit"
                 className="text-gray-700 flex gap-2 w-full px-4 py-2 text-left text-sm hover:bg-green-100"
-                onClick={() => {
-                  if (window.confirm("Are you sure logout?")) {
-                    mutate();
-                  }
-                }}
+                onClick={signOutClick}
               >
                 <LogOut size={20} />
                 Sign out

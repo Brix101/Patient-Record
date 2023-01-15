@@ -22,10 +22,11 @@ export const authRouter = createRouter()
           message: "User Not Found",
         });
       }
-      const passwordCorrect = comparePassword({
+      const passwordCorrect = await comparePassword({
         candidatePassword: password,
         hashedPassword: user.password ? user.password : "",
       });
+      console.log({ passwordCorrect });
 
       if (!passwordCorrect) {
         throw new trpc.TRPCError({
@@ -55,25 +56,16 @@ export const authRouter = createRouter()
       const { email, password, patiendId } = input;
 
       try {
-        const isPatienRegistered = await ctx.prisma.user.findFirst({
+        const patient = await ctx.prisma.patient.findUniqueOrThrow({
           where: {
-            patient: {
-              id: parseInt(patiendId),
-            },
+            id: parseInt(patiendId),
           },
         });
 
-        if (isPatienRegistered) {
+        if (patient.userId) {
           throw new trpc.TRPCError({
             code: "CONFLICT",
             message: "Patient Id already registered",
-          });
-        }
-
-        if (!isPatienRegistered) {
-          throw new trpc.TRPCError({
-            code: "NOT_FOUND",
-            message: "Patient Id not found",
           });
         }
 
@@ -82,6 +74,7 @@ export const authRouter = createRouter()
             email,
             password: await hashPassword({ password }),
             role: Role.PATIENT,
+            image: "/patient.png",
             patient: {
               connect: {
                 id: parseInt(patiendId),

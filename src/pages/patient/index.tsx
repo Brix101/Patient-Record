@@ -1,3 +1,4 @@
+import Main from "@/components/Layout/Main";
 import type { NextPage } from "next";
 import Head from "next/head";
 
@@ -8,7 +9,7 @@ const Home: NextPage = () => {
         <title>Patient Page</title>
         <link rel="icon" href="/logo.svg" />
       </Head>
-      <div>asdfsadf</div>
+      <Main>asdfsadf</Main>
     </>
   );
 };

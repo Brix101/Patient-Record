@@ -112,6 +112,13 @@ const SignInPage: NextPage = () => {
                       Sign In
                     </PrimaryButton>
                   </div>
+                  <div className="flex justify-end">
+                    <Link href="/register">
+                      <a className="block py-2 pr-4 pl-3 text-gray-700 hover:text-green-700 hover:underline">
+                        Register patient account?
+                      </a>
+                    </Link>
+                  </div>
                 </form>
               </>
             </div>

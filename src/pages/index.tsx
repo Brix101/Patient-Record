@@ -3,10 +3,6 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 const Home: NextPage = () => {
   return (
     <>
