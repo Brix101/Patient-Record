@@ -1,4 +1,5 @@
 import { searchLogchema } from "@/schema/log.schema";
+import { Role } from "@prisma/client";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 
@@ -20,6 +21,11 @@ export const logsRouter = createProtectedRouter()
             createAt: {
               gte: fromDate,
               lte: toDate,
+            },
+            NOT: {
+              user: {
+                role: Role.PATIENT,
+              },
             },
           },
           orderBy: {

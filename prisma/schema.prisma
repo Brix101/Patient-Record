@@ -16,24 +16,24 @@ model Example {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   firstName String?
   lastName  String?
-  email     String?    @unique
-  role      Role       @default(NURSE)
+  email     String?   @unique
+  role      Role      @default(NURSE)
   image     String?
   gender    String?
   birthday  DateTime?
   address   String?
   mobile    String?
   password  String?
-  active    Boolean    @default(true)
-  createAt  DateTime   @default(now())
-  updateAt  DateTime   @updatedAt
-  Physician Physician?
+  active    Boolean   @default(true)
+  createAt  DateTime  @default(now())
+  updateAt  DateTime  @updatedAt
 
-  addedPatient Patient[]
-  userLogs     UserLogs[]
+  userLogs  UserLogs[]
+  Physician Physician?
+  patient   Patient?
 }
 
 model Physician {
@@ -80,12 +80,10 @@ model Patient {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 
-  addedPatient User? @relation(fields: [addedById], references: [id], onDelete: Restrict, onUpdate: NoAction)
-  addedById    Int?
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?  @unique
 
   medicalRecord MedicalRecord[]
-
-  @@index([addedById])
 }
 
 model MedicalRecord {
@@ -178,7 +176,7 @@ model Medicine {
   price    Decimal? @db.Decimal(10, 2)
   total    Decimal? @db.Decimal(10, 2)
 
-  MedicalRecord   MedicalRecord? @relation(fields: [medicalRecordId], references: [id])
+  MedicalRecord   MedicalRecord? @relation(fields: [medicalRecordId], references: [id], onDelete: Cascade)
   medicalRecordId Int?
 }
 
@@ -240,6 +238,7 @@ enum Role {
   ADMIN
   NURSE
   PHYSICIAN
+  PATIENT
 }
 
 enum RoomCat {

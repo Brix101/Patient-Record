@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { createProtectedRouter } from "@server/router/context";
 import * as trpc from "@trpc/server";
 
@@ -9,6 +10,11 @@ export const dashboardRouter = createProtectedRouter().query("analytics", {
         by: ["role"],
         _count: {
           _all: true,
+        },
+        where: {
+          NOT: {
+            role: Role.PATIENT,
+          },
         },
       });
 

@@ -103,6 +103,7 @@ const ViewUsers: NextPage = () => {
                   setSearchInput({ ...searchInput, role: undefined });
                 }
               }}
+              filterOption={(option) => option.value !== Role.PATIENT}
             />
           </div>
           <div>
