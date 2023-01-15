@@ -1248,7 +1248,7 @@ function PatientAppointments({
                               sx={{ width: "100%" }}
                             />
                           )}
-                          value={value ? value : dateNow}
+                          value={value ? value : getCreateValues("start")}
                           onChange={(newValue) => {
                             onChange(newValue ?? dateNow);
                           }}
@@ -1365,7 +1365,11 @@ function PatientAppointments({
                               sx={{ width: "100%" }}
                             />
                           )}
-                          value={value ? value : dateNow}
+                          value={
+                            moment(value) < moment(getUpdateValues("start"))
+                              ? getUpdateValues("start")
+                              : value
+                          }
                           onChange={(newValue) => {
                             onChange(newValue ?? dateNow);
                           }}
