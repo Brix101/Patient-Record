@@ -126,438 +126,571 @@ const Home: NextPage = () => {
       </Head>
       <Main>
         <SuspenseComponent isLoading={isPatientLoading || isRecordLoading}>
-          {record ? (
-            <div className="flex-1 h-full w-full  space-y-5 overflow-x-hidden">
-              <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full flex items-center flex-col gap-10">
-                <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
-                  <div className="flex items-center">
-                    <h1 className="text-2xl font-bold text-gray-400">Record</h1>
-                  </div>
+          <div className="flex-1 h-full w-full  space-y-5 overflow-x-hidden">
+            <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full flex items-center flex-col gap-10">
+              <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+                <div className="flex items-center">
+                  <h1 className="text-2xl font-bold text-gray-900">Record</h1>
                 </div>
-                <div className="flex flex-col max-w-4xl w-full">
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Height
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.height}
-                        </h3>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Weight
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.weight}
-                        </h3>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Blood pressure
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.bloodPressure}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Room Type
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.room?.category}
-                        </h3>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Room No
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.room?.roomNo}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Physician
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.physician?.user.firstName +
-                            " " +
-                            record.physician?.user.lastName}
-                        </h3>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Chief Complaint
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.chiefComplaint}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Guardian
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.guardian}
-                        </h3>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Guardian No
-                      </label>
-                      <div className="relative mt-1 rounded-md shadow-sm ">
-                        <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                          {record.guardianNo}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col max-w-4xl w-full">
-                  <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
-                    Charges Summary
-                  </h1>
-                  {record?.receipt ? (
-                    <div className="col-span-1 space-y-3 mt-5">
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Room Charges
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.receipt.roomCharge?.toString()}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Appointment Charges
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.receipt.appointmentCharge?.toString()}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Medicine Charges
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.receipt.medicineCharge?.toString()}
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Reference #
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.receipt?.id}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Total Charges
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.receipt.total?.toString()}
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="col-span-1 space-y-3 mt-5">
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Room Charges
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {roomCharge?.toFixed(2)}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Appointment Charges
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {appointmentCharge?.toFixed(2)}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Medicine Charges
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {medicineCharge?.toFixed(2)}
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Reference #
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.receipt?.id}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Total Charges
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {totalCharge.toFixed(2)}
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                {data?.discharedAt ? (
-                  <>
-                    <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
-                      Discharged Summary
-                    </h1>
-                    <div className="col-span-1 space-y-3 mt-5">
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Addmitting Diagnosis
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.admittingDiagnosis}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Final Diagnosis
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.finalDiagnosis}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Other Diagnosis
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.otherDiagnosis}
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Medical Result
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.result}
-                            </h3>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-grey-700">
-                            Disposition
-                          </label>
-                          <div className="relative mt-1 rounded-md shadow-sm ">
-                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                              {record.status}
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                ) : null}
               </div>
-              <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
-                <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
-                  <div className="flex items-center">
-                    <h1 className="text-2xl font-bold text-gray-400">
-                      Appointments
-                    </h1>
+              <div className="flex flex-col max-w-4xl w-full">
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      First name
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.firstName}
+                      </h3>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Middle name
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.middleName}
+                      </h3>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Last name
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.lastName}
+                      </h3>
+                    </div>
                   </div>
                 </div>
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="py-3 px-6">
-                        Appointment Id
-                      </th>
-                      <th scope="col" className="py-3 px-6">
-                        Physician
-                      </th>
-                      <th scope="col" className="py-3 px-6">
-                        Schedule Start
-                      </th>
-                      <th scope="col" className="py-3 px-6">
-                        Schedule End
-                      </th>
-                      <th scope="col" className="py-3 px-6">
-                        Status
-                      </th>
-
-                      <th scope="col" className="py-3 px-6">
-                        Sub Total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {record.appointments?.map((appointment, i) => {
-                      return (
-                        <tr key={i} className={`${TableStyle(i)}`}>
-                          <th
-                            scope="row"
-                            className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
-                          >
-                            Appointment {appointment.id}
-                          </th>
-                          <td className="py-4 px-6">
-                            {appointment.physician.user.firstName}{" "}
-                            {appointment.physician.user.lastName}
-                          </td>
-                          <td className="py-4 px-6">
-                            {moment(appointment?.start).format(
-                              "MMM DD, YYYY hh:mm A"
-                            )}
-                          </td>
-                          <td className="py-4 px-6">
-                            {moment(appointment?.end).format(
-                              "MMM DD, YYYY hh:mm A"
-                            )}
-                          </td>
-                          <td className="py-4 px-6">{appointment.status}</td>
-
-                          <td className="py-4 px-6">
-                            {appointmentTotal({ data: appointment })}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-                <div className="h-20 w-full flex justify-between items-center pt-2 px-5 mr-20">
-                  <div></div>
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-lg  text-gray-900">Total :</h1>
-                    <h1 className="text-lg  text-gray-900">
-                      {appointmentCharge?.toFixed(2)}
-                    </h1>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Gender
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.gender}
+                      </h3>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Blood type
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.bloodType}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Birthday
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.birthday
+                          ? moment(patientData?.birthday).format("MMMM-dd-yyyy")
+                          : null}
+                      </h3>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Civil Status
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.civilStatus}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Mobile number
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.mobile}
+                      </h3>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Religion
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.religion}
+                      </h3>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Nationality
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.nationality}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Address
+                    </label>
+                    <div className="relative mt-1 rounded-md shadow-sm ">
+                      <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                        {patientData?.address}
+                      </h3>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
-                <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
-                  <div className="flex items-center">
-                    <h1 className="text-2xl font-bold text-gray-400">
-                      Medicines
+              {record ? (
+                <>
+                  <div className="flex flex-col max-w-4xl w-full">
+                    <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
+                      Admitted Details
                     </h1>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Height
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.height}
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Weight
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.weight}
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Blood pressure
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.bloodPressure}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Room Type
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.room?.category}
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Room No
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.room?.roomNo}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Physician
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.physician?.user.firstName +
+                              " " +
+                              record.physician?.user.lastName}
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Chief Complaint
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.chiefComplaint}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Guardian
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.guardian}
+                          </h3>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                          Guardian No
+                        </label>
+                        <div className="relative mt-1 rounded-md shadow-sm ">
+                          <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                            {record.guardianNo}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div></div>
-                </div>
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="py-3 px-6">
-                        Name
-                      </th>
-                      <th scope="col" className="py-3 px-6">
-                        Quantity
-                      </th>
-                      <th scope="col" className="py-3 px-6">
-                        price
-                      </th>
-                      <th scope="col" className="py-3 px-6">
-                        sub total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {record.medicine?.map((medicine, i) => {
-                      return (
-                        <tr key={i} className={`${TableStyle(i)}`}>
-                          <th
-                            scope="row"
-                            className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
-                          >
-                            {medicine.name}
-                          </th>
-                          <td className="py-4 px-6">{medicine.quantity}</td>
-                          <td className="py-4 px-6">
-                            {medicine.price?.toString()}
-                          </td>
-                          <td className="py-4 px-6">
-                            {medicine.total?.toString()}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-                <div className="h-20 w-full flex justify-between items-center pt-2 px-5 mr-20">
-                  <div></div>
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-lg  text-gray-900">Total :</h1>
-                    <h1 className="text-lg  text-gray-900">
-                      {medicineCharge?.toFixed(2)}
+                  <div className="flex flex-col max-w-4xl w-full">
+                    <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
+                      Charges Summary
                     </h1>
+                    {record?.receipt ? (
+                      <div className="col-span-1 space-y-3 mt-5">
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Room Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt.roomCharge?.toString()}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Appointment Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt.appointmentCharge?.toString()}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Medicine Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt.medicineCharge?.toString()}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Reference #
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt?.id}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Total Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt.total?.toString()}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="col-span-1 space-y-3 mt-5">
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Room Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {roomCharge?.toFixed(2)}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Appointment Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {appointmentCharge?.toFixed(2)}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Medicine Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {medicineCharge?.toFixed(2)}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Reference #
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt?.id}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Total Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {totalCharge.toFixed(2)}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              </div>
+                  {data?.discharedAt ? (
+                    <>
+                      <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
+                        Discharged Summary
+                      </h1>
+                      <div className="col-span-1 space-y-3 mt-5">
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Addmitting Diagnosis
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.admittingDiagnosis}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Final Diagnosis
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.finalDiagnosis}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Other Diagnosis
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.otherDiagnosis}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Medical Result
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.result}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Disposition
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.status}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : null}
+                </>
+              ) : null}
             </div>
-          ) : (
-            <div>No patient Record</div>
-          )}
+            {record ? (
+              <>
+                <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
+                  <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+                    <div className="flex items-center">
+                      <h1 className="text-2xl font-bold text-gray-400">
+                        Appointments
+                      </h1>
+                    </div>
+                  </div>
+                  <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
+                        <th scope="col" className="py-3 px-6">
+                          Appointment Id
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Physician
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Schedule Start
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Schedule End
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Status
+                        </th>
+
+                        <th scope="col" className="py-3 px-6">
+                          Sub Total
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {record.appointments?.map((appointment, i) => {
+                        return (
+                          <tr key={i} className={`${TableStyle(i)}`}>
+                            <th
+                              scope="row"
+                              className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                            >
+                              Appointment {appointment.id}
+                            </th>
+                            <td className="py-4 px-6">
+                              {appointment.physician.user.firstName}{" "}
+                              {appointment.physician.user.lastName}
+                            </td>
+                            <td className="py-4 px-6">
+                              {moment(appointment?.start).format(
+                                "MMM DD, YYYY hh:mm A"
+                              )}
+                            </td>
+                            <td className="py-4 px-6">
+                              {moment(appointment?.end).format(
+                                "MMM DD, YYYY hh:mm A"
+                              )}
+                            </td>
+                            <td className="py-4 px-6">{appointment.status}</td>
+
+                            <td className="py-4 px-6">
+                              {appointmentTotal({ data: appointment })}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  <div className="h-20 w-full flex justify-between items-center pt-2 px-5 mr-20">
+                    <div></div>
+                    <div className="flex items-center gap-2">
+                      <h1 className="text-lg  text-gray-900">Total :</h1>
+                      <h1 className="text-lg  text-gray-900">
+                        {appointmentCharge?.toFixed(2)}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+                <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full">
+                  <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+                    <div className="flex items-center">
+                      <h1 className="text-2xl font-bold text-gray-400">
+                        Medicines
+                      </h1>
+                    </div>
+                    <div></div>
+                  </div>
+                  <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
+                        <th scope="col" className="py-3 px-6">
+                          Name
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Quantity
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          price
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          sub total
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {record.medicine?.map((medicine, i) => {
+                        return (
+                          <tr key={i} className={`${TableStyle(i)}`}>
+                            <th
+                              scope="row"
+                              className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
+                            >
+                              {medicine.name}
+                            </th>
+                            <td className="py-4 px-6">{medicine.quantity}</td>
+                            <td className="py-4 px-6">
+                              {medicine.price?.toString()}
+                            </td>
+                            <td className="py-4 px-6">
+                              {medicine.total?.toString()}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  <div className="h-20 w-full flex justify-between items-center pt-2 px-5 mr-20">
+                    <div></div>
+                    <div className="flex items-center gap-2">
+                      <h1 className="text-lg  text-gray-900">Total :</h1>
+                      <h1 className="text-lg  text-gray-900">
+                        {medicineCharge?.toFixed(2)}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div>No patient Record</div>
+            )}
+          </div>
         </SuspenseComponent>
       </Main>
     </>
