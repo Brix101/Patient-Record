@@ -28,7 +28,7 @@ const localizer = momentLocalizer(moment);
 
 const Apointment: NextPage = () => {
   const session = useSession();
-
+  const dateNow = new Date();
   const isNurse = session.data?.user?.role === "NURSE";
 
   const {
@@ -295,9 +295,9 @@ const Apointment: NextPage = () => {
                                   sx={{ width: "100%" }}
                                 />
                               )}
-                              value={value ? value : new Date()}
+                              value={value ? value : dateNow}
                               onChange={(newValue) => {
-                                onChange(newValue ?? new Date());
+                                onChange(newValue ?? dateNow);
                               }}
                               disabled={
                                 !isNurse ||
@@ -305,7 +305,7 @@ const Apointment: NextPage = () => {
                                   selectedAppointment.MedicalRecord?.receipt
                                 )
                               }
-                              minDateTime={moment(new Date())}
+                              minDateTime={moment(dateNow)}
                             />
                           )}
                         />
@@ -326,9 +326,13 @@ const Apointment: NextPage = () => {
                                   sx={{ width: "100%" }}
                                 />
                               )}
-                              value={value ? value : new Date()}
+                              value={
+                                moment(value) < moment(getRecordValues("start"))
+                                  ? getRecordValues("start")
+                                  : value
+                              }
                               onChange={(newValue) => {
-                                onChange(newValue ?? new Date());
+                                onChange(newValue ?? dateNow);
                               }}
                               disabled={
                                 !isNurse ||

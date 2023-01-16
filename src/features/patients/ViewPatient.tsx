@@ -162,9 +162,11 @@ const ViewPatient: NextPage = () => {
             <th scope="col" className="py-3 px-2">
               Blood type
             </th>
-            <th scope="col" className="py-3 px-1">
-              Action
-            </th>
+            {
+              <th scope="col" className="py-3 px-1">
+                Action
+              </th>
+            }
           </tr>
         </thead>
         <Suspense>
@@ -177,7 +179,9 @@ const ViewPatient: NextPage = () => {
                     scope="row"
                     className={`py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize cursor-pointer hover:underline`}
                     onClick={() => {
-                      viewPatient({ patient });
+                      if (!isAdmin) {
+                        viewPatient({ patient });
+                      }
                     }}
                   >
                     <Tooltip title="View patient data" arrow>
@@ -228,22 +232,24 @@ const ViewPatient: NextPage = () => {
                           </Tooltip>
                         ) : (
                           <>
-                            <Tooltip title="View Patient Record" arrow>
-                              <FileText
-                                className="text-blue-500 cursor-pointer"
-                                size={20}
-                                onClick={() => {
-                                  if (patient.medicalRecord.at(-1)) {
-                                    viewRecord({
-                                      id: patient.medicalRecord.at(-1)
-                                        ?.id as number,
-                                    });
-                                  } else {
-                                    viewPatient({ patient });
-                                  }
-                                }}
-                              />
-                            </Tooltip>
+                            {!isAdmin ? (
+                              <Tooltip title="View Patient Record" arrow>
+                                <FileText
+                                  className="text-blue-500 cursor-pointer"
+                                  size={20}
+                                  onClick={() => {
+                                    if (patient.medicalRecord.at(-1)) {
+                                      viewRecord({
+                                        id: patient.medicalRecord.at(-1)
+                                          ?.id as number,
+                                      });
+                                    } else {
+                                      viewPatient({ patient });
+                                    }
+                                  }}
+                                />
+                              </Tooltip>
+                            ) : null}
                           </>
                         )}
                       </>

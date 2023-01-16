@@ -196,7 +196,7 @@ const Home: NextPage = () => {
                     <div className="relative mt-1 rounded-md shadow-sm ">
                       <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
                         {patientData?.birthday
-                          ? moment(patientData?.birthday).format("MMMM-dd-yyyy")
+                          ? moment(patientData?.birthday).format("MMMM-DD-yyyy")
                           : null}
                       </h3>
                     </div>

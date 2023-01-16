@@ -7,6 +7,7 @@ import { UpdateUserInput } from "@/schema/user.schema";
 import { trpc } from "@/utils/trpc";
 import { setUsersMode, usersState } from "@features/users/usersSlice";
 import { Role } from "@prisma/client";
+import moment from "moment";
 import { NextPage } from "next";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
@@ -86,7 +87,7 @@ const EditUser: NextPage = () => {
         <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold text-gray-900">
-              Edit User Information
+              {user?.patient ? "Patient" : "Edit"} User Information
             </h1>
           </div>
           <div>
@@ -114,7 +115,90 @@ const EditUser: NextPage = () => {
             <span className="font-medium">Success alert!</span> User Updated
           </div>
         )}
-        {user && (
+        {user && user.patient ? (
+          <div className="w-full">
+            <div className="w-full flex flex-col items-center mt-5 mb-20 gap-5">
+              <div className="grid grid-cols-3 gap-3 w-full">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    First name
+                  </label>
+                  <div className="relative mt-1 rounded-md shadow-sm ">
+                    <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                      {user.patient?.firstName}
+                    </h3>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Middle name
+                  </label>
+                  <div className="relative mt-1 rounded-md shadow-sm ">
+                    <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                      {user.patient?.middleName}
+                    </h3>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Last name
+                  </label>
+                  <div className="relative mt-1 rounded-md shadow-sm ">
+                    <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                      {user.patient?.lastName}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 w-full">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Gender
+                  </label>
+                  <div className="relative mt-1 rounded-md shadow-sm ">
+                    <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                      {user.patient?.gender}
+                    </h3>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Blood type
+                  </label>
+                  <div className="relative mt-1 rounded-md shadow-sm ">
+                    <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                      {user.patient?.bloodType}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 w-full">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Birthday
+                  </label>
+                  <div className="relative mt-1 rounded-md shadow-sm ">
+                    <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                      {user.patient?.birthday
+                        ? moment(user.patient?.birthday).format("MMMM-DD-yyyy")
+                        : null}
+                    </h3>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Civil Status
+                  </label>
+                  <div className="relative mt-1 rounded-md shadow-sm ">
+                    <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-100 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                      {user.patient?.civilStatus}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
           <form
             className="flex-1 flex flex-col items-center mt-5 mb-20"
             onSubmit={handleSubmit(onSubmit)}
