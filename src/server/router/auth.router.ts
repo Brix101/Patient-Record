@@ -60,9 +60,12 @@ export const authRouter = createRouter()
           where: {
             id: parseInt(patiendId),
           },
+          include: {
+            user: true,
+          },
         });
 
-        if (patient.userId) {
+        if (patient.user) {
           throw new trpc.TRPCError({
             code: "CONFLICT",
             message: "Patient Id already registered",
