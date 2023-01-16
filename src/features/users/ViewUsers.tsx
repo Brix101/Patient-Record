@@ -6,19 +6,20 @@ import useDebounce from "@/hooks/useDebounce";
 import { SearchUserInput } from "@/schema/user.schema";
 import LinearLoading from "@components/LinearLoading";
 import { setUsersMode } from "@features/users/usersSlice";
-import { Physician, Role, User } from "@prisma/client";
+import { Patient, Physician, Role, User } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import { NextPage } from "next";
 import { Suspense, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { Edit, Trash2, UserPlus } from "react-feather";
+import { Edit, FileText, Trash2, UserPlus } from "react-feather";
 import Select from "react-select";
 
 const ViewUsers: NextPage = () => {
   const dispatch = useAppDispatch();
   const [isActive, setIsActive] = useState<number | undefined>();
   const [usersData, setUsersData] = useState<
-    (User & { Physician: Physician | null })[] | undefined
+    | (User & { Physician: Physician | null; patient: Patient | null })[]
+    | undefined
   >([]);
   const [searchInput, setSearchInput] = useState<SearchUserInput>({
     name: undefined,
@@ -103,7 +104,7 @@ const ViewUsers: NextPage = () => {
                   setSearchInput({ ...searchInput, role: undefined });
                 }
               }}
-              filterOption={(option) => option.value !== Role.PATIENT}
+              // filterOption={(option) => option.value !== Role.PATIENT}
             />
           </div>
           <div>
@@ -153,11 +154,18 @@ const ViewUsers: NextPage = () => {
                     scope="row"
                     className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize"
                   >
-                    {user.lastName && user.lastName},{" "}
-                    {user.firstName && user.firstName}
+                    {user.patient ? (
+                      <>
+                        {user.patient.lastName + ", " + user.patient.firstName}
+                      </>
+                    ) : (
+                      <>{user.lastName + ", " + user.firstName}</>
+                    )}
                   </th>
                   <td className="py-4 px-6">{user.email}</td>
-                  <td className="py-4 px-6">{user.mobile}</td>
+                  <td className="py-4 px-6">
+                    {user.patient ? user.patient.middleName : user.mobile}
+                  </td>
                   <td className="py-4 px-6 capitalize">{user.role}</td>
                   <td className="py-4 px-6 flex gap-5 items-center">
                     <SuspenseComponent isLoading={isActive === user.id}>
@@ -167,7 +175,11 @@ const ViewUsers: NextPage = () => {
                           dispatch(setUsersMode({ mode: "Edit", user: user }))
                         }
                       >
-                        <Edit size={20} />
+                        {user.patient ? (
+                          <FileText size={20} />
+                        ) : (
+                          <Edit size={20} />
+                        )}
                       </span>
 
                       <span

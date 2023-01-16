@@ -71,6 +71,8 @@ export const authRouter = createRouter()
 
         const user = await ctx.prisma.user.create({
           data: {
+            firstName: "",
+            lastName: "",
             email,
             password: await hashPassword({ password }),
             role: Role.PATIENT,

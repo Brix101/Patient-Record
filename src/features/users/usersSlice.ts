@@ -1,5 +1,5 @@
 import type { AppState } from "@app/store";
-import { Physician, User } from "@prisma/client";
+import { Patient, Physician, User } from "@prisma/client";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UsersState {
@@ -7,6 +7,7 @@ export interface UsersState {
   account?: boolean;
   user?: User & {
     Physician: Physician | null;
+    patient: Patient | null;
   };
 }
 

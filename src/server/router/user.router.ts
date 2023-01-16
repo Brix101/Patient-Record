@@ -95,7 +95,6 @@ export const usersRouter = createProtectedRouter()
               role: Role[role as keyof typeof Role],
               NOT: {
                 active: false,
-                role: Role.PATIENT,
               },
             },
             orderBy: {
@@ -103,6 +102,7 @@ export const usersRouter = createProtectedRouter()
             },
             include: {
               Physician: true,
+              patient: true,
             },
           });
           return users;
