@@ -31,27 +31,11 @@ export default function ProfileButton() {
     }
   };
 
-  const { data: patientData } = trpc.useQuery(
-    [
-      "patient.get-registered-patient",
-      {
-        id: parseInt(data?.user?.id as string),
-      },
-    ],
-    {
-      enabled: isPatient,
-    }
-  );
-
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="flex items-center gap-5">
         <h1 className="capitalize text-gray-900 text-base font-bold">
-          {isPatient ? (
-            <>{patientData?.firstName + " " + patientData?.lastName}</>
-          ) : (
-            <>{data?.user?.name}</>
-          )}
+          {data?.user?.name}
         </h1>
         <span className="inline-block h-10 w-10 overflow-hidden rounded-full bg-gray-100 border border-gray-500">
           {data?.user && (

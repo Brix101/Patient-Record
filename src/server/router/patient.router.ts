@@ -157,10 +157,13 @@ export const patientRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { id } = input;
       try {
-        const patient = await ctx.prisma.patient.findUnique({
-          where: { userId: id },
+        const user = await ctx.prisma.user.findUnique({
+          where: { id },
+          include: {
+            patient: true,
+          },
         });
-        return patient;
+        return user?.patient;
       } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === "P2002") {

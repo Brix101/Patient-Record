@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "@env/server.mjs";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@server/db/client";
+import patient from "../patient/[patient]";
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
@@ -31,11 +32,18 @@ export const authOptions: NextAuthOptions = {
           where: {
             email: credentials?.email,
           },
+          include: {
+            patient: true,
+          },
         });
+
+        const userName = _user?.firstName + " " + _user?.lastName;
+        const patientName =
+          _user?.patient?.firstName + " " + _user?.patient?.lastName;
 
         const user = {
           id: _user?.id,
-          name: _user?.firstName + " " + _user?.lastName,
+          name: _user?.patient ? patientName : userName,
           image: _user?.image,
           role: _user?.role,
           email: _user?.email,
