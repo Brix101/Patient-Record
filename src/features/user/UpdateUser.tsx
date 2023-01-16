@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hook";
 import OutlinedButton from "@/components/buttons/OutlinedButton";
 import { Dialog, Tab, Transition } from "@headlessui/react";
 import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { Fragment } from "react";
 import { XSquare } from "react-feather";
@@ -16,11 +17,14 @@ function classNames(...classes: string[]) {
 
 const UpdateUser: NextPage = () => {
   const dispatch = useAppDispatch();
+  const { data } = useSession();
   const { edit } = useAppSelector(userState);
 
   const handleCloseModal = () => {
     dispatch(setEditMode({ edit: false }));
   };
+
+  const isPatient = data?.user?.role === "PATIENT";
 
   return (
     <>
@@ -65,19 +69,21 @@ const UpdateUser: NextPage = () => {
                     <div className="flex items-center flex-col">
                       <div className="container  w-full">
                         <Tab.List className=" flex space-x-1 rounded-xl bg-green-900/20 p-1 w-3/6 my-5 ">
-                          <Tab
-                            className={({ selected }) =>
-                              classNames(
-                                "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-green-700",
-                                "ring-white ring-opacity-60 ring-offset-2 ring-offset-green-400 focus:outline-none focus:ring-2",
-                                selected
-                                  ? "bg-white shadow"
-                                  : "text-gray-900 hover:bg-white/[0.12] hover:text-gray-800"
-                              )
-                            }
-                          >
-                            Personal
-                          </Tab>
+                          {!isPatient ? (
+                            <Tab
+                              className={({ selected }) =>
+                                classNames(
+                                  "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-green-700",
+                                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-green-400 focus:outline-none focus:ring-2",
+                                  selected
+                                    ? "bg-white shadow"
+                                    : "text-gray-900 hover:bg-white/[0.12] hover:text-gray-800"
+                                )
+                              }
+                            >
+                              Personal
+                            </Tab>
+                          ) : null}
                           <Tab
                             className={({ selected }) =>
                               classNames(
@@ -98,9 +104,13 @@ const UpdateUser: NextPage = () => {
                           "container h-[65vh] relative overflow-hidden"
                         }
                       >
-                        <Tab.Panel className={"h-full w-full overflow-y-auto"}>
-                          <PersonalForm />
-                        </Tab.Panel>
+                        {!isPatient ? (
+                          <Tab.Panel
+                            className={"h-full w-full overflow-y-auto"}
+                          >
+                            <PersonalForm />
+                          </Tab.Panel>
+                        ) : null}
                         <Tab.Panel className={"h-full w-full overflow-y-auto"}>
                           <PasswordForm />
                         </Tab.Panel>

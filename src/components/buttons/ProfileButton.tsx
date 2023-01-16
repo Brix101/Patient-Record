@@ -61,30 +61,28 @@ export default function ProfileButton() {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-2">
-            {!isPatient ? (
-              <>
-                <Menu.Item>
-                  <button
-                    type="submit"
-                    className="text-gray-700 w-full px-4 py-2 text-left text-sm hover:bg-green-100 flex gap-2"
-                    onClick={() => {
-                      if (data?.user) {
-                        dispatch(
-                          setEditMode({
-                            edit: true,
-                            id: data?.user?.id as unknown as number,
-                          })
-                        );
-                      }
-                    }}
-                  >
-                    <Settings size={20} />
-                    Account Settings
-                  </button>
-                </Menu.Item>
-                <div className="w-full border-b-2 border-gray-600 my-2" />
-              </>
-            ) : null}
+            <>
+              <Menu.Item>
+                <button
+                  type="submit"
+                  className="text-gray-700 w-full px-4 py-2 text-left text-sm hover:bg-green-100 flex gap-2"
+                  onClick={() => {
+                    if (data?.user) {
+                      dispatch(
+                        setEditMode({
+                          edit: true,
+                          id: data?.user?.id as unknown as number,
+                        })
+                      );
+                    }
+                  }}
+                >
+                  <Settings size={20} />
+                  Account Settings
+                </button>
+              </Menu.Item>
+              <div className="w-full border-b-2 border-gray-600 my-2" />
+            </>
             <Menu.Item>
               <button
                 type="submit"
