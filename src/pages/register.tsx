@@ -7,23 +7,21 @@ import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { Eye, EyeOff } from "react-feather";
 import { useForm } from "react-hook-form";
 
 const RegisterPage: NextPage = () => {
+  const router = useRouter();
   const [show, setShow] = useState<boolean>(false);
   const { handleSubmit, register } = useForm<RegisterPatientUserInput>();
 
   const { mutate, error, isLoading, isSuccess } = trpc.useMutation(
     ["auth.register-account"],
     {
-      onSuccess: ({ email, role }) => {
-        signIn("credentials", {
-          email,
-          expires: Date,
-          callbackUrl: `${window.location.origin}/${role.toLowerCase()}`,
-        });
+      onSuccess: () => {
+        router.push("/signin");
       },
     }
   );
