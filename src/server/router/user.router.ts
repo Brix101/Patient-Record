@@ -91,6 +91,14 @@ export const usersRouter = createProtectedRouter()
               OR: [
                 { firstName: { contains: name ? name : "" } },
                 { lastName: { contains: name ? name : "" } },
+                {
+                  patient: {
+                    OR: [
+                      { firstName: { contains: name ? name : "" } },
+                      { lastName: { contains: name ? name : "" } },
+                    ],
+                  },
+                },
               ],
               role: Role[role as keyof typeof Role],
               NOT: {
