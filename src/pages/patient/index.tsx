@@ -364,126 +364,7 @@ const Home: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col max-w-4xl w-full">
-                    <h1 className="text-lg font-bold text-gray-900 mb-5 capitalize">
-                      Charges Summary
-                    </h1>
-                    {record?.receipt ? (
-                      <div className="col-span-1 space-y-3 mt-5">
-                        <div className="grid grid-cols-3 gap-3">
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Room Charges
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {record.receipt.roomCharge?.toString()}
-                              </h3>
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Appointment Charges
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {record.receipt.appointmentCharge?.toString()}
-                              </h3>
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Medicine Charges
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {record.receipt.medicineCharge?.toString()}
-                              </h3>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Reference #
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {record.receipt?.id}
-                              </h3>
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Total Charges
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {record.receipt.total?.toString()}
-                              </h3>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="col-span-1 space-y-3 mt-5">
-                        <div className="grid grid-cols-3 gap-3">
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Room Charges
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {roomCharge?.toFixed(2)}
-                              </h3>
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Appointment Charges
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {appointmentCharge?.toFixed(2)}
-                              </h3>
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Medicine Charges
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {medicineCharge?.toFixed(2)}
-                              </h3>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Reference #
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {record.receipt?.id}
-                              </h3>
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-grey-700">
-                              Total Charges
-                            </label>
-                            <div className="relative mt-1 rounded-md shadow-sm ">
-                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
-                                {totalCharge.toFixed(2)}
-                              </h3>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+
                   {data?.discharedAt ? (
                     <>
                       <h1 className="text-base font-bold text-gray-900 mt-5 capitalize">
@@ -647,6 +528,9 @@ const Home: NextPage = () => {
                           Quantity
                         </th>
                         <th scope="col" className="py-3 px-6">
+                          Intake
+                        </th>
+                        <th scope="col" className="py-3 px-6">
                           price
                         </th>
                         <th scope="col" className="py-3 px-6">
@@ -665,6 +549,7 @@ const Home: NextPage = () => {
                               {medicine.name}
                             </th>
                             <td className="py-4 px-6">{medicine.quantity}</td>
+                            <td className="py-4 px-6">{medicine.intake}</td>
                             <td className="py-4 px-6">
                               {medicine.price?.toString()}
                             </td>
@@ -684,6 +569,189 @@ const Home: NextPage = () => {
                         {medicineCharge?.toFixed(2)}
                       </h1>
                     </div>
+                  </div>
+                </div>
+                <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full flex items-center flex-col">
+                  <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+                    <div className="flex items-center">
+                      <h1 className="text-2xl font-bold text-gray-400">
+                        Diagnosis
+                      </h1>
+                    </div>
+                  </div>
+                  <div className="flex flex-col max-w-4xl w-full">
+                    <div className="col-span-1 space-y-3 mt-5">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Admitting Diagnosis
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                              {record?.admittingDiagnosis}
+                            </h3>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Other Diagnosis
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                              {record?.otherDiagnosis}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Final Diagnosis
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                              {record?.finalDiagnosis}
+                            </h3>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-grey-700">
+                            Medical Result
+                          </label>
+                          <div className="relative mt-1 rounded-md shadow-sm ">
+                            <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                              {record?.result}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="relative shadow-md sm:rounded-lg mx-5 p-5 overflow-hidden h-auto w-full flex items-center flex-col">
+                  <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
+                    <div className="flex items-center">
+                      <h1 className="text-2xl font-bold text-gray-400">
+                        Charges Summary
+                      </h1>
+                    </div>
+                  </div>
+                  <div className="flex flex-col max-w-4xl w-full">
+                    {record?.receipt ? (
+                      <div className="col-span-1 space-y-3 mt-5">
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Room Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt.roomCharge?.toString()}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Appointment Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt.appointmentCharge?.toString()}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Medicine Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt.medicineCharge?.toString()}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Reference #
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt?.id}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Total Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt.total?.toString()}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="col-span-1 space-y-3 mt-5">
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Room Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {roomCharge?.toFixed(2)}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Appointment Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {appointmentCharge?.toFixed(2)}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Medicine Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {medicineCharge?.toFixed(2)}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Reference #
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {record.receipt?.id}
+                              </h3>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-grey-700">
+                              Total Charges
+                            </label>
+                            <div className="relative mt-1 rounded-md shadow-sm ">
+                              <h3 className="w-full h-10 flex items-center capitalize rounded-md border  border-gray-300 pl-3 pr-12 focus:border-green-500 focus:ring-4 focus:ring-green-200 sm:text-sm">
+                                {totalCharge.toFixed(2)}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </>

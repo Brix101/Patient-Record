@@ -1568,6 +1568,9 @@ function PatientMedicines({
                 Quantity
               </th>
               <th scope="col" className="py-3 px-6">
+                Intake
+              </th>
+              <th scope="col" className="py-3 px-6">
                 price
               </th>
               <th scope="col" className="py-3 px-6">
@@ -1592,6 +1595,7 @@ function PatientMedicines({
                       {medicine.name}
                     </th>
                     <td className="py-4 px-6">{medicine.quantity}</td>
+                    <td className="py-4 px-6">{medicine.intake}</td>
                     <td className="py-4 px-6">{medicine.price?.toString()}</td>
                     <td className="py-4 px-6">{medicine.total?.toString()}</td>
                     {!isDisabled ? (
@@ -1658,6 +1662,12 @@ function PatientMedicines({
                   register={register("name")}
                 />
                 <GenericInput
+                  label="Intake"
+                  type="text"
+                  placeHolder="Intake"
+                  register={register("intake")}
+                />
+                <GenericInput
                   label="Quantity"
                   type="number"
                   placeHolder="Quantity"
@@ -1722,6 +1732,13 @@ function PatientMedicines({
                   placeHolder="Name"
                   required
                   register={updateRegister("name")}
+                />
+                <GenericInput
+                  label="Intake"
+                  type="text"
+                  placeHolder="Intake"
+                  required
+                  register={updateRegister("intake")}
                 />
                 <GenericInput
                   label="Quantity"

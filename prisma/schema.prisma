@@ -173,6 +173,7 @@ model Medicine {
   id       Int      @id @default(autoincrement())
   name     String?
   quantity Int?
+  intake   String?
   price    Decimal? @db.Decimal(10, 2)
   total    Decimal? @db.Decimal(10, 2)
 

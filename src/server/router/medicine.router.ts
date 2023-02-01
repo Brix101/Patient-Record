@@ -12,7 +12,7 @@ export const mediceneRouter = createProtectedRouter()
   .mutation("add-medicine", {
     input: createMedicineSchema,
     resolve: async ({ input, ctx }) => {
-      const { name, price, quantity, medicalRecordId } = input;
+      const { name, price, quantity, medicalRecordId, intake } = input;
       try {
         const medicalRecord = await ctx.prisma.medicalRecord.update({
           where: {
@@ -24,6 +24,7 @@ export const mediceneRouter = createProtectedRouter()
                 name,
                 price,
                 quantity,
+                intake,
                 total: new Prisma.Decimal(price * quantity),
               },
             },
@@ -64,7 +65,7 @@ export const mediceneRouter = createProtectedRouter()
   .mutation("update-medicine", {
     input: updateMedicineSchema,
     resolve: async ({ input, ctx }) => {
-      const { id, name, price, quantity } = input;
+      const { id, name, price, quantity, intake } = input;
 
       try {
         const medicine = await ctx.prisma.medicine.update({
@@ -75,6 +76,7 @@ export const mediceneRouter = createProtectedRouter()
             name,
             price: new Prisma.Decimal(price),
             quantity,
+            intake,
             total: new Prisma.Decimal(price * quantity),
           },
         });

@@ -3,6 +3,7 @@ import z from "zod";
 export const createMedicineSchema = z.object({
   name: z.string(),
   quantity: z.number(),
+  intake: z.string().nullish(),
   price: z.number(),
   medicalRecordId: z.number(),
 });
@@ -10,6 +11,7 @@ export const createMedicineSchema = z.object({
 export const updateMedicineSchema = z.object({
   id: z.number(),
   name: z.string(),
+  intake: z.string().nullish(),
   quantity: z.number(),
   price: z.number(),
 });
