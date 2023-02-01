@@ -575,7 +575,7 @@ const Home: NextPage = () => {
                   <div className="h-20 w-full flex justify-between items-center pt-2 px-5">
                     <div className="flex items-center">
                       <h1 className="text-2xl font-bold text-gray-400">
-                        Diagnosis
+                        Diagnosis Summary
                       </h1>
                     </div>
                   </div>
